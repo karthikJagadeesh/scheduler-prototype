@@ -4,7 +4,10 @@
   "description": "Scheduler Prototype for Schedule by Task and Schedule by Employee",
   "main": "index.js",
   "scripts": {
-    "test": "echo \"Error: no test specified\" && exit 1"
+    "test": "echo \"Error: no test specified\" && exit 1",
+    "start-babel": "babel script.js --watch --out-file babel_script.js",
+    "start-browserSync": "browser-sync start --server --files \"**/*.js\" \"**/*.css\" \"**/*.html\"",
+    "start": "start npm run start-babel && start npm run start-browserSync"
   },
   "repository": {
     "type": "git",
@@ -20,6 +23,9 @@
     "material-design-lite": "^1.2.1"
   },
   "devDependencies": {
+    "babel-cli": "^6.18.0",
+    "babel-core": "^6.18.2",
+    "babel-preset-es2015": "^6.18.0",
     "browser-sync": "^2.18.2"
   }
 }
