@@ -1,4 +1,5 @@
 html,body{padding:0;margin:0;}
+a{color: #009fda;  text-decoration: none;}
 .mdl-layout__header{background-color: #445978;box-shadow: none;min-height:52px;}
 .mdl-layout__header-row{padding: 0 15px;height:52px;}
 .mdl-layout__header-row .mdl-navigation__link {position: relative;
@@ -20,3 +21,8 @@ html,body{padding:0;margin:0;}
 
 .item{  position:relative;padding: 0.78571em 0.95em; }
  div.item:before{left:0px;}
+ footer.mdl-mini-footer{position: fixed;background-color: #f0f0f0;color: #000;
+    left: 0;
+    right: 0;
+    bottom: 0;
+    padding: 12px 15px;}
