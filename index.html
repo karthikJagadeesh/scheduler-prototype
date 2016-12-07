@@ -5,12 +5,77 @@
     <title>Scheduler Prototype</title>
     <link rel="stylesheet" href="./node_modules/material-design-lite/material.min.css">
     <link rel="stylesheet" href="https://fonts.googleapis.com/icon?family=Material+Icons">
+  <link rel="stylesheet" href="./style.css">
+
+
+
+  </head>
+  <body>
+  <div class="mdl-layout mdl-js-layout mdl-layout--fixed-header">
+        <header class="mdl-layout__header">
+           <div class="mdl-layout__header-row">
+              <span class="mdl-layout-title"><img src="./assets/images/xcm-logo.png"></span>
+              <nav class="mdl-navigation">
+                <a class="mdl-navigation__link" href="">My View</a>
+                <a class="mdl-navigation__link" href="">Dashboard</a>
+                <a class="mdl-navigation__link" href="">Reports</a>
+                <a class="mdl-navigation__link" href="">Scheduler</a>
+              </nav>
+            <div class="mdl-layout-spacer"></div>
+   <div class="search item">
+     <form action="#">
+                 <div class="mdl-textfield mdl-js-textfield mdl-textfield--expandable">
+                    <label class="mdl-button mdl-js-button mdl-button--icon" for="text8">
+                       <i class="material-icons">search</i>
+                    </label>
+                    <div class="mdl-textfield__expandable-holder">
+                       <input class="mdl-textfield__input" type="text" id="text8">
+                          <label class="mdl-textfield__label" for="sample-expandable">Expandable Input</label>
+                    </div>
+                 </div>
+               </form>
+   </div>
+   <div class="settings item"><i class="material-icons">settings</i></div>
+  <div class="user-nav item">Sanjath Sulkunte
+    <button id="user-actionsr-right"
+        class="mdl-button mdl-js-button mdl-button--icon">
+        <i class="material-icons">more_vert</i>
+    </button>
+
+<ul class="mdl-menu mdl-menu--bottom-right mdl-js-menu mdl-js-ripple-effect"
+    for="user-actionsr-right">
+  <li class="mdl-menu__item">Some Action</li>
+  <li class="mdl-menu__item">Another Action</li>
+  <li disabled class="mdl-menu__item">Disabled Action</li>
+  <li class="mdl-menu__item">Yet Another Action</li>
+</ul> </div>
+  </div>
+          </div>
+  </header>
+      <!--  <div class="mdl-layout__drawer">
+           <span class="mdl-layout-title">HTML5 Tutorial</span>
+           <nav class="mdl-navigation">
+              <a class="mdl-navigation__link" href="">Home</a>
+              <a class="mdl-navigation__link" href="">About</a>
+           </nav>
+        </div>-->
+  <div class="mdl-layout__content">
+           <div class="page-content">Hello Schedular</div>
+  </div>
+
+
+  <footer class="mdl-mini-footer">
+    <div class="mdl-mini-footer__left-section">
+      <div class="mdl-logo">Title</div>
+      <ul class="mdl-mini-footer__link-list">
+        <li><a href="#">Help</a></li>
+        <li><a href="#">Privacy & Terms</a></li>
+      </ul>
+    </div>
+  </footer>
 
     <script type="text/javascript" src="./assets/daypilot-all.min.js"></script>
     <script type="text/javascript" src="./node_modules/material-design-lite/material.min.js"></script>
     <script type="text/javascript" src="./babel_script.js"></script>
-  </head>
-  <body>
-    Hello There
   </body>
 </html>
