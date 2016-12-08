@@ -5,7 +5,10 @@
   <title>Scheduler Prototype</title>
   <link rel="stylesheet" href="./node_modules/material-design-lite/material.min.css">
   <link rel="stylesheet" href="https://fonts.googleapis.com/icon?family=Material+Icons">
+  <link type="text/css" rel="stylesheet" href="./assets/themes/scheduler_8.css" />
+   <link type="text/css" rel="stylesheet" href="./assets/themes/areas.css" />
   <link rel="stylesheet" href="./style.css">
+
 </head>
 <body>
   <div class="mdl-layout mdl-js-layout mdl-layout--fixed-header">
@@ -55,9 +58,66 @@
 <a class="mdl-navigation__link" href="">About</a>
 </nav>
 </div>-->
-<div class="mdl-layout__content">
-  <div class="page-content">Hello Schedular</div>
+
+
+
+<div class="mdl-layout mdl-layout__content mdl-pagewrap">
+<div class="features-grid mdl-grid">
+<div class="mdl-cell mdl-cell--6-col">
+<button class="mdl-button mdl-js-button mdl-button--raised mdl-js-ripple-effect" id="toggle-sidebar">
+  <i class="material-icons">menu</i>
+</button>
+<div class="calender-buttons">
+  <button class="mdl-button mdl-js-button mdl-button--raised mdl-js-ripple-effect calendar-prevnext" data-direction="previous">
+  <i class="material-icons">navigate_before</i>
+  </button>
+  <button class="mdl-button mdl-js-button mdl-button--raised mdl-js-ripple-effect calendar-prevnext" data-direction="todays">
+<i class="material-icons">stop</i>
+  </button>
+  <button class="mdl-button mdl-js-button mdl-button--raised mdl-js-ripple-effect calendar-prevnext" data-direction="next">
+  <i class="material-icons">navigate_next</i>
+  </button>
 </div>
+
+
+
+
+  <div class="mdl-textfield mdl-js-textfield mdl-textfield--floating-label getmdl-select getmdl-select__fix-height">
+           <input class="mdl-textfield__input" type="text" id="timeline-dropdown" name="timeline-dropdown" value="Days" readonly tabIndex="-1">
+           <label for="timeline-dropdown">
+                         <i class="mdl-icon-toggle__label material-icons">keyboard_arrow_down</i>
+                     </label>
+                     <label for="timeline-dropdown" class="mdl-textfield__label">Timeline</label>
+           <ul for="timeline-dropdown" class="mdl-menu mdl-menu--bottom-left mdl-js-menu">
+               <li class="mdl-menu__item" data-val="Days">Days</li>
+               <li class="mdl-menu__item" data-val="Weeks">Weeks</li>
+               <li class="mdl-menu__item" data-val="Month">Month</li>
+           </ul>
+       </div>
+       <div class="ui icon buttons">
+           <a class="ui button" id="calendar-startDate">
+               <i class="calendar icon"></i>
+           </a>
+       </div>
+
+
+
+
+              </div>
+
+
+
+              <div class="mdl-cell mdl-cell--6-col">
+
+              </div>
+  </div>
+  <div id="calendar-container">
+        <div id="dp"></div>
+    </div>
+</div>
+
+
+
 
 
 <footer class="mdl-mini-footer clearfix">
