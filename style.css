@@ -70,4 +70,7 @@ button.mdl-button{min-width: 40px;padding: 0 10px;}
     padding-top: 12px;
     display: flex;
     margin-left: 20px;
+
+#calendar-container {
+  margin-top: 160px;
 }
