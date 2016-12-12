@@ -26,6 +26,12 @@ dp.separators = [
     { color: "red", location: new DayPilot.Date(),  width:2 }
 ];
 
+dp.heightSpec = "Max";
+dp.height = 400;
+dp.width = '95%';
+
+
+
 dp.onBeforeCellRender = function(args) {
 //get today line
 
@@ -169,7 +175,7 @@ dp.bubble = new DayPilot.Bubble({
 // header columns
 dp.rowHeaderColumns = [{ title: 'Name' }];
 dp.treeEnabled = false;
-   dp.resources = [
+dp.resources = [
 
                 { name : "Resource 1", id : "r1" },
                 { name : "Resource 2", id : "r2" },
@@ -208,6 +214,39 @@ dp.treeEnabled = false;
                    tags: { bookingType: 'schedule',  taskType: 1041 } // custom event property
                }];
 
+
+               dp.contextMenu = new DayPilot.Menu({
+                   items: [
+                       { text: "Edit", onclick: function() {} },
+
+                       { text: "Delete", onclick: function() { var res = confirm("Are you sure want to delete "); if(res )dp.events.remove(this.source); } },
+                       { text: "Copy", onclick: function() { copied = this.source;} },
+                       { text: "Select", onclick: function() { dp.multiselect.add(this.source); } },
+                       { text: "-"},
+                       { text: "Reassign to", items: dp.resources.map(res => ({ text: res.name }) )}
+                   ]
+               });
+
+               dp.contextMenuSelection = new DayPilot.Menu({ items: [
+                 {
+                  text:"Paste", onclick: function() {
+                   if (!copied) { alert('You need to copy an event first.'); return; }
+                   var selection = this.source;
+                   var duration = copied.end().getTime() - copied.start().getTime(); // milliseconds
+                   var newEvent = new DayPilot.Event({
+                     start: selection.start,
+                     end: selection.start.addMilliseconds(duration),
+                     text: copied.text(),
+                     resource: selection.resource,
+                     id: DayPilot.guid(),
+                     total: copied.data.total,
+                     tags: copied.data.tags,  // generate random id
+                   });
+                     dp.events.add(newEvent);
+                   }
+                 }
+                 ]
+               });
 
    dp.init();
 

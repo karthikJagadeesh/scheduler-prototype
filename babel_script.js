@@ -21,6 +21,10 @@ dp.scale = "Day";
 dp.timeHeaders = [{ groupBy: "Month", format: "MMM yyyy" }, { groupBy: "Week" }, { groupBy: "Cell", format: "ddd d" }];
 dp.separators = [{ color: "red", location: new DayPilot.Date(), width: 2 }];
 
+dp.heightSpec = "Max";
+dp.height = 400;
+dp.width = '95%';
+
 dp.onBeforeCellRender = function (args) {
     //get today line
 
@@ -172,6 +176,38 @@ dp.events.list = [{
     total: 13,
     tags: { bookingType: 'schedule', taskType: 1041 } // custom event property
 }];
+
+dp.contextMenu = new DayPilot.Menu({
+    items: [{ text: "Edit", onclick: function onclick() {} }, { text: "Delete", onclick: function onclick() {
+            var res = confirm("Are you sure want to delete ");if (res) dp.events.remove(this.source);
+        } }, { text: "Copy", onclick: function onclick() {
+            copied = this.source;
+        } }, { text: "Select", onclick: function onclick() {
+            dp.multiselect.add(this.source);
+        } }, { text: "-" }, { text: "Reassign to", items: dp.resources.map(function (res) {
+            return { text: res.name };
+        }) }]
+});
+
+dp.contextMenuSelection = new DayPilot.Menu({ items: [{
+        text: "Paste", onclick: function onclick() {
+            if (!copied) {
+                alert('You need to copy an event first.');return;
+            }
+            var selection = this.source;
+            var duration = copied.end().getTime() - copied.start().getTime(); // milliseconds
+            var newEvent = new DayPilot.Event({
+                start: selection.start,
+                end: selection.start.addMilliseconds(duration),
+                text: copied.text(),
+                resource: selection.resource,
+                id: DayPilot.guid(),
+                total: copied.data.total,
+                tags: copied.data.tags });
+            dp.events.add(newEvent);
+        }
+    }]
+});
 
 dp.init();
 

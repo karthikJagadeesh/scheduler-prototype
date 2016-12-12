@@ -102,4 +102,13 @@ button.mdl-button.mdl-button--raised{min-width: 40px;padding: 0 10px;}
     margin-left: 20px;
 }
 
+<<<<<<< Updated upstream
 .scheduler_default_event {}
+=======
+#calendar-container {
+    margin-top: 0px;
+}
+#dp {
+  margin: 0 auto;
+}
+>>>>>>> Stashed changes
