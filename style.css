@@ -126,3 +126,8 @@ footer.mdl-mini-footer {
 #calendar-container {
     margin-top: 0px;
 }
+#dp {
+  overflow-y: scroll;
+  min-height: 420px;
+  max-height: 420px;
+}
