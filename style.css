@@ -1,32 +1,13 @@
-html, body {
-    padding: 0;
-    margin: 0;
-}
-
-a {
-    color: #009fda;
-    text-decoration: none;
-}
-
-.mdl-layout__header {
-    background-color: #445978;
-    box-shadow: none;
-    min-height: 52px;
-}
-
-.mdl-layout__header-row {
-    padding: 0 15px;
-    height: 52px;
-}
-
-.mdl-layout__header-row .mdl-navigation__link {
-    position: relative;
+html,body{padding:0;margin:0;}
+a{color: #009fda;  text-decoration: none;}
+.mdl-layout__header{background-color: #445978;box-shadow: none;min-height:52px;}
+.mdl-layout__header-row{padding: 0 15px;height:52px;}
+.mdl-layout__header-row .mdl-navigation__link {position: relative;
     display: block;
     color: #fff;
     line-height: 24px;
     padding: 0.78571em 0.95em;
 }
-
 .mdl-navigation a:before, div.item:before {
     position: absolute;
     content: '';
@@ -36,86 +17,84 @@ a {
     height: 100%;
     background: linear-gradient(rgba(0, 0, 0, 0.05) 0%, rgba(0, 0, 0, 0.1) 50%, rgba(0, 0, 0, 0.05) 100%);
 }
+.mdl-navigation a:before,  div.item:before{background: linear-gradient(rgba(255, 255, 255, 0.03) 0%, rgba(255, 255, 255, 0.1) 50%, rgba(255, 255, 255, 0.03) 100%);}
+.item{  position:relative;padding: 0.78571em 0.95em; }
+ div.item:before{left:0px;}
+.mdl-layout.mdl-pagewrap{top:52px;}
+button.mdl-button.mdl-button--raised{min-width: 40px;padding: 0 10px;}
+.calender-buttons{display: inline-block;}
 
-.mdl-navigation a:before, div.item:before {
-    background: linear-gradient(rgba(255, 255, 255, 0.03) 0%, rgba(255, 255, 255, 0.1) 50%, rgba(255, 255, 255, 0.03) 100%);
+.mdl-checkbox.is-focused{box-shadow:none !important;background-color:rgba(0,0,0,.1)}
+.mdl-menu__item{    height: 34px;
+    line-height: 34px;    border-left: 5px solid #fff;}
+  .mdl-menu__item:hover  {border-left: 5px solid #717171;
+    background: #EFEFEF none;
+    color: #000;}
+  .bubble-class{padding:12px;}
+
+  .scheduler_8_event_move_left,.scheduler_8_event_move_right {
+    box-sizing: border-box;
+    padding: 1px;
+    background: -webkit-gradient(linear, left top, left bottom, from(#000000), to(#333333));
+    background: -webkit-linear-gradient(top, #000000 0%, #333333);
+    background: -moz-linear-gradient(top, #000000 0%, #333333);
+    background: -ms-linear-gradient(top, #000000 0%, #333333);
+    background: -o-linear-gradient(top, #000000 0%, #eeeeee);
+    background: linear-gradient(top, #000000 0%, #333333);
+    filter: progid:DXImageTransform.Microsoft.Gradient(startColorStr="#000000", endColorStr="#333333");
+    margin-top: -29px;
+    margin-left: -8px;
+    border-radius: 4px;
+    width: 110px !important;
+    text-align: center;
+    padding-top: 6px;
+    color: #FFF;
+    font-size: 11px;
+    height: 26px !important;
+    z-index: 9999999;
 }
-
-.item {
-    position: relative;
-    padding: 0.78571em 0.95em;
+ .cellSelectionMenu {
+   position: absolute;
+     right: 0;
+     height: inherit;
+     z-index: 99;
+     cursor: pointer;
+     top: 0px;
+     color: #393939;
 }
+.cellSelectionMenu:hover{background: #eee;}
 
-div.item:before {
-    left: 0px;
+.cellSelectionMenu i {
+    display: table-cell;
+    vertical-align: middle;
+    height: inherit;
+  
 }
-
-.mdl-layout.mdl-pagewrap {
-    top: 52px;
-}
-
-button.mdl-button {
-    min-width: 40px;
-    padding: 0 10px;
-}
-
-.calender-buttons {
-    display: inline-block;
-}
-
-
-/* mdl select dropdown css */
-
-.getmdl-select .mdl-icon-toggle__label {
-    float: right;
-    margin-top: -30px;
-    color: rgba(0, 0, 0, 0.4);
-}
-
-.getmdl-select.is-focused .mdl-icon-toggle__label {
-    color: #3f51b5;
-}
-
-.getmdl-select .mdl-menu__container {
-    width: 100% !important;
-    overflow-y: auto;
-    overflow-x: hidden;
-}
-
-.getmdl-select .mdl-menu__container .mdl-menu .mdl-menu__item {
-    font-size: 16px;
-}
-
-.getmdl-select__fullwidth .mdl-menu {
-    width: 100%;
-}
-
-.getmdl-select__fix-height .mdl-menu__container {
-    max-height: 300px !important;
-}
-
-.mdl-checkbox.is-focused {
-    box-shadow: none !important;
-    background-color: rgba(0, 0, 0, .1)
-}
-
-footer.mdl-mini-footer {
-    position: fixed;
-    background-color: #f0f0f0;
-    color: #000;
+ footer.mdl-mini-footer{position: fixed;background-color: #f0f0f0;color: #000;
     left: 0;
     right: 0;
     bottom: 0;
-    padding: 12px 15px;
-}
-
+    padding: 12px 15px;}
 
 /* custom css  */
-
+.scheduler_default_timeheadercol_inner,.scheduler_default_timeheadergroup_inner,.scheduler_default_timeheader_float,
+.scheduler_default_rowheader_inner,.scheduler_default_columnheader_cell_inner{align-items: center;
+    display: flex;
+    justify-content: center}
+.unscheduled-booking,.booking-numbers{    font-size: 12px;
+  text-align: center;
+      line-height: 18px;
+      height: 18px !important;
+      border-bottom: 1px solid #eee;
+      position: absolute;z-index:1;
+      width: 100%;}
 .scheduler_default_timeheadercol.firm-holiday {
     background-color: #ffff99;
 }
-
+.booking-numbers span, .unscheduled-booking span, .booking-numbers, .booking-bar {
+    display: block;text-align: center;    border-right: 1px solid #ccc;
+}
+.scheduler_default_event_bar_inner {background-color:transparant !important;}
 .firm-holiday:before {
     content: "Holiday";
     padding-top: 12px;
@@ -123,11 +102,4 @@ footer.mdl-mini-footer {
     margin-left: 20px;
 }
 
-#calendar-container {
-    margin-top: 0px;
-}
-#dp {
-  overflow-y: scroll;
-  min-height: 420px;
-  max-height: 420px;
-}
+.scheduler_default_event {}

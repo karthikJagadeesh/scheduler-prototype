@@ -1,222 +1,223 @@
-const dayPilot = new DayPilot.Scheduler('dp')
-dayPilot.cssClassPrefix = "dp"
-dayPilot.clipBoard = null
 
-// resources related  -------------------------------------------------------------
-dayPilot.treeEnabled = true
-const resources = dayPilot.resources = [
-    {
-        name: "Task 1",
-        id: "task1",
-        expanded: true,
-        children: [
-            {
-                name: "Sulkunte, Sanjath Me",
-                id: "sanjath"
-            }, {
-                name: "Macclean, MaxJ",
-                id: "maxj"
-            }, {
-                name: "Baily, Tom",
-                id: "tom"
-            }
-        ]
-    }, {
-        name: "Task 2",
-        id: "task2",
-        expanded: true,
-        children: [
-            {
-                name: "Fallon, Elias ",
-                id: "elias"
-            }, {
-                name: "Hammer, Judy",
-                id: "judy"
-            }, {
-                name: "James, Jimmy",
-                id: "jimmy"
-            }
-        ]
-    }
-]
-//-----------------------------------------------------------------------------------------
-
-//initial headers and rows-------------
-dayPilot.startDate = new DayPilot.Date().firstDayOfYear()
-dayPilot.days = 400
-
-dayPilot.timeHeaders = [
-    {
-        groupBy: "Month",
-        format: "MMM yyyy"
-    }, {
-        groupBy: "Cell",
-        format: "ddd d"
-    }
-]
-dayPilot.scale = "Day"
-
-dayPilot.separators = [
-    {
-        color: "red",
-        location: new DayPilot.Date()
-    }
+var moreThan = 0;
+var copied = null;
+var bookingObj = {};
+var showGrid = 'numbers';
+var weekdays = ['sun', 'mon', 'tue', 'wed', 'thu', 'fri', 'sat'];
+var resources = [];
+var bookingType = '';
+var dp = new DayPilot.Scheduler("dp");
+dp.theme = "scheduler_8";
+//dp.cssClassPrefix = "scheduler_blue";
+//behaviour & appearance
+dp.cellWidth = 60;
+dp.eventHeight = 50;
+dp.headerHeight = 30;
+dp.startDate = "2016-12-01"; // or just dp.startDate = "2013-03-25";
+dp.days = 900;
+dp.cellDuration = 8; // one day
+dp.scale = "Day";
+dp.timeHeaders = [
+  {groupBy: "Month",  format: "MMM yyyy"},
+  {groupBy: "Week" },
+ { groupBy: "Cell",format: "ddd d"}
+];
+dp.separators = [
+    { color: "red", location: new DayPilot.Date(),  width:2 }
 ];
 
-//-------------------------------------------------------------
+dp.onBeforeCellRender = function(args) {
+//get today line
 
-//predefined events --------------------------------
-dayPilot.events.list = [
-    {
-        start: "2016-01-04",
-        end: "2016-01-09",
-        id: "1",
-        resource: "maxj",
-        text: "1's,A Stitch, 1041, 40 ",
-        //total: 1, //no of work hours
-        barColor: "#9a0"
+  if (args.cell.start <= DayPilot.Date.today() && DayPilot.Date.today() < args.cell.end) {
+      args.cell.backColor = "#ffcccc";
+  }
+
+    var firmAvaiblehrs = 8;
+    var weekDay = weekdays[args.cell.start.getDayOfWeek()];
+
+
+
+    // utilization color
+    var utilization = args.cell.utilization("total");
+
+    var visibleUtilization = utilization > moreThan;
+
+    // cell bar color
+    var bgColor = '';
+    var utilizationText = '';
+    var utilizationHrs = 0;
+    if (utilization > firmAvaiblehrs) {
+        bgColor = '#c0504d';
+        utilizationHrs = utilization - firmAvaiblehrs;
+        utilizationText = 'over';
+    } else if (utilization == firmAvaiblehrs) {
+        bgColor = '#9bbb59;';
+        utilizationText = 'ok';
+        utilizationHrs = firmAvaiblehrs;
+    } else {
+        bgColor = '#4F81BD;';
+        utilizationText = 'under';
+        utilizationHrs = firmAvaiblehrs - utilization;
     }
-];
 
-//-------------------------------------------------
+    firmAvaiblehrs = firmAvaiblehrs > 0 ? firmAvaiblehrs : '-';
+
+    // showing numbers only
+    if (showGrid == 'numbers' && visibleUtilization == true) {
+        args.cell.html = "<div class='booking-bg booking-numbers' style='background-color: " + bgColor + ";'><span class='utilization-span'>" + utilizationHrs + "hr " + utilizationText + "</span></div>";
+    } else if (showGrid == 'numbers' && visibleUtilization == false) {
+        args.cell.html = "<div class='booking-bg unscheduled-booking'><span>"+firmAvaiblehrs+"</span></div>";
+    }
+    // showing bars only
+    /*if (showGrid == 'bar' && visibleUtilization == true) {
+        args.cell.html = "<div class='booking-bg booking-bar' style='background-color: " + bgColor + ";'><span class='utilization-span'>" + utilizationHrs + "hr " + utilizationText + "</span></div>";
+    } else if (showGrid == 'bar' && visibleUtilization == false) {
+        args.cell.html = "<div class='booking-bg booking-bar unscheduled-booking'></div>";
+    }
+    // disable
+    if (showGrid == 'none' && visibleUtilization == true) {
+        args.cell.html = "<div class='booking-bg booking-disable' style='background-color: " + bgColor + ";'><span class='utilization-span'>" + utilizationHrs + "hr " + utilizationText + "</span></div>";
+    } else if (showGrid == 'none' && visibleUtilization == false) {
+        args.cell.html = "<div class='booking-bg booking-disable unscheduled-booking'></div>";
+    }*/
+    // for weekends
+    if (dp.scale == "Day" && (args.cell.start.getDayOfWeek() === 0 || args.cell.start.getDayOfWeek() === 6)) {
+        args.cell.backColor = "#FCFBF8";
+    }
 
 
 
-//on click and drag to create a new event------------------------
-dayPilot.onTimeRangeSelected = args => {
-  console.log(args)
-    let modal = new DayPilot.Modal()
-    modal.top = 160
-    modal.width = 300
-    modal.opacity = 70
-    modal.border = "2px solid rgba(0,0,0,0.2)"
-    modal.zIndex = 100
-    modal.showHtml()
 
 
-    const name = document.querySelector("#event-name").value
 
-    const e = new DayPilot.Event({
+
+
+
+};
+
+// adding holidays to the caleneder beore loading
+
+dp.onBeforeTimeHeaderRender = function(args) {
+
+		var firmHolidays = [
+			{ startDate: '2017-03-25T00:00:00', endDate:'2017-03-26T00:00:00', title: 'Good Friday'},
+			{ startDate: '2017-01-26T00:00:00', endDate:'2017-01-27T00:00:00', title: 'Republic Day'},
+			{ startDate: '2017-01-05-01T00:00:00', endDate:'2017-05-02T00:00:00', title: 'Worker Day'},
+			{ startDate: '2017-08-15T00:00:00', endDate:'2017-08-16T00:00:00', title: 'Independence Day'},
+			{ startDate: '2017-09-05T00:00:00', endDate:'2017-09-06T00:00:00', title: 'Teachers Day'},
+		];
+		for(var i=0; i< firmHolidays.length; i++ ){
+		   if (args.header.start == firmHolidays[i].startDate && args.header.end  ==  firmHolidays[i].endDate ) {
+				args.header.cssClass = "firm-holiday";
+				args.header.toolTip =  firmHolidays[i].title +" " + args.header.toolTip;
+		    }
+		}
+};
+
+// event creating
+
+dp.onTimeRangeSelecting = function(args) {
+
+         args.right.enabled = true;
+         args.left.enabled = true;
+         args.allowed = true;
+
+};
+
+dp.onTimeRangeSelected = function (args) {
+
+//dp.durationBarVisible = true;
+//var name = prompt("New event name:", "Event");
+var el = document.querySelector('.scheduler_8_shadow');
+  var elChild = document.createElement('div');
+   elChild.className = 'cellSelectionMenu';
+   el.prepend(elChild);
+   var el2 = document.querySelector('.cellSelectionMenu');
+   el2.innerHTML = "<i class='material-icons'>more_vert</i>";
+
+    // dp.clearSelection();
+  //if (!name) return;
+  var e = new DayPilot.Event({
       start: args.start,
       end: args.end,
       id: DayPilot.guid(),
       resource: args.resource,
-      text: name
-    })
-
-    dayPilot.events.add(e)
-    dayPilot.message("Created")
-
-}
-//------------------------
+    //  text: name
+  });
+  //dp.events.add(e);
+  //dp.message("Created");
+};
 
 
-//right click on an event-------------------------------------------
-dayPilot.contextMenu = new DayPilot.Menu({
-  items: [
-    {
-      text: "Edit",
-      onclick: function() {
+dp.dynamicEventRenderingCacheSweeping = true;
+dp.eventMovingStartEndEnabled = false;
+dp.eventResizingStartEndEnabled = true;
+dp.timeRangeSelectingStartEndEnabled = false;
 
-      }
-    },
-    {
-      text: "Delete",
-      onclick: function() {
-        const response = confirm("Are you sure you want to delete?")
-        if (response)
-          dayPilot.events.remove(this.source)
-      }
-    },
-    {
-      text: "Copy",
-      onclick: function() {
-        dayPilot.clipBoard = this.source
-      }
-    },
-    {
-      text: "Select",
-      onclick: function() {
-        dayPilot.multiselect.add(this.source)
-      }
-    },
-    {
-      text: "Re-Assign To",
-      items: resources[0].children
+// see also DayPilot.Event.data.staticBubbleHTML property
+dp.bubble = new DayPilot.Bubble({
+    onLoad: function(args) {
+        var ev = args.source, parentElement;
+        var noDaysBooked = new DayPilot.Date(ev.data.end).getDay() - new DayPilot.Date(ev.data.start).getDay();
+        if (noDaysBooked == 0) noDaysBooked = 1;
+        var bookedHrs = ev.data.total;
+        args.html = '<div class="bubble-class"> '+ev.text()+ ' '+' : '+ bookedHrs +'  hrs for  '+ noDaysBooked +' day </div>';
     }
-  ]
-})
-//------------------------------------------------------
+});
 
-// right click on empty block---------------------------
-dayPilot.contextMenuSelection = new DayPilot.Menu({
-  items: [
-    {
-      text: "paste",
-      onclick: function() {
-        if (!dayPilot.clipBoard)
-          alert("Nothing copied to paste")
+// header columns
+dp.rowHeaderColumns = [{ title: 'Name' }];
+dp.treeEnabled = false;
+   dp.resources = [
 
-        const selection = this.source
-        const { clipBoard } = dayPilot
-        const duration = clipBoard.end().getTime() - clipBoard.start().getTime()
-
-        const newEvent = new DayPilot.Event({
-          start: selection.start,
-          end: selection.start.addMilliseconds(duration),
-          text: clipBoard.text(),
-          resource: selection.resource,
-          id: DayPilot.guid()
-        })
-
-        dayPilot.events.add(newEvent)
-        dayPilot.clipBoard = null
-      }
-    }
-  ]
-})
-//--------------------------------------------------------
-
-// let modal = new DayPilot.Modal()
-// modal.top = 160
-// modal.width = 300
-// modal.opacity = 70
-// modal.border = "2px solid rgba(0,0,0,0.2)"
-// modal.zIndex = 100
-// modal.showHtml(`
-//   <div>Hello</div>
-//   <div>there</div>
-//   `)
-
-// dayPilot.bubble = new DayPilot.Bubble({
-//
-//   }
-// })
-
-dayPilot.cellWidth = 50
-dayPilot.headerHeight = 40
-dayPilot.rowHeight = 40
-dayPilot.eventHeight = 40
+                { name : "Resource 1", id : "r1" },
+                { name : "Resource 2", id : "r2" },
+                { name: "Resource 3", id: "r3" },
+                { name: "Resource 4", id: "r4" },
+                { name : "Resource 5", id : "r5" },
+                { name : "Resource 6", id : "r6" }
 
 
-// function gridCalendarHeight() {
-//   var calendarContainer = document.querySelector('#calendar-container');
-//   var footer = document.querySelector('.footer')
-//   var windowHeight = window.innerHeight;
-//
-//   var getOffsetTop = function(el) {
-//     return el.getBoundingClientRect().top + window.scrollY;
-//   };
-//
-//   var totalHeight = calendarContainer.style.height +
-//                     getOffsetTop(calendarContainer) +
-//                     footer.style.height;
-//
-//   if (totalHeight >= windowHeight) {
-//     dp.heightSpec = 'Fixed';
-//     dp.height = windowHeight - getOffsetTop(calendarContainer) - footer.style.height - 80;
-//     dp.update();
-//   }
-// }
+               ];
+ dp.events.list = [{
+                   start: "2016-12-04",
+                   end: "2016-12-09",
+                   id: "1",
+                   resource: "r1",
+                   text: "2's,A Stitch In Time's, 1040, 40 ",
+                   total: 8,
 
-dayPilot.init()
+                	tags: { bookingType: 'schedule',  taskType: 1040 } // custom event property
+               }, {
+                   start: "2016-12-04",
+                   end: "2016-12-09",
+                   id: "2",
+                   resource: "r2",
+                   text: "1's,A Stitch, 1041, 40 ",
+                   total: 13,
+                   tags: { bookingType: 'schedule',  taskType: 1041 } // custom event property
+               },
+               {
+                   start: "2016-12-10",
+                   end: "2016-12-15",
+                   id: "3",
+                   resource: "r2",
+                   text: "1's,A Stitch, 1041, 40 ",
+                   total: 13,
+                   tags: { bookingType: 'schedule',  taskType: 1041 } // custom event property
+               }];
+
+
+   dp.init();
+
+/*   // height of grid container as per window and list of resources
+   function gridCalendarHeight() {
+       var totalHeight = $("#calendar-container").height() + $("#calendar-container").offset().top + $(".footer").height();
+       if(  totalHeight >= $(window).height() ){
+           dp.heightSpec = "Fixed";
+           dp.height = $(window).height() - $("#calendar-container").offset().top  - $(".footer").height() - 80;
+           dp.update();
+       }
+   }
+   gridCalendarHeight();*/
