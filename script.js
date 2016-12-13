@@ -85,65 +85,62 @@
 
 
 
-  dp.onBeforeCellRender = function(args) {
-  //get today line
-
+  dp.onBeforeCellRender = args => {
+    //highlight today's column
     if (args.cell.start <= DayPilot.Date.today() && DayPilot.Date.today() < args.cell.end) {
-        args.cell.backColor = "#ffcccc";
+        args.cell.backColor = "#FCB941";
     }
 
-      var firmAvaiblehrs = 8;
-      var weekDay = weekdays[args.cell.start.getDayOfWeek()];
+    let firmAvailableHours = 8;
+    // var weekDay = weekdays[args.cell.start.getDayOfWeek()];
+    console.log(args.cell.utilization('total'))
+    // utilization color
+    var utilization = args.cell.utilization("total");
 
+    var visibleUtilization = utilization > 0
 
+    // cell bar color
+    var bgColor = '';
+    var utilizationText = '';
+    var utilizationHrs = 0;
+    if (utilization > firmAvailableHours) {
+        bgColor = '#c0504d';
+        utilizationHrs = utilization - firmAvailableHours;
+        utilizationText = 'over';
+    } else if (utilization == firmAvailableHours) {
+        bgColor = '#9bbb59;';
+        utilizationText = 'ok';
+        utilizationHrs = firmAvailableHours;
+    } else {
+        bgColor = '#4F81BD;';
+        utilizationText = 'under';
+        utilizationHrs = firmAvailableHours - utilization;
+    }
 
-      // utilization color
-      var utilization = args.cell.utilization("total");
+    firmAvailableHours = firmAvailableHours > 0 ? firmAvailableHours : '-';
 
-      var visibleUtilization = utilization > 0
-
-      // cell bar color
-      var bgColor = '';
-      var utilizationText = '';
-      var utilizationHrs = 0;
-      if (utilization > firmAvaiblehrs) {
-          bgColor = '#c0504d';
-          utilizationHrs = utilization - firmAvaiblehrs;
-          utilizationText = 'over';
-      } else if (utilization == firmAvaiblehrs) {
-          bgColor = '#9bbb59;';
-          utilizationText = 'ok';
-          utilizationHrs = firmAvaiblehrs;
-      } else {
-          bgColor = '#4F81BD;';
-          utilizationText = 'under';
-          utilizationHrs = firmAvaiblehrs - utilization;
-      }
-
-      firmAvaiblehrs = firmAvaiblehrs > 0 ? firmAvaiblehrs : '-';
-
-      // showing numbers only
-      if (showGrid == 'numbers' && visibleUtilization == true) {
-          args.cell.html = "<div class='booking-bg booking-numbers' style='background-color: " + bgColor + ";'><span class='utilization-span'>" + utilizationHrs + "hr " + utilizationText + "</span></div>";
-      } else if (showGrid == 'numbers' && visibleUtilization == false) {
-          args.cell.html = "<div class='booking-bg unscheduled-booking'><span>"+firmAvaiblehrs+"</span></div>";
-      }
-      // showing bars only
-      /*if (showGrid == 'bar' && visibleUtilization == true) {
-          args.cell.html = "<div class='booking-bg booking-bar' style='background-color: " + bgColor + ";'><span class='utilization-span'>" + utilizationHrs + "hr " + utilizationText + "</span></div>";
-      } else if (showGrid == 'bar' && visibleUtilization == false) {
-          args.cell.html = "<div class='booking-bg booking-bar unscheduled-booking'></div>";
-      }
-      // disable
-      if (showGrid == 'none' && visibleUtilization == true) {
-          args.cell.html = "<div class='booking-bg booking-disable' style='background-color: " + bgColor + ";'><span class='utilization-span'>" + utilizationHrs + "hr " + utilizationText + "</span></div>";
-      } else if (showGrid == 'none' && visibleUtilization == false) {
-          args.cell.html = "<div class='booking-bg booking-disable unscheduled-booking'></div>";
-      }*/
-      // for weekends
-      if (dp.scale == "Day" && (args.cell.start.getDayOfWeek() === 0 || args.cell.start.getDayOfWeek() === 6)) {
-          args.cell.backColor = "#FCFBF8";
-      }
+    // showing numbers only
+    if (showGrid == 'numbers' && visibleUtilization == true) {
+        args.cell.html = "<div class='booking-bg booking-numbers' style='background-color: " + bgColor + ";'><span class='utilization-span'>" + utilizationHrs + "hr " + utilizationText + "</span></div>";
+    } else if (showGrid == 'numbers' && visibleUtilization == false) {
+        args.cell.html = "<div class='booking-bg unscheduled-booking'><span>"+firmAvailableHours+"</span></div>";
+    }
+    // showing bars only
+    /*if (showGrid == 'bar' && visibleUtilization == true) {
+        args.cell.html = "<div class='booking-bg booking-bar' style='background-color: " + bgColor + ";'><span class='utilization-span'>" + utilizationHrs + "hr " + utilizationText + "</span></div>";
+    } else if (showGrid == 'bar' && visibleUtilization == false) {
+        args.cell.html = "<div class='booking-bg booking-bar unscheduled-booking'></div>";
+    }
+    // disable
+    if (showGrid == 'none' && visibleUtilization == true) {
+        args.cell.html = "<div class='booking-bg booking-disable' style='background-color: " + bgColor + ";'><span class='utilization-span'>" + utilizationHrs + "hr " + utilizationText + "</span></div>";
+    } else if (showGrid == 'none' && visibleUtilization == false) {
+        args.cell.html = "<div class='booking-bg booking-disable unscheduled-booking'></div>";
+    }*/
+    // for weekends
+    if (dp.scale == "Day" && (args.cell.start.getDayOfWeek() === 0 || args.cell.start.getDayOfWeek() === 6)) {
+        args.cell.backColor = "#FCFBF8";
+    }
   };
 
   // adding holidays to the caleneder beore loading

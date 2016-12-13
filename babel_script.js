@@ -70,15 +70,14 @@ document.querySelector('#scroll-today').addEventListener('click', function () {
 });
 
 dp.onBeforeCellRender = function (args) {
-  //get today line
-
+  //highlight today's column
   if (args.cell.start <= DayPilot.Date.today() && DayPilot.Date.today() < args.cell.end) {
-    args.cell.backColor = "#ffcccc";
+    args.cell.backColor = "#FCB941";
   }
 
-  var firmAvaiblehrs = 8;
-  var weekDay = weekdays[args.cell.start.getDayOfWeek()];
-
+  var firmAvailableHours = 8;
+  // var weekDay = weekdays[args.cell.start.getDayOfWeek()];
+  console.log(args.cell.utilization('total'));
   // utilization color
   var utilization = args.cell.utilization("total");
 
@@ -88,27 +87,27 @@ dp.onBeforeCellRender = function (args) {
   var bgColor = '';
   var utilizationText = '';
   var utilizationHrs = 0;
-  if (utilization > firmAvaiblehrs) {
+  if (utilization > firmAvailableHours) {
     bgColor = '#c0504d';
-    utilizationHrs = utilization - firmAvaiblehrs;
+    utilizationHrs = utilization - firmAvailableHours;
     utilizationText = 'over';
-  } else if (utilization == firmAvaiblehrs) {
+  } else if (utilization == firmAvailableHours) {
     bgColor = '#9bbb59;';
     utilizationText = 'ok';
-    utilizationHrs = firmAvaiblehrs;
+    utilizationHrs = firmAvailableHours;
   } else {
     bgColor = '#4F81BD;';
     utilizationText = 'under';
-    utilizationHrs = firmAvaiblehrs - utilization;
+    utilizationHrs = firmAvailableHours - utilization;
   }
 
-  firmAvaiblehrs = firmAvaiblehrs > 0 ? firmAvaiblehrs : '-';
+  firmAvailableHours = firmAvailableHours > 0 ? firmAvailableHours : '-';
 
   // showing numbers only
   if (showGrid == 'numbers' && visibleUtilization == true) {
     args.cell.html = "<div class='booking-bg booking-numbers' style='background-color: " + bgColor + ";'><span class='utilization-span'>" + utilizationHrs + "hr " + utilizationText + "</span></div>";
   } else if (showGrid == 'numbers' && visibleUtilization == false) {
-    args.cell.html = "<div class='booking-bg unscheduled-booking'><span>" + firmAvaiblehrs + "</span></div>";
+    args.cell.html = "<div class='booking-bg unscheduled-booking'><span>" + firmAvailableHours + "</span></div>";
   }
   // showing bars only
   /*if (showGrid == 'bar' && visibleUtilization == true) {

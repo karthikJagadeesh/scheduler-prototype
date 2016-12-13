@@ -3,7 +3,7 @@
 .scheduler_8_timeheadercol,
 .scheduler_8_timeheadergroup
 {
-    font-family: Segoe UI Light,Segoe UI,Arial,Helvetica,Verdana,Sans Serif;
+    font-family: Segoe UI,Arial,Helvetica,Verdana,Sans Serif;
 }
 
 .scheduler_8_main
@@ -69,7 +69,7 @@
 .scheduler_8_rowheader,
 .scheduler_8_corner
 {
-    color: #666;
+    color: #888;
     background: #eee;
 
     -ms-transition: background-color .3s linear;
