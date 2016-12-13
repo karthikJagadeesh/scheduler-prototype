@@ -20,7 +20,8 @@
   },
   "homepage": "https://github.com/karthikJagadeesh/scheduler-prototype#readme",
   "dependencies": {
-    "material-design-lite": "^1.2.1"
+    "material-design-lite": "^1.2.1",
+    "pikaday": "^1.5.1"
   },
   "devDependencies": {
     "babel-cli": "^6.18.0",

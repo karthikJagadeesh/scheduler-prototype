@@ -1,38 +1,98 @@
-html,body{padding:0;margin:0}
-a{color: #009fda;  text-decoration: none;}
-.mdl-layout__header{background-color: #445978;box-shadow: none;min-height:52px;}
-.mdl-layout__header-row{padding: 0 15px;height:52px;}
-.mdl-layout__header-row .mdl-navigation__link {position: relative;
-    display: block;
-    color: #fff;
-    line-height: 24px;
-    padding: 0.78571em 0.95em;
+html,
+body {
+    padding: 0;
+    margin: 0;
+    background: #F5F5F5;
 }
-.mdl-navigation a:before, div.item:before {
+
+a {
+    color: #009fda;
+    text-decoration: none;
+}
+
+.pad15 {
+    padding: 15px !important;
+}
+
+.ripple {
     position: absolute;
-    content: '';
-    top: 0%;
-    right: 0px;
-    width: 1px;
-    height: 100%;
-    background: linear-gradient(rgba(0, 0, 0, 0.05) 0%, rgba(0, 0, 0, 0.1) 50%, rgba(0, 0, 0, 0.05) 100%);
+    background: rgba(0, 0, 0, .15);
+    border-radius: 100%;
+    transform: scale(0);
+    pointer-events: none;
 }
-.mdl-navigation a:before,  div.item:before{background: linear-gradient(rgba(255, 255, 255, 0.03) 0%, rgba(255, 255, 255, 0.1) 50%, rgba(255, 255, 255, 0.03) 100%);}
-.item{  position:relative;padding: 0.78571em 0.95em; }
- div.item:before{left:0px;}
-.mdl-layout.mdl-pagewrap{top:52px;}
-button.mdl-button.mdl-button--raised{min-width: 40px;padding: 0 10px;}
-.calender-buttons{display: inline-block;}
 
-.mdl-checkbox.is-focused{box-shadow:none !important;background-color:rgba(0,0,0,.1)}
-.mdl-menu__item{    height: 34px;
-    line-height: 34px;    border-left: 5px solid #fff;}
-  .mdl-menu__item:hover  {border-left: 5px solid #717171;
-    background: #EFEFEF none;
-    color: #000;}
-  .bubble-class{padding:12px;}
+.ripple.show {
+    animation: ripple .30s ease-out;
+}
 
-  .scheduler_8_event_move_left,.scheduler_8_event_move_right {
+@keyframes ripple {
+    to {
+        transform: scale(2);
+        opacity: 0;
+    }
+}
+
+.ui.dropdown .menu>.item {
+    padding-left: 6px !important;
+    border-left: 6px solid rgba(0, 0, 0, 0);
+}
+
+.ui.dropdown .menu .active.item {
+    border-left: 6px solid #60728C;
+    background: rgba(154, 170, 195, 0.24) !important;
+}
+
+.ui.dropdown .menu>.item:hover {
+    border-left: 6px solid #60728C;
+    background: rgba(154, 170, 195, 0.24) !important;
+}
+
+.ui.dropdown.selection.multiple {
+    min-width: 102.5% !important;
+    margin-left: -30px;
+    border:0;
+}
+
+.ui.labeled.icon.button>.icon,
+.ui.labeled.icon.buttons>.button>.icon,
+.ui.labeled.icon.button,
+.ui.labeled.icon.buttons .button {
+    background: #FFFFFF !important;
+}
+
+.ui.labeled.icon.button>.icon, .ui.labeled.icon.buttons>.button>.icon, .ui.labeled.icon.button, .ui.labeled.icon.buttons .button{
+  border-right: 1px solid rgba(0,0,0,0.08)
+}
+
+#conflictsbtn {
+    min-width: 217px;
+}
+#role-selection{
+  min-width: 97% !important;
+}
+#days-filter{
+  min-width: 150px !important;
+}
+
+button {
+    position: relative;
+    display: block;
+    border: none;
+    outline: none;
+    cursor: pointer;
+    overflow: hidden;
+    user-select: none;
+    border-radius: 2px;
+    background: #FFFFFF !important;
+}
+
+.bubble-class {
+    padding: 12px;
+}
+
+.scheduler_8_event_move_left,
+.scheduler_8_event_move_right {
     box-sizing: border-box;
     padding: 1px;
     background: -webkit-gradient(linear, left top, left bottom, from(#000000), to(#333333));
@@ -41,7 +101,7 @@ button.mdl-button.mdl-button--raised{min-width: 40px;padding: 0 10px;}
     background: -ms-linear-gradient(top, #000000 0%, #333333);
     background: -o-linear-gradient(top, #000000 0%, #eeeeee);
     background: linear-gradient(top, #000000 0%, #333333);
-    filter: progid:DXImageTransform.Microsoft.Gradient(startColorStr="#000000", endColorStr="#333333");
+    filter: progid: DXImageTransform.Microsoft.Gradient(startColorStr="#000000", endColorStr="#333333");
     margin-top: -29px;
     margin-left: -8px;
     border-radius: 4px;
@@ -53,48 +113,79 @@ button.mdl-button.mdl-button--raised{min-width: 40px;padding: 0 10px;}
     height: 26px !important;
     z-index: 9999999;
 }
- .cellSelectionMenu {
-   position: absolute;
-     right: 0;
-     height: inherit;
-     z-index: 99;
-     cursor: pointer;
-     top: 0px;
-     color: #393939;
+
+.cellSelectionMenu {
+    position: absolute;
+    right: 0;
+    height: inherit;
+    z-index: 99;
+    cursor: pointer;
+    top: 0px;
+    color: #393939;
 }
-.cellSelectionMenu:hover{background: #eee;}
+
+.cellSelectionMenu:hover {
+    background: #eee;
+}
 
 .cellSelectionMenu i {
     display: table-cell;
     vertical-align: middle;
     height: inherit;
-
 }
- footer.mdl-mini-footer{position: fixed;background-color: #f0f0f0;color: #000;
+
+footer.mdl-mini-footer {
+    position: fixed;
+    background-color: #f0f0f0;
+    color: #000;
     left: 0;
     right: 0;
     bottom: 0;
-    padding: 12px 15px;}
+    padding: 12px 15px;
+}
+
 
 /* custom css  */
-.scheduler_default_timeheadercol_inner,.scheduler_default_timeheadergroup_inner,.scheduler_default_timeheader_float,
-.scheduler_default_rowheader_inner,.scheduler_default_columnheader_cell_inner{align-items: center;
+
+.scheduler_default_timeheadercol_inner,
+.scheduler_default_timeheadergroup_inner,
+.scheduler_default_timeheader_float,
+.scheduler_default_rowheader_inner,
+.scheduler_default_columnheader_cell_inner {
+    align-items: center;
     display: flex;
-    justify-content: center}
-.unscheduled-booking,.booking-numbers{    font-size: 12px;
-  text-align: center;
-      line-height: 18px;
-      height: 18px !important;
-      border-bottom: 1px solid #eee;
-      position: absolute;z-index:1;
-      width: 100%;}
+    justify-content: center
+}
+
+.unscheduled-booking,
+.booking-numbers {
+    font-size: 12px;
+    text-align: center;
+    line-height: 18px;
+    height: 18px !important;
+    border-bottom: 1px solid #eee;
+    position: absolute;
+    z-index: 1;
+    width: 100%;
+}
+
 .scheduler_default_timeheadercol.firm-holiday {
     background-color: #ffff99;
 }
-.booking-numbers span, .unscheduled-booking span, .booking-numbers, .booking-bar {
-    display: block;text-align: center;    border-right: 1px solid #ccc;
+
+.booking-numbers span,
+.unscheduled-booking span,
+.booking-numbers,
+.booking-bar {
+    display: block;
+    text-align: center;
+    border-right: 1px solid #ccc;
 }
-.scheduler_default_event_bar_inner {background-color:transparant !important;}
+
+.scheduler_default_event_bar_inner {
+    background-color: transparant !important;
+}
+
 .firm-holiday:before {
     content: "Holiday";
     padding-top: 12px;
@@ -102,15 +193,14 @@ button.mdl-button.mdl-button--raised{min-width: 40px;padding: 0 10px;}
     margin-left: 20px;
 }
 
-.features-grid.mdl-grid {
-  margin-left: 18px;
-}
+<<<<<<< Updated upstream .scheduler_default_event {}
 
-.scheduler_default_event {}
-
-#calendar-container {
+=======#calendar-container {
     margin-top: 0px;
 }
+
 #dp {
-  margin: 0 auto;
+    margin: 0 auto;
 }
+
+>>>>>>> Stashed changes

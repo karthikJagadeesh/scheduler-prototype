@@ -28,7 +28,7 @@
 
   dp.heightSpec = "Max";
   dp.height = 400;
-  dp.width = '95%';
+  dp.width = '98%';
 
   //Navigate toolbar Handlers
   // - change Time Headers view to Days, Weeks, Months, Year
@@ -291,5 +291,49 @@
 
      dp.init();
 
+     var picker = new Pikaday({ field: document.getElementById('select-cal') });
+
+
+     $(document).ready(function() {
+         $('.ui.dropdown')
+             .dropdown();
+     });
+
+
+     var addRippleEffect = function(e) {
+         var target = e.target;
+         if (target.tagName.toLowerCase() !== 'button') return false;
+         var rect = target.getBoundingClientRect();
+         var ripple = target.querySelector('.ripple');
+         if (!ripple) {
+             ripple = document.createElement('span');
+             ripple.className = 'ripple';
+             ripple.style.height = ripple.style.width = Math.max(rect.width, rect.height) + 'px';
+             target.appendChild(ripple);
+         }
+         ripple.classList.remove('show');
+         var top = e.pageY - rect.top - ripple.offsetHeight / 2 - document.body.scrollTop;
+         var left = e.pageX - rect.left - ripple.offsetWidth / 2 - document.body.scrollLeft;
+         ripple.style.top = top + 'px';
+         ripple.style.left = left + 'px';
+         ripple.classList.add('show');
+         return false;
+     }
+
+     document.addEventListener('click', addRippleEffect, false);
 
 // })()
+
+
+
+
+/*   // height of grid container as per window and list of resources
+   function gridCalendarHeight() {
+       var totalHeight = $("#calendar-container").height() + $("#calendar-container").offset().top + $(".footer").height();
+       if(  totalHeight >= $(window).height() ){
+           dp.heightSpec = "Fixed";
+           dp.height = $(window).height() - $("#calendar-container").offset().top  - $(".footer").height() - 80;
+           dp.update();
+       }
+   }
+   gridCalendarHeight();*/
