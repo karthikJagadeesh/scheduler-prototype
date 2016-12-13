@@ -1,130 +1,169 @@
 <!DOCTYPE html>
 <html>
+
 <head>
-  <meta charset="utf-8">
-  <title>Scheduler Prototype</title>
-  <link rel="stylesheet" href="./node_modules/material-design-lite/material.min.css">
-  <link rel="stylesheet" href="https://fonts.googleapis.com/icon?family=Material+Icons">
-  <link type="text/css" rel="stylesheet" href="./assets/themes/scheduler_8.css" />
-  <link type="text/css" rel="stylesheet" href="./assets/themes/areas.css" />
-  <link rel="stylesheet" href="./style.css">
-
+    <meta charset="utf-8">
+    <title>Scheduler Prototype</title>
+    <link type="text/css" rel="stylesheet" href="./assets/themes/scheduler_8.css" />
+    <link type="text/css" rel="stylesheet" href="./assets/themes/areas.css" />
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/4.7.0/css/font-awesome.min.css" />
+    <link rel="stylesheet" type="text/css" href="assets/semantic.min.css">
+    <link rel="stylesheet" type="text/css" href="assets/icon.min.css">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/pikaday/1.5.1/css/pikaday.min.css" />
+    <link rel="stylesheet" href="./style.css">
 </head>
+
 <body>
-  <div class="mdl-layout mdl-js-layout mdl-layout--fixed-header">
-    <header class="mdl-layout__header">
-      <div class="mdl-layout__header-row">
-        <span class="mdl-layout-title"><img src="./assets/images/xcm-logo.png"></span>
-        <nav class="mdl-navigation">
-          <a class="mdl-navigation__link" href="">My View</a>
-          <a class="mdl-navigation__link" href="">Reports</a>
-          <a class="mdl-navigation__link" href="">Scheduler</a>
-        </nav>
-        <div class="mdl-layout-spacer"></div>
-        <div class="search item">
-          <form action="#">
-            <div class="mdl-textfield mdl-js-textfield mdl-textfield--expandable">
-              <label class="mdl-button mdl-js-button mdl-button--icon" for="text8">
-                <i class="material-icons">search</i>
-              </label>
-              <div class="mdl-textfield__expandable-holder">
-                <input class="mdl-textfield__input" type="text" id="text8">
-                <label class="mdl-textfield__label" for="sample-expandable">Expandable Input</label>
-              </div>
+    <div class="ui inverted menu" style="margin:0; border-radius:0;background-color: #445978; @*background-color: rgb(68,89,120);*@">
+        <a class="item" style="width:83px"><img src="assets/images/xcm-logo.png" style="width:55px"></a>
+        <a class="item" href="#">My View</a>
+        <a class="item" href="#">Reports</a>
+        <a class="item active" href="#">Scheduler</a>
+        <div class="right menu">
+            <div class="item" style="padding:0;">
+                <div class="ui category search">
+                    <div class="ui icon input" style="height:30px;">
+                        <input class="prompt" type="text" style="width:300px;" placeholder="Search here...">
+                        <i class="search icon"></i>
+                    </div>
+                    <div class="results"></div>
+                </div>
             </div>
-          </form>
+            <div class="item">
+                <a href="#">
+                    <div class="sprite advance_search" title="Advanced Search"></div>
+                </a>
+            </div>
+            <div class="item" id="displayfirmname" style="max-width: 200px;white-space: nowrap;overflow: hidden;color: rgb(247, 178, 51);text-overflow: ellipsis;">
+                XCM Solutions, LLC
+            </div>
+            <div class="item">
+                <a href="#">
+                    <i class="fa fa-cog" aria-hidden="true"></i>
+                </a>
+            </div>
+            <div class="ui dropdown item">
+                Sulkunte, Sanjath <i class="dropdown icon"></i>
+                <div class="menu transition hidden" tabindex="-1">
+                    <a class="item">Profile</a>
+                    <a class="item" id="myCalender">My Calendar</a>
+                    <a class="item" href="#">Log Off</a>
+                </div>
+            </div>
         </div>
-        <div class="settings item"><i class="material-icons">settings</i></div>
-        <div class="user-nav item">Sanjath Sulkunte
-          <button id="user-actionsr-right"
-          class="mdl-button mdl-js-button mdl-button--icon">
-          <i class="material-icons">arrow_drop_down</i>
-        </button>
-
-        <ul class="mdl-menu mdl-menu--bottom-right mdl-js-menu mdl-js-ripple-effect"
-        for="user-actionsr-right">
-        <li class="mdl-menu__item">Profile</li>
-        <li class="mdl-menu__item">My Calendar</li>
-        <li class="mdl-menu__item">Time Validation</li>
-        <li class="mdl-menu__item">Log Off</li>
-      </ul> </div>
     </div>
-  </div>
-</header>
-<!--  <div class="mdl-layout__drawer">
-<span class="mdl-layout-title">HTML5 Tutorial</span>
-<nav class="mdl-navigation">
-<a class="mdl-navigation__link" href="">Home</a>
-<a class="mdl-navigation__link" href="">About</a>
-</nav>
-</div>-->
-
-
-
-  <div class="mdl-layout mdl-layout__content mdl-pagewrap">
-  <div class="features-grid mdl-grid">
-  <div class="mdl-cell mdl-cell--6-col">
-  <button class="mdl-button mdl-js-button mdl-button--raised mdl-js-ripple-effect" id="toggle-sidebar">
-    <i class="material-icons">menu</i>
-  </button>
-  <div class="calender-buttons">
-    <button class="mdl-button mdl-js-button mdl-button--raised mdl-js-ripple-effect calendar-prevnext" id="scroll-back" data-direction="previous">
-    <i class="material-icons">navigate_before</i>
-    </button>
-    <button class="mdl-button mdl-js-button mdl-button--raised mdl-js-ripple-effect calendar-prevnext" id="scroll-today" data-direction="todays">
-  <i class="material-icons">stop</i>
-    </button>
-    <button class="mdl-button mdl-js-button mdl-button--raised mdl-js-ripple-effect calendar-prevnext" id="scroll-next" data-direction="next">
-    <i class="material-icons">navigate_next</i>
-    </button>
-  </div>
-
-
-
-  <button  id="timeline" class="mdl-button mdl-js-button mdl-button--raised mdl-js-ripple-effect">
-    <i class="material-icons">zoom_in</i>
-  </button>
-
-  <ul class="mdl-menu mdl-menu--bottom-left mdl-js-menu mdl-js-ripple-effect"
-    for="timeline">
-    <li class="mdl-menu__item" id="show-days">Days</li>
-    <li class="mdl-menu__item" id="show-weeks">Weeks</li>
-    <li class="mdl-menu__item mdl-menu__item--full-bleed-divider" id="show-months">Months</li>
-    <li class="mdl-menu__item" id="show-this-week">This Week</li>
-  </ul>
-  <button id="caleneder" class="mdl-button mdl-js-button mdl-button--raised mdl-js-ripple-effect">
-    <i class="material-icons">event</i>
-  </button>
-
-
-
-
-              </div>
-
-
-
-              <div class="mdl-cell mdl-cell--6-col">
-
-              </div>
-  </div>
-  <div id="calendar-container">
-        <div id="dp"></div>
+    <div class="ui grid pad15" style="padding-bottom:0 !important">
+        <!-- <div style="padding:15px 15px 0px  !important;display:inline-block;width:292px;"> -->
+        <div class="ui four wide column" style="padding-bottom:0 !important">
+            <div id="role-selection" class="ui floating labeled icon dropdown button">
+                <i class="filter icon"></i>
+                <span class="text">Resource Role</span>
+                <div class="menu">
+                    <div class="item active">
+                        Tax Manager
+                    </div>
+                    <div class="item">
+                        Responsible Person
+                    </div>
+                    <div class="item">
+                        Tax Senior
+                    </div>
+                </div>
+            </div>
+        </div>
+        <!-- <div style="padding:15px 15px 15px 0px !important;display: inline-block;width:1070px"> -->
+        <div class="ui twelve wide column" style="padding-bottom:0 !important">
+            <span>
+              <select name="Select Resource .." multiple="" class="ui search dropdown" >
+                <option value="">Search Resources .. </option>
+                <option value="Resource1">Resource 1</option>
+                <option value="Resource2">Resource 2</option>
+                <option value="Resource3">Resource 3</option>
+                <option value="Resource4">Resource 4</option>
+                <option value="Resource5">Resource 5</option>
+                <option value="Resource6">Resource 6</option>
+                <option value="Resource7">Resource 7</option>
+                <option value="Resource8">Resource 8</option>
+                <option value="Resource9">Resource 9</option>
+                <option value="Resource10">Resource 10</option>
+                <option value="Resource11">Resource 11</option>
+                <option value="Resource12">Resource 12</option>
+                <option value="Resource13">Resource 12</option>
+                <option value="Resource14">Resource 14</option>
+            </select>
+            </span>
+        </div>
     </div>
-</div>
-
-
-
-
-
-<footer class="footer mdl-mini-footer clearfix">
-  <div class="mdl-mini-footer__left-section">
-    <div class="mdl-title">	&copy; <script> document.write(new Date().getFullYear());</script>2016 <a href="http://xcmsolutions.com">XCM Solutions LLC</a>, All rights reserved.</div>
-
-  </div>
-</footer>
-
-<script type="text/javascript" src="./assets/daypilot-all.min.js"></script>
-<script type="text/javascript" src="./node_modules/material-design-lite/material.min.js"></script>
-<script type="text/javascript" src="./babel_script.js"></script>
+    <div class="ui grid pad15" style="padding-top: 0!important">
+        <div class="ui eleven wide column">
+            <div class="ui icon buttons">
+                <button class="ui button"><i class="fa fa-angle-left" aria-hidden="true"></i></button>
+                <button class="ui button"><i class="fa fa-circle" aria-hidden="true"></i></button>
+                <button class="ui button"><i class="fa fa-angle-right" aria-hidden="true"></i></button>
+            </div>
+            <button id="select-cal" class="ui button"><i class="fa fa-calendar" aria-hidden="true"></i></button>
+            <div id="days-filter" class="ui floating labeled icon dropdown button">
+                <i class="filter icon"></i>
+                <span class="text">Days</span>
+                <div class="menu">
+                    <div class="item active">
+                        Days
+                    </div>
+                    <div class="item">
+                        Months
+                    </div>
+                    <div class="item">
+                        Year
+                    </div>
+                    <div class="divider"></div>
+                    <div class="item">
+                        This Week
+                    </div>
+                    <div class="item">
+                        This Month
+                    </div>
+                </div>
+            </div>
+        </div>
+        <div class="ui five wide column">
+            <button class="ui button" style="margin-left:30px">
+                Schedule
+            </button>
+            <div id="conflictsbtn" class="ui floating labeled icon dropdown button">
+                <i class="filter icon"></i>
+                <span class="text">Filter By Conflicts</span>
+                <div class="menu">
+                    <div class="item">
+                        Only Conflicts
+                    </div>
+                    <div class="item">
+                        Availablity & Conflicts
+                    </div>
+                </div>
+            </div>
+            <button class="ui icon button">
+                <i class="fa fa-cog" aria-hidden="true"></i>
+            </button>
+        </div>
+    </div>
+    <div class="">
+        <div id="calendar-container">
+            <div id="dp"></div>
+        </div>
+    </div>
+    <!--     <footer class="footer mdl-mini-footer clearfix">
+        <div class="mdl-mini-footer__left-section">
+            <div class="mdl-title"> &copy;
+                <script>
+                document.write(new Date().getFullYear());
+                </script>2016 <a href="http://xcmsolutions.com">XCM Solutions LLC</a>, All rights reserved.</div>
+        </div>
+    </footer> -->
+    <script type="text/javascript" src="./assets/daypilot-all.min.js"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/jquery/3.1.1/jquery.min.js"></script>
+    <script src="assets/semantic.min.js"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/pikaday/1.5.1/pikaday.js"></script>
+    <script type="text/javascript" src="./babel_script.js"></script>
 </body>
+
 </html>
