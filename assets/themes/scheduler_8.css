@@ -8,7 +8,7 @@
 
 .scheduler_8_main
 {
-    border: 1px solid #999;
+    border: 1px solid rgba(0,0,0,0.2);
     background: #ffffff;
 }
 
@@ -22,7 +22,7 @@
     position:absolute;
     left:0px;
     right: 1px;
-      top: 18px;
+    top: 18px;
     bottom: 1px;
     padding: 4px;
 

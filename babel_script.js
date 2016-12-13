@@ -45,6 +45,30 @@ document.querySelector('#show-months').addEventListener('click', function () {
   dp.update();
 });
 
+//Scroll forward, backward and today
+var scroll = function scroll() {
+  switch (dp.scale) {
+    case 'Day':
+      return dp.scrollTo(dp.getDate(dp.getScrollX()).addDays(arguments.length <= 0 ? undefined : arguments[0]));
+
+    case 'Week':
+      return dp.scrollTo(dp.getDate(dp.getScrollX()).addDays(arguments.length <= 1 ? undefined : arguments[1]));
+
+    case 'Month':
+      return dp.scrollTo(dp.getDate(dp.getScrollX()).addMonths(arguments.length <= 2 ? undefined : arguments[2]));
+  }
+};
+
+document.querySelector('#scroll-next').addEventListener('click', function () {
+  scroll(7, 21, 1);
+});
+document.querySelector('#scroll-back').addEventListener('click', function () {
+  scroll(-7, -21, -1);
+});
+document.querySelector('#scroll-today').addEventListener('click', function () {
+  dp.scrollTo(new DayPilot.Date().getDatePart().addDays(-10));
+});
+
 dp.onBeforeCellRender = function (args) {
   //get today line
 

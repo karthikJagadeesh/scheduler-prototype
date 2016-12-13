@@ -57,6 +57,33 @@
     dp.update()
   })
 
+  //Scroll forward, backward and today
+  const scroll = (...distance) => {
+    switch (dp.scale) {
+      case 'Day':
+        return dp.scrollTo(dp.getDate(dp.getScrollX()).addDays(distance[0]))
+
+      case 'Week':
+        return dp.scrollTo(dp.getDate(dp.getScrollX()).addDays(distance[1]))
+
+      case 'Month':
+        return dp.scrollTo(dp.getDate(dp.getScrollX()).addMonths(distance[2]))
+    }
+  }
+
+  document.querySelector('#scroll-next').addEventListener('click', () => {
+    scroll(7, 21, 1)
+  })
+  document.querySelector('#scroll-back').addEventListener('click', () => {
+    scroll(-7, -21, -1)
+  })
+  document.querySelector('#scroll-today').addEventListener('click', () => {
+    dp.scrollTo(new DayPilot.Date().getDatePart().addDays(-10))
+  })
+
+
+
+
 
   dp.onBeforeCellRender = function(args) {
   //get today line
