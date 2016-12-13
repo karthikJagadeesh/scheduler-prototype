@@ -61,41 +61,40 @@
 
 
 
-<div class="mdl-layout mdl-layout__content mdl-pagewrap">
-<div class="features-grid mdl-grid">
-<div class="mdl-cell mdl-cell--6-col">
-<button class="mdl-button mdl-js-button mdl-button--raised mdl-js-ripple-effect" id="toggle-sidebar">
-  <i class="material-icons">menu</i>
-</button>
-<div class="calender-buttons">
-  <button class="mdl-button mdl-js-button mdl-button--raised mdl-js-ripple-effect calendar-prevnext" data-direction="previous">
-  <i class="material-icons">navigate_before</i>
+  <div class="mdl-layout mdl-layout__content mdl-pagewrap">
+  <div class="features-grid mdl-grid">
+  <div class="mdl-cell mdl-cell--6-col">
+  <button class="mdl-button mdl-js-button mdl-button--raised mdl-js-ripple-effect" id="toggle-sidebar">
+    <i class="material-icons">menu</i>
   </button>
-  <button class="mdl-button mdl-js-button mdl-button--raised mdl-js-ripple-effect calendar-prevnext" data-direction="todays">
-<i class="material-icons">stop</i>
+  <div class="calender-buttons">
+    <button class="mdl-button mdl-js-button mdl-button--raised mdl-js-ripple-effect calendar-prevnext" data-direction="previous">
+    <i class="material-icons">navigate_before</i>
+    </button>
+    <button class="mdl-button mdl-js-button mdl-button--raised mdl-js-ripple-effect calendar-prevnext" data-direction="todays">
+  <i class="material-icons">stop</i>
+    </button>
+    <button class="mdl-button mdl-js-button mdl-button--raised mdl-js-ripple-effect calendar-prevnext" data-direction="next">
+    <i class="material-icons">navigate_next</i>
+    </button>
+  </div>
+
+
+
+  <button  id="timeline" class="mdl-button mdl-js-button mdl-button--raised mdl-js-ripple-effect">
+    <i class="material-icons">zoom_in</i>
   </button>
-  <button class="mdl-button mdl-js-button mdl-button--raised mdl-js-ripple-effect calendar-prevnext" data-direction="next">
-  <i class="material-icons">navigate_next</i>
+
+  <ul class="mdl-menu mdl-menu--bottom-left mdl-js-menu mdl-js-ripple-effect"
+    for="timeline">
+    <li class="mdl-menu__item" id="show-days">Days</li>
+    <li class="mdl-menu__item" id="show-weeks">Weeks</li>
+    <li class="mdl-menu__item mdl-menu__item--full-bleed-divider" id="show-months">Months</li>
+    <li class="mdl-menu__item" id="show-this-week">This Week</li>
+  </ul>
+  <button id="caleneder" class="mdl-button mdl-js-button mdl-button--raised mdl-js-ripple-effect">
+    <i class="material-icons">event</i>
   </button>
-</div>
-
-
-
-<button  id="timeline" class="mdl-button mdl-js-button mdl-button--raised mdl-js-ripple-effect">
-<i class="material-icons">zoom_in</i>
-</button>
-
-<ul class="mdl-menu mdl-menu--bottom-left mdl-js-menu mdl-js-ripple-effect"
-  for="timeline">
-<li class="mdl-menu__item">Days</li>
-<li class="mdl-menu__item">Weeks</li>
-<li class="mdl-menu__item mdl-menu__item--full-bleed-divider">Months</li>
-
-<li class="mdl-menu__item">This Week</li>
-</ul>
-<button id="caleneder" class="mdl-button mdl-js-button mdl-button--raised mdl-js-ripple-effect">
-<i class="material-icons">event</i>
-</button>
 
 
 

@@ -68,7 +68,7 @@ button.mdl-button.mdl-button--raised{min-width: 40px;padding: 0 10px;}
     display: table-cell;
     vertical-align: middle;
     height: inherit;
-  
+
 }
  footer.mdl-mini-footer{position: fixed;background-color: #f0f0f0;color: #000;
     left: 0;
@@ -102,13 +102,15 @@ button.mdl-button.mdl-button--raised{min-width: 40px;padding: 0 10px;}
     margin-left: 20px;
 }
 
-<<<<<<< Updated upstream
+.features-grid.mdl-grid {
+  margin-left: 18px;
+}
+
 .scheduler_default_event {}
-=======
+
 #calendar-container {
     margin-top: 0px;
 }
 #dp {
   margin: 0 auto;
 }
->>>>>>> Stashed changes
