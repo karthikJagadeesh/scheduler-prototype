@@ -3,7 +3,7 @@
   const showGrid = 'numbers'
   const weekdays = ['sun', 'mon', 'tue', 'wed', 'thu', 'fri', 'sat']
 
-  let bookingType = '';
+  let bookingType = ''
 
   const dp = new DayPilot.Scheduler("dp")
 
@@ -14,6 +14,7 @@
   dp.eventHeight = 50
   dp.headerHeight = 40
   dp.startDate = new DayPilot.Date().firstDayOfMonth()
+  let cacheStart = dp.startDate
   dp.days = 900
   dp.cellDuration = 8
   dp.scale = 'Day'
@@ -30,14 +31,29 @@
   dp.height = 400;
   dp.width = '98%';
 
+  dp.businessBeginsHour = 10
+  dp.businessEndsHour = 18
+
   //Navigate toolbar Handlers
   // - change Time Headers view to Days, Weeks, Months, Year
+  document.querySelector('#show-hours').addEventListener('click', () => {
+    dp.scale = "Manual";
+    dp.timeline = [];
+    dp.timeHeaders = [
+      { groupBy: 'Day', format: 'dddd, MMM dd'},
+      { groupBy: 'Hour' }
+    ]
+    dp.scale = 'Hour'
+    dp.days = 100
+    dp.update()
+  })
   document.querySelector('#show-days').addEventListener('click', () => {
     dp.timeHeaders = [
       { groupBy: 'Month', format: 'MMMM yyyy' },
       { groupBy: 'Cell', format: 'ddd d' }
     ]
     dp.scale = 'Day'
+    dp.days = 900
     dp.update()
   })
   document.querySelector('#show-weeks').addEventListener('click', () => {
@@ -46,6 +62,7 @@
       { groupBy: 'Week' }
     ]
     dp.scale = 'Week'
+    dp.days = 900
     dp.update()
   })
   document.querySelector('#show-months').addEventListener('click', () => {
@@ -54,31 +71,49 @@
       { groupBy: 'Cell', format: 'MM' }
     ]
     dp.scale = 'Month'
+    dp.days = 900
     dp.update()
   })
 
   //Scroll forward, backward and today
   const scroll = (...distance) => {
     switch (dp.scale) {
-      case 'Day':
+      case 'Hour':
         return dp.scrollTo(dp.getDate(dp.getScrollX()).addDays(distance[0]))
 
-      case 'Week':
+      case 'Day':
         return dp.scrollTo(dp.getDate(dp.getScrollX()).addDays(distance[1]))
 
+      case 'Week':
+        return dp.scrollTo(dp.getDate(dp.getScrollX()).addDays(distance[2]))
+
       case 'Month':
-        return dp.scrollTo(dp.getDate(dp.getScrollX()).addMonths(distance[2]))
+        return dp.scrollTo(dp.getDate(dp.getScrollX()).addMonths(distance[3]))
     }
   }
 
   document.querySelector('#scroll-next').addEventListener('click', () => {
-    scroll(7, 21, 1)
+    scroll(1, 7, 21, 1)
+    if (dp.getViewPort().end.addDays(-1).value === dp.getDate().value) {
+      cacheStart = dp.startDate = dp.startDate.addDays(100)
+      dp.scrollTo(dp.getDate(dp.getScrollX()).addDays(-100))
+      dp.update()
+    }
   })
   document.querySelector('#scroll-back').addEventListener('click', () => {
-    scroll(-7, -21, -1)
+
+    if (dp.getViewPort().start === cacheStart) {
+      cacheStart = dp.startDate = dp.getViewPort().start.addDays(-100)
+      dp.scrollTo(dp.getDate(dp.getScrollX()).addDays(100))
+      dp.update()
+    }
+
+    scroll(-1, -7, -21, -1)
   })
   document.querySelector('#scroll-today').addEventListener('click', () => {
-    dp.scrollTo(new DayPilot.Date().getDatePart().addDays(-10))
+    cacheStart = dp.startDate = (new DayPilot.Date().getDatePart()).addDays(-10)
+    dp.scrollTo(new DayPilot.Date().getDatePart(), false, 'middle')
+    dp.update()
   })
 
 
@@ -88,12 +123,11 @@
   dp.onBeforeCellRender = args => {
     //highlight today's column
     if (args.cell.start <= DayPilot.Date.today() && DayPilot.Date.today() < args.cell.end) {
-        args.cell.backColor = "#FCB941";
+        args.cell.backColor = "#83D6DE";
     }
 
     let firmAvailableHours = 8;
     // var weekDay = weekdays[args.cell.start.getDayOfWeek()];
-    console.log(args.cell.utilization('total'))
     // utilization color
     var utilization = args.cell.utilization("total");
 
@@ -179,9 +213,10 @@
   var el = document.querySelector('.scheduler_8_shadow');
     var elChild = document.createElement('div');
      elChild.className = 'cellSelectionMenu';
+     elChild.innerHTML = "<i class='fa fa-ellipsis-v fa-2x'></i>"
      el.prepend(elChild);
-     var el2 = document.querySelector('.cellSelectionMenu');
-     el2.innerHTML = "<i class='material-icons'>more_vert</i>";
+    //  var el2 = document.querySelector('.cellSelectionMenu');
+    //  el2.innerHTML = "<i class='material-icons'>more_vert</i>";
 
       // dp.clearSelection();
     //if (!name) return;
@@ -256,55 +291,64 @@
                  }];
 
 
-                 dp.contextMenu = new DayPilot.Menu({
-                     items: [
-                         { text: "Edit", onclick: function() {} },
+     dp.contextMenu = new DayPilot.Menu({
+         items: [
+             { text: "Edit", onclick: function() {} },
 
-                         { text: "Delete", onclick: function() { var res = confirm("Are you sure want to delete "); if(res )dp.events.remove(this.source); } },
-                         { text: "Copy", onclick: function() { dp.clipBoard = this.source;} },
-                         { text: "Select", onclick: function() { dp.multiselect.add(this.source); } },
-                         { text: "-"},
-                         { text: "Reassign to", items: dp.resources.map(res => ({ text: res.name }) )}
-                     ]
-                 });
+             { text: "Delete", onclick: function() { var res = confirm("Are you sure want to delete "); if(res )dp.events.remove(this.source); } },
+             { text: "Copy", onclick: function() { dp.clipBoard = this.source;} },
+             { text: "Select", onclick: function() { dp.multiselect.add(this.source); } },
+             { text: "-"},
+             { text: "Reassign to", items: dp.resources.map(res => ({ text: res.name }) )}
+         ]
+     });
 
-                 dp.contextMenuSelection = new DayPilot.Menu({ items: [
-                   {
-                    text:"Paste", onclick: function() {
-                     if (!dp.clipBoard) { alert('You need to copy an event first.'); return; }
-                     var selection = this.source;
-                     var duration = dp.clipBoard.end().getTime() - dp.clipBoard.start().getTime(); // milliseconds
-                     var newEvent = new DayPilot.Event({
-                       start: selection.start,
-                       end: selection.start.addMilliseconds(duration),
-                       text: dp.clipBoard.text(),
-                       resource: selection.resource,
-                       id: DayPilot.guid(),
-                       total: dp.clipBoard.data.total,
-                       tags: dp.clipBoard.data.tags,  // generate random id
-                     });
-                       dp.events.add(newEvent);
-                     }
-                   }
-                   ]
-                 });
+     dp.contextMenuSelection = new DayPilot.Menu({ items: [
+       {
+        text:"Paste", onclick: function() {
+         if (!dp.clipBoard) { alert('You need to copy an event first.'); return; }
+         var selection = this.source;
+         var duration = dp.clipBoard.end().getTime() - dp.clipBoard.start().getTime(); // milliseconds
+         var newEvent = new DayPilot.Event({
+           start: selection.start,
+           end: selection.start.addMilliseconds(duration),
+           text: dp.clipBoard.text(),
+           resource: selection.resource,
+           id: DayPilot.guid(),
+           total: dp.clipBoard.data.total,
+           tags: dp.clipBoard.data.tags,  // generate random id
+         });
+           dp.events.add(newEvent);
+         }
+       }
+       ]
+     });
 
      dp.init();
 
-     var picker = new Pikaday({ field: document.getElementById('select-cal') });
+
+
+//-------------------------------------------------------------------------------------------------
+     let picker = new Pikaday({
+       field: document.getElementById('select-cal'),
+       format: 'YYYY-MM-DD',
+       onSelect: function() {
+         dp.scrollTo(picker.getMoment().format('YYYY-MM-DD'), false, 'middle')
+       }
+     })
 
 
      $(document).ready(function() {
          $('.ui.dropdown')
              .dropdown();
-     });
+     })
 
 
-     var addRippleEffect = function(e) {
-         var target = e.target;
+     const addRippleEffect = function(e) {
+         let target = e.target;
          if (target.tagName.toLowerCase() !== 'button') return false;
-         var rect = target.getBoundingClientRect();
-         var ripple = target.querySelector('.ripple');
+         let rect = target.getBoundingClientRect();
+         let ripple = target.querySelector('.ripple');
          if (!ripple) {
              ripple = document.createElement('span');
              ripple.className = 'ripple';
@@ -312,15 +356,15 @@
              target.appendChild(ripple);
          }
          ripple.classList.remove('show');
-         var top = e.pageY - rect.top - ripple.offsetHeight / 2 - document.body.scrollTop;
-         var left = e.pageX - rect.left - ripple.offsetWidth / 2 - document.body.scrollLeft;
+         let top = e.pageY - rect.top - ripple.offsetHeight / 2 - document.body.scrollTop;
+         let left = e.pageX - rect.left - ripple.offsetWidth / 2 - document.body.scrollLeft;
          ripple.style.top = top + 'px';
          ripple.style.left = left + 'px';
          ripple.classList.add('show');
          return false;
      }
 
-     document.addEventListener('click', addRippleEffect, false);
+     document.addEventListener('click', addRippleEffect, false)
 
 // })()
 

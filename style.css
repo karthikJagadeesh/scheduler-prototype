@@ -115,6 +115,7 @@ button {
 }
 
 .cellSelectionMenu {
+  padding: 0 8px;
     position: absolute;
     right: 0;
     height: inherit;

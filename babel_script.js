@@ -16,6 +16,7 @@ dp.cellWidth = 60;
 dp.eventHeight = 50;
 dp.headerHeight = 40;
 dp.startDate = new DayPilot.Date().firstDayOfMonth();
+var cacheStart = dp.startDate;
 dp.days = 900;
 dp.cellDuration = 8;
 dp.scale = 'Day';
@@ -27,57 +28,87 @@ dp.heightSpec = "Max";
 dp.height = 400;
 dp.width = '98%';
 
+dp.businessBeginsHour = 10;
+dp.businessEndsHour = 18;
+
 //Navigate toolbar Handlers
 // - change Time Headers view to Days, Weeks, Months, Year
+document.querySelector('#show-hours').addEventListener('click', function () {
+  dp.scale = "Manual";
+  dp.timeline = [];
+  dp.timeHeaders = [{ groupBy: 'Day', format: 'dddd, MMM dd' }, { groupBy: 'Hour' }];
+  dp.scale = 'Hour';
+  dp.days = 100;
+  dp.update();
+});
 document.querySelector('#show-days').addEventListener('click', function () {
   dp.timeHeaders = [{ groupBy: 'Month', format: 'MMMM yyyy' }, { groupBy: 'Cell', format: 'ddd d' }];
   dp.scale = 'Day';
+  dp.days = 900;
   dp.update();
 });
 document.querySelector('#show-weeks').addEventListener('click', function () {
   dp.timeHeaders = [{ groupBy: 'Month', format: 'MMMM yyyy' }, { groupBy: 'Week' }];
   dp.scale = 'Week';
+  dp.days = 900;
   dp.update();
 });
 document.querySelector('#show-months').addEventListener('click', function () {
   dp.timeHeaders = [{ groupBy: 'Year', format: 'yyyy' }, { groupBy: 'Cell', format: 'MM' }];
   dp.scale = 'Month';
+  dp.days = 900;
   dp.update();
 });
 
 //Scroll forward, backward and today
 var scroll = function scroll() {
   switch (dp.scale) {
-    case 'Day':
+    case 'Hour':
       return dp.scrollTo(dp.getDate(dp.getScrollX()).addDays(arguments.length <= 0 ? undefined : arguments[0]));
 
-    case 'Week':
+    case 'Day':
       return dp.scrollTo(dp.getDate(dp.getScrollX()).addDays(arguments.length <= 1 ? undefined : arguments[1]));
 
+    case 'Week':
+      return dp.scrollTo(dp.getDate(dp.getScrollX()).addDays(arguments.length <= 2 ? undefined : arguments[2]));
+
     case 'Month':
-      return dp.scrollTo(dp.getDate(dp.getScrollX()).addMonths(arguments.length <= 2 ? undefined : arguments[2]));
+      return dp.scrollTo(dp.getDate(dp.getScrollX()).addMonths(arguments.length <= 3 ? undefined : arguments[3]));
   }
 };
 
 document.querySelector('#scroll-next').addEventListener('click', function () {
-  scroll(7, 21, 1);
+  scroll(1, 7, 21, 1);
+  if (dp.getViewPort().end.addDays(-1).value === dp.getDate().value) {
+    cacheStart = dp.startDate = dp.startDate.addDays(100);
+    dp.scrollTo(dp.getDate(dp.getScrollX()).addDays(-100));
+    dp.update();
+  }
 });
 document.querySelector('#scroll-back').addEventListener('click', function () {
-  scroll(-7, -21, -1);
+
+  if (dp.getViewPort().start === cacheStart) {
+    cacheStart = dp.startDate = dp.getViewPort().start.addDays(-100);
+    dp.scrollTo(dp.getDate(dp.getScrollX()).addDays(100));
+    dp.update();
+  }
+
+  scroll(-1, -7, -21, -1);
 });
 document.querySelector('#scroll-today').addEventListener('click', function () {
-  dp.scrollTo(new DayPilot.Date().getDatePart().addDays(-10));
+  cacheStart = dp.startDate = new DayPilot.Date().getDatePart().addDays(-10);
+  dp.scrollTo(new DayPilot.Date().getDatePart(), false, 'middle');
+  dp.update();
 });
 
 dp.onBeforeCellRender = function (args) {
   //highlight today's column
   if (args.cell.start <= DayPilot.Date.today() && DayPilot.Date.today() < args.cell.end) {
-    args.cell.backColor = "#FCB941";
+    args.cell.backColor = "#83D6DE";
   }
 
   var firmAvailableHours = 8;
   // var weekDay = weekdays[args.cell.start.getDayOfWeek()];
-  console.log(args.cell.utilization('total'));
   // utilization color
   var utilization = args.cell.utilization("total");
 
@@ -156,9 +187,10 @@ dp.onTimeRangeSelected = function (args) {
   var el = document.querySelector('.scheduler_8_shadow');
   var elChild = document.createElement('div');
   elChild.className = 'cellSelectionMenu';
+  elChild.innerHTML = "<i class='fa fa-ellipsis-v fa-2x'></i>";
   el.prepend(elChild);
-  var el2 = document.querySelector('.cellSelectionMenu');
-  el2.innerHTML = "<i class='material-icons'>more_vert</i>";
+  //  var el2 = document.querySelector('.cellSelectionMenu');
+  //  el2.innerHTML = "<i class='material-icons'>more_vert</i>";
 
   // dp.clearSelection();
   //if (!name) return;
@@ -254,7 +286,14 @@ dp.contextMenuSelection = new DayPilot.Menu({ items: [{
 
 dp.init();
 
-var picker = new Pikaday({ field: document.getElementById('select-cal') });
+//-------------------------------------------------------------------------------------------------
+var picker = new Pikaday({
+  field: document.getElementById('select-cal'),
+  format: 'YYYY-MM-DD',
+  onSelect: function onSelect() {
+    dp.scrollTo(picker.getMoment().format('YYYY-MM-DD'), false, 'middle');
+  }
+});
 
 $(document).ready(function () {
   $('.ui.dropdown').dropdown();
