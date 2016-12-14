@@ -295,8 +295,18 @@
 
 
      $(document).ready(function() {
-         $('.ui.dropdown')
-             .dropdown();
+         $('.ui.dropdown').dropdown();
+         $('#setting').click(function(){
+          $('.ui.sidebar').sidebar('setting',{'transition': 'overlay',dimPage: true}).sidebar("toggle");
+          e.preventDefault();
+         });
+         // $('#addresource-form .item').click(function(e){
+         //  e.preventDefault();
+         // });
+         $('#addresource-submit').click(function(){
+            // $('#addresource-form').parent().hide();          
+            //console.log($('#addresource-form').parent())
+         })
      });
 
 
