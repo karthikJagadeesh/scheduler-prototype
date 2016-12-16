@@ -6,7 +6,7 @@
   "scripts": {
     "test": "echo \"Error: no test specified\" && exit 1",
     "start-babel": "babel script.js --watch --out-file babel_script.js",
-    "start-browserSync": "browser-sync start --server --files \"**/*.js\" \"**/*.css\" \"**/*.html\"",
+    "start-browserSync": "browser-sync start --server --files \"babel_script.js\" \"**/*.css\" \"**/*.html\"",
     "start": "start npm run start-babel && start npm run start-browserSync"
   },
   "repository": {

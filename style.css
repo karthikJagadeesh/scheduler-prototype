@@ -3,6 +3,7 @@ body {
     padding: 0;
     margin: 0;
     background: #F5F5F5;
+    font-family: 'Segoe UI,Arial,Helvetica,Verdana,Sans Serif';
 }
 
 a {
@@ -49,9 +50,9 @@ a {
 }
 
 .ui.dropdown.selection.multiple {
-    min-width: 102.5% !important;
-    margin-left: -30px;
-    border:0;
+    min-width: 101.5% !important;
+    margin-left: -18px;
+    border: 0;
 }
 
 .ui.labeled.icon.button>.icon,
@@ -61,18 +62,56 @@ a {
     background: #FFFFFF !important;
 }
 
-.ui.labeled.icon.button>.icon, .ui.labeled.icon.buttons>.button>.icon, .ui.labeled.icon.button, .ui.labeled.icon.buttons .button{
-  border-right: 1px solid rgba(0,0,0,0.08)
+.ui.labeled.icon.button>.icon,
+.ui.labeled.icon.buttons>.button>.icon,
+.ui.labeled.icon.button,
+.ui.labeled.icon.buttons .button {
+    border-right: 1px solid rgba(0, 0, 0, 0.08)
+}
+
+
+/*resetting background after pusher activates*/
+
+body.pushable>.pusher {
+    background: #F5F5F5 !important;
 }
 
 #conflictsbtn {
-    min-width: 217px;
+    min-width: 242px;
 }
-#role-selection{
-  min-width: 97% !important;
+
+#role-selection {
+    min-width: 100% !important;
 }
-#days-filter{
-  min-width: 150px !important;
+
+#days-filter {
+    min-width: 150px !important;
+}
+
+#sidebar-area {
+    width: 269px;
+    background: #FFFFFF !important;
+    top: 44px;
+    overflow-x: hidden;
+}
+
+#sidebar-area a,
+#sidebar-area p {
+    color: red;
+}
+
+.sidebar-header {
+    margin: 5px;
+    width: 96%;
+    background: rgb(247, 178, 51) !important;
+    color: #F5F5F5;
+    padding: 15px;
+    cursor: context-menu;
+    text-align: center;
+    font-weight: 600;
+    letter-spacing: 1px;
+    font-size: 15px;
+    font-family: lato;
 }
 
 button {
@@ -84,7 +123,71 @@ button {
     overflow: hidden;
     user-select: none;
     border-radius: 2px;
+}
+
+#sidebar-hours:after{
+    content:'hours';
+    padding:9px;
+}
+#sidebar-days:after{
+    content:'days';
+    padding:9px;
+}
+#sidebar-weeks:after{
+    content:'weeks';
+    padding:9px;
+}
+#sidebar-months:after{
+    content:'months';
+    padding:9px;
+}
+
+.ui .button {
     background: #FFFFFF !important;
+}
+
+.ui.floating.dropdown.labeled.search.icon.button.sidebar-btn {
+    margin: 5px auto;
+    min-width: 244px;
+    background: #F2F2F2 !important;
+}
+
+.ui.cards~.ui.cards {
+    margin-top: -20px;
+}
+
+.ui.card>.content>.header,
+.ui.cards>.card>.content>.header {
+    color: #a5673f;
+}
+
+.ui.card>.content>.header:not(.ui),
+.ui.cards>.card>.content>.header:not(.ui) {
+    font-size: 16px;
+}
+
+.ui.card .meta,
+.ui.cards>.card .meta {
+    color: rgba(96, 114, 140, 0.7);
+}
+
+.ui.radio.checkbox .box, .ui.radio.checkbox label {
+    padding-left: 18px;
+    padding-right: 8px;
+}
+
+#addresource-form{
+    width: 321px !important;
+}
+
+#footer{
+    position:absolute;
+    bottom:0;
+    left:0;
+    background-color: rgba(212, 212, 213, 0.52);
+    width:100%;
+    text-align: center;
+    font-family: 'lato';
 }
 
 .bubble-class {

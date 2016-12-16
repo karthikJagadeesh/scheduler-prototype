@@ -37,9 +37,9 @@
             <div class="item" id="displayfirmname" style="max-width: 200px;white-space: nowrap;overflow: hidden;color: rgb(247, 178, 51);text-overflow: ellipsis;">
                 XCM Solutions, LLC
             </div>
-            <div class="item">
+            <div class="item ui icon">
                 <a href="#">
-                    <i class="fa fa-cog" aria-hidden="true"></i>
+                    <i class="setting icon"></i>
                 </a>
             </div>
             <div class="ui dropdown item">
@@ -89,11 +89,12 @@
     <div class="ui grid pad15" style="padding-top: 0!important">
         <div class="ui eleven wide column">
             <div class="ui icon buttons">
-                <button class="ui button" id="scroll-back"><i class="fa fa-angle-left" aria-hidden="true"></i></button>
-                <button class="ui button" id="scroll-today"><i class="fa fa-circle" aria-hidden="true"></i></button>
-                <button class="ui button" id="scroll-next"><i class="fa fa-angle-right" aria-hidden="true"></i></button>
+                <button class="ui icon button" id="scroll-back"><i class="chevron left icon"></i></button>
+                <button class="ui icon button" id="scroll-today"><i class="circle icon"></i></i>
+                </button>
+                <button class="ui icon button" id="scroll-next"><i class="chevron right icon"></i></button>
             </div>
-            <button id="select-cal" class="ui button"><i class="fa fa-calendar" aria-hidden="true"></i></button>
+            <button id="select-cal" class="ui icon button"><i class="calendar icon"></i></button>
             <div id="days-filter" class="ui floating labeled icon dropdown button">
                 <i class="filter icon"></i>
                 <span class="text">Days</span>
@@ -119,9 +120,32 @@
                     </div>
                 </div>
             </div>
+            <div class="ui buttons" style="margin-left: 5px">
+                <div class="ui button">Add Resources</div>
+                <div class="ui floating dropdown icon button" id="add-resource-dropdown">
+                    <i class="dropdown icon"></i>
+                    <div id="addresource-form" class="menu">
+                        <div class="item disabled" style="text-align:center">Add a new resource to your account</div>
+                        <div class="ui divider"></div>
+                        <div style="padding:15px">
+                            <form class="ui form" id="add-resource-form">
+                                <div class="field">
+                                    <label>First Name</label>
+                                    <input type="text" name="first-name" placeholder="First Name">
+                                </div>
+                                <div class="field">
+                                    <label>Last Name</label>
+                                    <input type="text" name="last-name" placeholder="Last Name">
+                                </div>
+                                <button type="submit" id="addresource-submit" class="ui button" style="background:rgba(96, 114, 140,0.2)!important" >Add To Scheduler</button>
+                            </form>
+                        </div>
+                    </div>
+                </div>
+            </div>
         </div>
         <div class="ui five wide column">
-            <button class="ui button" style="margin-left:30px">
+            <button class="ui button" style="margin-left:-1px">
                 Schedule
             </button>
             <div id="conflictsbtn" class="ui floating labeled icon dropdown button">
@@ -136,8 +160,8 @@
                     </div>
                 </div>
             </div>
-            <button class="ui icon button">
-                <i class="fa fa-cog" aria-hidden="true"></i>
+            <button id="setting" class="ui icon button">
+                <i class="setting icon"></i>
             </button>
         </div>
     </div>
@@ -146,14 +170,158 @@
             <div id="dp"></div>
         </div>
     </div>
-    <!--     <footer class="footer mdl-mini-footer clearfix">
-        <div class="mdl-mini-footer__left-section">
-            <div class="mdl-title"> &copy;
-                <script>
-                document.write(new Date().getFullYear());
-                </script>2016 <a href="http://xcmsolutions.com">XCM Solutions LLC</a>, All rights reserved.</div>
+    <!-- Rightsidebar -->
+    <div id="sidebar-area" class="ui right sidebar inverted vertical menu">
+        <div class="sidebar-header">Scheduler Customization</div>
+        <!-- cell Width -->
+        <div class="ui cards">
+            <div class="card">
+                <div class="content">
+                    <div class="header">
+                        Cell Width
+                    </div>
+                    <div class="meta">
+                        increase/decrease cell size
+                    </div>
+                    <div class="description">
+                        <div id="sidebar-hours" class="ui floating dropdown labeled search icon button sidebar-btn ">
+                            <i class="time icon"></i>
+                            <span class="text">10</span>
+                            <div class="menu">
+                                <div class="item">10</div>
+                                <div class="item">40</div>
+                                <div class="item">70</div>
+                                <div class="item">100</div>
+                                <div class="item">130</div>
+                                <div class="item">160</div>
+                                <div class="item">190</div>
+                                <div class="item">220</div>
+                                <div class="item">250</div>
+                            </div>
+                        </div>
+                        <div id="sidebar-days" class="ui floating dropdown labeled search icon button sidebar-btn ">
+                            <i class="time icon"></i>
+                            <span class="text">10</span>
+                            <div class="menu">
+                                <div class="item">10</div>
+                                <div class="item">40</div>
+                                <div class="item">70</div>
+                                <div class="item">100</div>
+                                <div class="item">130</div>
+                                <div class="item">160</div>
+                                <div class="item">190</div>
+                                <div class="item">220</div>
+                                <div class="item">250</div>
+                            </div>
+                        </div>
+                        <div id="sidebar-weeks" class="ui floating dropdown labeled search icon button sidebar-btn ">
+                            <i class="time icon"></i>
+                            <span class="text">10</span>
+                            <div class="menu">
+                                <div class="item">10</div>
+                                <div class="item">40</div>
+                                <div class="item">70</div>
+                                <div class="item">100</div>
+                                <div class="item">130</div>
+                                <div class="item">160</div>
+                                <div class="item">190</div>
+                                <div class="item">220</div>
+                                <div class="item">250</div>
+                            </div>
+                        </div>
+                        <div id="sidebar-months" class="ui floating dropdown labeled search icon button sidebar-btn ">
+                            <i class="time icon"></i>
+                            <span class="text">10</span>
+                            <div class="menu">
+                                <div class="item">10</div>
+                                <div class="item">40</div>
+                                <div class="item">70</div>
+                                <div class="item">100</div>
+                                <div class="item">130</div>
+                                <div class="item">160</div>
+                                <div class="item">190</div>
+                                <div class="item">220</div>
+                                <div class="item">250</div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
         </div>
-    </footer> -->
+        <!-- cell Height / Bookings -->
+        <div class="ui cards">
+            <div class="card">
+                <div class="content">
+                    <div class="header">
+                        Bookings
+                    </div>
+                    <div class="meta">
+                        Control the height of bookings
+                    </div>
+                    <div class="description">
+                        <div class="ui segment">
+                            <div class="ui radio checkbox">
+                                <input type="radio" id="xtrasmall" class="booking-height" value="xtrasmall" name="example">
+                                <label for="xtrasmall">XS</label>
+                            </div>
+                            <div class="ui radio checkbox">
+                                <input type="radio" id="small" class="booking-height" value="small" name="example">
+                                <label for="small">S</label>
+                            </div>
+                            <div class="ui radio checkbox checked">
+                                <input type="radio" id="medium" checked="checked" class="booking-height" value="medium" name="example">
+                                <label for="medium">M</label>
+                            </div>
+                            <div class="ui radio checkbox">
+                                <input type="radio" id="large" class="booking-height" value="large" name="example">
+                                <label for="large">L</label>
+                            </div>
+                            <div class="ui radio checkbox">
+                                <input type="radio" id="xtralarge" class="booking-height" value="xtralarge" name="example">
+                                <label for="xtralarge">XL</label>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+        <!-- Availablity Display Options -->
+        <div class="ui cards">
+            <div class="card">
+                <div class="content">
+                    <div class="header">
+                        Availablity Display Options
+                    </div>
+                    <div class="meta">
+                        Controls Notification bar
+                    </div>
+                    <div class="description">
+                        <div class="ui segment">
+                            <div class="ui radio checkbox">
+                                <input type="radio" id="bar" class="booking-height" value="bar" name="bar">
+                                <label for="xtrasmall">Bar</label>
+                            </div>
+                            <div class="ui radio checkbox">
+                                <input type="radio" id="Numbers" class="booking-height" value="Numbers" name="Numbers">
+                                <label for="small">Numbers</label>
+                            </div>
+                            <div class="ui radio checkbox checked">
+                                <input type="radio" id="Disable" checked="checked" class="booking-height" value="Disable" name="Disable">
+                                <label for="medium">Disable</label>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+    <div id="footer" class="row">
+        <footer class="sixteen wide column">
+            <div class="ui basic segment">
+                <p>© 2016 <a href="http://xcmsolutions.com">XCM Solutions LLC</a>, All rights reserved.</p>
+            </div>
+        </footer>
+    </div>
     <script type="text/javascript" src="./assets/daypilot-all.min.js"></script>
     <script src="https://cdnjs.cloudflare.com/ajax/libs/jquery/3.1.1/jquery.min.js"></script>
     <script src="assets/semantic.min.js"></script>

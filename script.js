@@ -95,7 +95,7 @@
   document.querySelector('#scroll-next').addEventListener('click', () => {
     scroll(1, 7, 21, 1)
     if (dp.getViewPort().end.addDays(-1).value === dp.getDate().value) {
-      cacheStart = dp.startDate = dp.startDate.addDays(100)
+      dp.days += 100
       dp.scrollTo(dp.getDate(dp.getScrollX()).addDays(-100))
       dp.update()
     }
@@ -104,6 +104,7 @@
 
     if (dp.getViewPort().start === cacheStart) {
       cacheStart = dp.startDate = dp.getViewPort().start.addDays(-100)
+      dp.days += 100
       dp.scrollTo(dp.getDate(dp.getScrollX()).addDays(100))
       dp.update()
     }
@@ -111,13 +112,16 @@
     scroll(-1, -7, -21, -1)
   })
   document.querySelector('#scroll-today').addEventListener('click', () => {
-    cacheStart = dp.startDate = (new DayPilot.Date().getDatePart()).addDays(-10)
-    dp.scrollTo(new DayPilot.Date().getDatePart(), false, 'middle')
+    // cacheStart = dp.startDate = (new DayPilot.Date()).addDays(-10)
+    dp.scrollTo(new DayPilot.Date(), false, 'middle')
     dp.update()
   })
 
+  const addResourceForm = document.querySelector('#add-resource-form')
+  addResourceForm.addEventListener('submit', event => {
+    event.preventDefault()
 
-
+  })
 
 
   dp.onBeforeCellRender = args => {
@@ -339,9 +343,23 @@
 
 
      $(document).ready(function() {
+
          $('.ui.dropdown')
              .dropdown();
      })
+
+         $('.ui.dropdown').dropdown();
+         $('#setting').click(function(){
+          $('.ui.sidebar').sidebar('setting',{'transition': 'overlay',dimPage: true}).sidebar("toggle");
+          e.preventDefault();
+         });
+         // $('#addresource-form .item').click(function(e){
+         //  e.preventDefault();
+         // });
+         $('#addresource-submit').click(function(){
+            // $('#addresource-form').parent().hide();
+            //console.log($('#addresource-form').parent())
+         })
 
 
      const addRippleEffect = function(e) {
