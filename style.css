@@ -296,15 +296,18 @@ footer.mdl-mini-footer {
     display: flex;
     margin-left: 20px;
 }
+ .scheduler_default_event {}
 
-<<<<<<< Updated upstream .scheduler_default_event {}
-
-=======#calendar-container {
+#calendar-container {
     margin-top: 0px;
+}
+
+
+
+#addresource-submit {
+
 }
 
 #dp {
     margin: 0 auto;
 }
-
->>>>>>> Stashed changes

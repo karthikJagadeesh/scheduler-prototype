@@ -25,7 +25,7 @@ dp.timeHeaders = [{ groupBy: 'Month', format: 'MMMM yyyy' }, { groupBy: 'Cell', 
 dp.separators = [{ color: "red", location: new DayPilot.Date(), width: 2 }];
 
 dp.heightSpec = "Max";
-dp.height = 400;
+dp.height = 360;
 dp.width = '98%';
 
 dp.businessBeginsHour = 10;
@@ -105,7 +105,42 @@ document.querySelector('#scroll-today').addEventListener('click', function () {
 var addResourceForm = document.querySelector('#add-resource-form');
 addResourceForm.addEventListener('submit', function (event) {
   event.preventDefault();
+
+  var firstName = event.target[0].value;
+  var lastName = event.target[1].value;
+
+  if (firstName !== '' && lastName !== '') {
+    dp.resources.unshift({
+      name: firstName + ' ' + lastName,
+      id: '' + firstName
+    });
+    dp.message("Added new Resource");
+  }
+
+  event.target[0].value = '';
+  event.target[1].value = '';
+  dp.update();
 });
+
+var cellHeights = {
+  '#xtrasmall': 30,
+  '#small': 40,
+  '#medium': 50,
+  '#large': 70,
+  '#xtralarge': 100
+};
+var heightKeys = Object.keys(cellHeights);
+
+var _loop = function _loop(i) {
+  document.querySelector(heightKeys[i]).addEventListener('click', function () {
+    dp.eventHeight = cellHeights[heightKeys[i]];
+    dp.update();
+  });
+};
+
+for (var i = 0; i < heightKeys.length; i++) {
+  _loop(i);
+}
 
 dp.onBeforeCellRender = function (args) {
   //highlight today's column
@@ -315,8 +350,8 @@ $('#setting').click(function () {
 //  e.preventDefault();
 // });
 $('#addresource-submit').click(function () {
-  // $('#addresource-form').parent().hide();
-  //console.log($('#addresource-form').parent())
+  // $('#addresource-form').parent('active visible);
+
 });
 
 var addRippleEffect = function addRippleEffect(e) {

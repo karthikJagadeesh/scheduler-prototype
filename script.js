@@ -28,7 +28,7 @@
   ];
 
   dp.heightSpec = "Max";
-  dp.height = 400;
+  dp.height = 360;
   dp.width = '98%';
 
   dp.businessBeginsHour = 10
@@ -118,11 +118,40 @@
   })
 
   const addResourceForm = document.querySelector('#add-resource-form')
-  addResourceForm.addEventListener('submit', event => {
+  addResourceForm.addEventListener('submit', function(event) {
     event.preventDefault()
+
+    const firstName = event.target[0].value
+    const lastName = event.target[1].value
+
+    if (firstName !== '' && lastName !== '') {
+      dp.resources.unshift({
+        name: `${firstName} ${lastName}`,
+        id: `${firstName}`
+      })
+      dp.message("Added new Resource")
+    }
+
+    event.target[0].value = ''
+    event.target[1].value = ''
+    dp.update()
 
   })
 
+  const cellHeights = {
+    '#xtrasmall': 30,
+    '#small': 40,
+    '#medium': 50,
+    '#large': 70,
+    '#xtralarge': 100,
+  }
+  const heightKeys = Object.keys(cellHeights)
+  for (let i=0; i < heightKeys.length; i++) {
+    document.querySelector(heightKeys[i]).addEventListener('click', () => {
+      dp.eventHeight = cellHeights[heightKeys[i]]
+      dp.update()
+    })
+  }
 
   dp.onBeforeCellRender = args => {
     //highlight today's column
@@ -357,8 +386,8 @@
          //  e.preventDefault();
          // });
          $('#addresource-submit').click(function(){
-            // $('#addresource-form').parent().hide();
-            //console.log($('#addresource-form').parent())
+            // $('#addresource-form').parent('active visible);
+
          })
 
 
