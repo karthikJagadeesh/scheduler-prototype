@@ -6,6 +6,7 @@ var showGrid = 'numbers';
 var weekdays = ['sun', 'mon', 'tue', 'wed', 'thu', 'fri', 'sat'];
 
 var bookingType = '';
+var bookingObj = {};
 
 var dp = new DayPilot.Scheduler("dp");
 
@@ -223,26 +224,45 @@ dp.onTimeRangeSelecting = function (args) {
 
 dp.onTimeRangeSelected = function (args) {
 
-  //dp.durationBarVisible = true;
-  //var name = prompt("New event name:", "Event");
+  $('.schedulepop').removeClass('disabled');
+
+  bookingObj = args;
+
+  dp.contextMenuSelection = new DayPilot.Menu({
+
+    items: [{ text: "Schedule Project", onclick: function onclick() {
+
+        var name = prompt("New event name:", "Event");
+        if (!name) return;
+        dp.clearSelection();
+        var data = { start: args.start,
+          end: args.end,
+          id: DayPilot.guid(),
+          resource: args.resource,
+          total: 8,
+          text: name
+        };
+
+        var e = new DayPilot.Event(data);
+        dp.events.add(e);
+        dp.message("Created");
+        dp.clearSelection();
+      } }, { text: "Add new Project", onclick: function onclick() {} }, { text: "Edit Resource", onclick: function onclick() {} }, { text: "Paste", onclick: function onclick() {} }]
+  });
+
+  if (document.getElementsByClassName('cellSelectionMenu').length) {
+    //  document.getElementsByClassName('cellSelectionMenu').remove();
+  }
+
   var el = document.querySelector('.scheduler_8_shadow');
   var elChild = document.createElement('div');
   elChild.className = 'cellSelectionMenu';
-  elChild.innerHTML = "<i class='fa fa-ellipsis-v fa-2x'></i>";
   el.prepend(elChild);
-  //  var el2 = document.querySelector('.cellSelectionMenu');
-  //  el2.innerHTML = "<i class='material-icons'>more_vert</i>";
+  var el2 = document.querySelector('.cellSelectionMenu');
+  el2.innerHTML = "<i class='fa fa-ellipsis-v fa-2x' aria-hidden='true'></i>";
 
-  // dp.clearSelection();
-  //if (!name) return;
-  var e = new DayPilot.Event({
-    start: args.start,
-    end: args.end,
-    id: DayPilot.guid(),
-    resource: args.resource
-  });
-  //dp.events.add(e);
-  //dp.message("Created");
+  var csm = document.querySelector('.cellSelectionMenu');
+  //  csm.addEventListener('click', function(){ customdropMenu.show(args);  });
 };
 
 dp.dynamicEventRenderingCacheSweeping = true;
@@ -272,6 +292,8 @@ dp.events.list = [{
   id: "1",
   resource: "r1",
   text: "2's,A Stitch In Time's, 1040, 40 ",
+  title: "2's,A Stitch In Time's, 1040, 40 ",
+
   total: 8,
 
   tags: { bookingType: 'schedule', taskType: 1040 } // custom event property
@@ -281,6 +303,8 @@ dp.events.list = [{
   id: "2",
   resource: "r2",
   text: "1's,A Stitch, 1041, 40 ",
+  title: "1's,A Stitch, 1041, 40 ",
+
   total: 13,
   tags: { bookingType: 'schedule', taskType: 1041 } // custom event property
 }, {
@@ -289,6 +313,8 @@ dp.events.list = [{
   id: "3",
   resource: "r2",
   text: "1's,A Stitch, 1041, 40 ",
+  title: "1's,A Stitch, 1041, 40 ",
+
   total: 13,
   tags: { bookingType: 'schedule', taskType: 1041 } // custom event property
 }];
@@ -328,30 +354,87 @@ dp.contextMenuSelection = new DayPilot.Menu({ items: [{
 dp.init();
 
 //-------------------------------------------------------------------------------------------------
-var picker = new Pikaday({
-  field: document.getElementById('select-cal'),
-  format: 'YYYY-MM-DD',
-  onSelect: function onSelect() {
-    dp.scrollTo(picker.getMoment().format('YYYY-MM-DD'), false, 'middle');
-  }
-});
+/*   let picker = new Pikaday({
+     field: document.getElementById('select-cal'),
+     format: 'YYYY-MM-DD',
+     onSelect: function() {
+       dp.scrollTo(picker.getMoment().format('YYYY-MM-DD'), false, 'middle')
+     }
+   })*/
+
+var picker = new Pikaday({ field: document.getElementById('select-cal') });
 
 $(document).ready(function () {
 
+  $('#setting').click(function () {
+    $('.ui.sidebar').sidebar('setting', { 'transition': 'overlay', dimPage: true }).sidebar("toggle");
+    e.preventDefault();
+  });
+  // $('#addresource-form .item').click(function(e){
+  //  e.preventDefault();
+  // });
+  $('#addresource-submit').click(function () {
+    // $('#addresource-form').parent('active visible);
+
+  });
+
+  /* vig code */
+
+  var taskList = dp.events.list;
+  var taskTitle = '';
+  var projectStartDate = new Pikaday({
+    field: $("#dateStart")[0],
+    theme: 'triangle',
+    container: $("#datepikstart")[0]
+  }),
+      projectEndDate = new Pikaday({
+    field: $("#dateEnd")[0],
+    theme: 'triangle',
+    container: $("#datepikend")[0]
+  });
+
   $('.ui.dropdown').dropdown();
-});
+  $('.ui.accordion').accordion();
+  $('.draghelp').popup();
 
-$('.ui.dropdown').dropdown();
-$('#setting').click(function () {
-  $('.ui.sidebar').sidebar('setting', { 'transition': 'overlay', dimPage: true }).sidebar("toggle");
-  e.preventDefault();
-});
-// $('#addresource-form .item').click(function(e){
-//  e.preventDefault();
-// });
-$('#addresource-submit').click(function () {
-  // $('#addresource-form').parent('active visible);
+  $('#search-client').search({
+    source: taskList,
+    searchFields: ['title'],
 
+    onSelect: function onSelect(result, response) {
+      taskTitle = result.title;
+    }
+  });
+
+  var scheduleproj = $("#schedule-proj");
+  $(scheduleproj).click(function (event) {
+
+    var bookingHours = parseInt($("#bookingHrs").val()) ? parseInt($("#bookingHrs").val()) : 8,
+        bookingTitle = $('#projName').val(),
+        projStartDate = $("#dateStart").val(),
+        projEndDate = $("#dateEnd").val();
+
+    createBooking();
+    function createBooking() {
+      var newBooking = new DayPilot.Event({
+        start: bookingObj.start,
+        end: bookingObj.end,
+        id: DayPilot.guid(),
+        resource: bookingObj.resource,
+        text: bookingTitle,
+        total: bookingHours,
+        color: '#ffffff',
+        barBackColor: 'transparent',
+        tags: {
+          bookingType: bookingType ? bookingType : 'schedule'
+        }
+      });
+      dp.events.add(newBooking);
+      dp.message("Created");
+      dp.clearSelection();
+    }
+  });
+  /* ends here */
 });
 
 var addRippleEffect = function addRippleEffect(e) {

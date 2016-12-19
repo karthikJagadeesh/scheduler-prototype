@@ -3,7 +3,7 @@ body {
     padding: 0;
     margin: 0;
     background: #F5F5F5;
-    font-family: 'Segoe UI,Arial,Helvetica,Verdana,Sans Serif';
+
 }
 
 a {
@@ -39,7 +39,7 @@ a {
     border-left: 6px solid rgba(0, 0, 0, 0);
 }
 
-.ui.dropdown .menu .active.item {
+.ui.dropdown .menu > .active.item {
     border-left: 6px solid #60728C;
     background: rgba(154, 170, 195, 0.24) !important;
 }
@@ -115,14 +115,15 @@ body.pushable>.pusher {
 }
 
 button {
-    position: relative;
-    display: block;
-    border: none;
-    outline: none;
-    cursor: pointer;
-    overflow: hidden;
-    user-select: none;
-    border-radius: 2px;
+  position: relative;
+  display: block;
+  border: none;
+  outline: none;
+  cursor: pointer;
+  overflow: hidden;
+  user-select: none;
+  border-radius: 2px;
+  background: #FFFFFF !important;
 }
 
 #sidebar-hours:after{
@@ -237,7 +238,8 @@ button {
     vertical-align: middle;
     height: inherit;
 }
-
+.scheduler_8_shadow{z-index:9;}
+.ui.styled.accordion{width:225px;}
 footer.mdl-mini-footer {
     position: fixed;
     background-color: #f0f0f0;
@@ -247,7 +249,7 @@ footer.mdl-mini-footer {
     bottom: 0;
     padding: 12px 15px;
 }
-
+.pika-lendar{width:auto;}
 
 /* custom css  */
 

@@ -57,15 +57,13 @@
 
 .scheduler_8_message
 {
-    opacity: 0.9;
-    z-index: 99999;
+    opacity: 0.9;    z-index: 99999;
     filter: alpha(opacity=90);
-    padding: 27px 10px;
+    padding: 10px;
     color: #fff;
-    background: #75536C;
-    text-align: center;
-    letter-spacing: 2px;
-    text-transform: uppercase;
+    background: #045776;    position: absolute;
+    left: 25%;
+    right: 25%;text-align: center;
 }
 
 .scheduler_8_timeheadergroup,
@@ -165,9 +163,9 @@
 
 .scheduler_8_shadow_inner
 {
-    background-color: #666666;
-    opacity: 0.3;
-    filter: alpha(opacity=30);
+    background-color: #7b969a;
+    opacity: 0.5;
+    filter: alpha(opacity=50);
     height: 100%;
 }
 
