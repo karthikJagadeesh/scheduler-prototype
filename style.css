@@ -114,6 +114,7 @@ body.pushable>.pusher {
     font-family: lato;
 }
 
+/* removed background  */
 button {
   position: relative;
   display: block;
@@ -305,6 +306,13 @@ footer.mdl-mini-footer {
 #calendar-container {
     margin-top: 0px;
 }
+
+
+.dropdown-desc{
+   color: #B3B3B3;
+   padding: 5px;
+}
+
 #addresource-submit {
 }
 #dp {

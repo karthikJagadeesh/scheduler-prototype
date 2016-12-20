@@ -112,15 +112,36 @@
                         Weeks
                     </div>
                     <div class="divider"></div>
-                    <div class="item">
+                    <div class="item" id="show-this-week"><!--karthikJagadeesh -->
                         This Week
                     </div>
-                    <div class="item">
+                    <div class="item" id="show-this-month"><!--karthikJagadeesh -->
                         This Month
                     </div>
                 </div>
             </div>
 
+            <div id="view-states-btn" class="ui icon top left pointing dropdown button">
+               <i class="desktop icon"></i>
+               <div class="menu">
+                   <div class="header" style="border-bottom:1px solid rgba(0,0,0,0.1)">
+                       <div class="dropdown-heading" style="text-align: center;font-size:14px; ">View Modes</div>
+                       <div class="dropdown-desc" style="text-align:center">View modes allow you to switch the calender <br>layout</div>
+                   </div>
+                   <div id="modes-grouped" class="item" style="border-bottom:1px solid rgba(0,0,0,0.1)">
+                       <div class="dropdown-heading"><h5 style="display:inline-block;margin-right:15px">Grouped Rows</h5><label id="label-modes-grouped" style="background: #638D63;color:#fff;padding:4px 10px;border-radius:10px;display:none">Active</label></div>
+                       <div class="dropdown-desc"><span>Group and combine the Project and Resource rows in <br>a collapsible group level Parent -> Child Relationship.</span></div>
+                   </div>
+                   <div id="modes-single-project-resource" class="item" style="border-bottom:1px solid rgba(0,0,0,0.1)">
+                       <div class="dropdown-heading"><h5 style="display:inline-block;margin-right:15px">Single Rows (Project & Resource)</h5><label id="label-modes-single-project-resource" style="background: #638D63;color:#fff;padding:4px 10px;border-radius:10px;display:none">Active</label></div>
+                       <div class="dropdown-desc"><span>A Project or Resource is represented as a single row.<br> All bookings will appear on 1 row to help resolve <br>booking conflicts.</span></div>
+                   </div>
+                   <div id="modes-single-resource" class="item active" style="margin-bottom:5px; ">
+                       <div class="dropdown-heading"><h5 style="display:inline-block;margin-right:15px">Single Rows (Resource)</h5><label id="label-modes-single-resource" style="background: #638D63;color:#fff;padding:4px 10px;border-radius:10px">Active</label></div>
+                       <div class="dropdown-desc"><span>All rows are Resource rows. All bookings will appear  <br> on 1 row to help resolve booking conflicts.</span></div>
+                   </div>
+               </div>
+           </div>
 
             <div class="ui buttons" style="margin-left: 5px">
 
@@ -200,7 +221,7 @@
                         <div id="sidebar-hours" class="ui floating dropdown labeled search icon button sidebar-btn ">
                             <i class="time icon"></i>
                             <span class="text">10</span>
-                            <div class="menu">
+                            <div id="cell-width" class="menu">
                                 <div class="item">10</div>
                                 <div class="item">40</div>
                                 <div class="item">70</div>
