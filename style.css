@@ -123,7 +123,7 @@ button {
   overflow: hidden;
   user-select: none;
   border-radius: 2px;
-  background: #FFFFFF !important;
+
 }
 
 #sidebar-hours:after{
@@ -143,9 +143,7 @@ button {
     padding:9px;
 }
 
-.ui .button {
-    background: #FFFFFF !important;
-}
+
 
 .ui.floating.dropdown.labeled.search.icon.button.sidebar-btn {
     margin: 5px auto;
@@ -215,7 +213,7 @@ button {
     color: #FFF;
     font-size: 11px;
     height: 26px !important;
-    z-index: 9999999;
+    z-index: 99;
 }
 
 .cellSelectionMenu {
@@ -250,6 +248,11 @@ footer.mdl-mini-footer {
     padding: 12px 15px;
 }
 .pika-lendar{width:auto;}
+
+/* vigfox css */
+.ui.basic.button{background: #fff !important}
+.ui.vertical.menu .dropdown.item.edge .menu{left:-100%;}
+/* vf css ends */
 
 /* custom css  */
 
@@ -299,17 +302,11 @@ footer.mdl-mini-footer {
     margin-left: 20px;
 }
  .scheduler_default_event {}
-
 #calendar-container {
     margin-top: 0px;
 }
-
-
-
 #addresource-submit {
-
 }
-
 #dp {
     margin: 0 auto;
 }

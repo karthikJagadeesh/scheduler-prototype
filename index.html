@@ -15,7 +15,7 @@
 
 <body>
     <div class="ui inverted menu" style="margin:0; border-radius:0;background-color: #445978; @*background-color: rgb(68,89,120);*@">
-        <a class="item" style="width:83px"><img src="assets/images/xcm-logo.png" style="width:55px"></a>
+        <a class="item" style="width:83px"><img alt="XCM Scheduler" src="assets/images/xcm-logo.png" style="width:55px"></a>
         <a class="item" href="#">My View</a>
         <a class="item" href="#">Reports</a>
         <a class="item active" href="#">Scheduler</a>
@@ -90,7 +90,7 @@
         <div class="ui ten wide column">
             <div class="ui icon buttons">
                 <button class="ui icon button" id="scroll-back"><i class="chevron left icon"></i></button>
-                <button class="ui icon button" id="scroll-today"><i class="circle icon"></i></i>
+                <button class="ui icon button" id="scroll-today"><i class="circle icon"></i>
                 </button>
                 <button class="ui icon button" id="scroll-next"><i class="chevron right icon"></i></button>
             </div>
@@ -123,8 +123,8 @@
 
 
             <div class="ui buttons" style="margin-left: 5px">
-                
-                <div class="ui floating dropdown icon button" id="add-resource-dropdown">Add Resources
+
+                <div class="ui floating dropdown icon button basic" id="add-resource-dropdown">Add Resources
                     <i class="dropdown icon"></i>
                     <div id="addresource-form" class="menu">
                         <div class="item disabled" style="text-align:center">Add a new resource to your account</div>
@@ -139,7 +139,8 @@
                                     <label>Last Name</label>
                                     <input type="text" name="last-name" placeholder="Last Name">
                                 </div>
-                                <div style="border: none !important; background: rgba(0, 0, 0, 0) !important;"class="item disable-item">
+                                <div style="border: none !important; background: rgba(0, 0, 0, 0) !important;"
+                                class="item disable-item">
                                   <button type="submit" id="addresource-submit" class="ui button" style="background:#445978 !important; color:white" >Add To Scheduler</button>
                                 </div>
                             </form>
@@ -152,109 +153,13 @@
 
         <div class="ui six wide column">
 
-        <!-- starting -->
 
         <span class="draghelp" data-content="You need to first select a cell from the scheduler below to use the cell tools." data-title="First Select a Cell"><i class="help circle icon large"></i></span>
-        <div class="ui dropdown simple schedulepop disabled" >
-        <button class="ui button">
+
+        <button class="ui button basic schedulepop disabled">
         Schedule  <i class="dropdown icon"></i>
         </button>
 
-
-        <div class="menu">
-        <div class="item">Paste</div>
-        <div class="item">
-        <i class="dropdown icon"></i>
-        Schedule project
-        <div class="menu">
-        <div class="ui styled accordion" id="spaccordion">
-        <div class="title">
-        <i class="dropdown icon"></i>
-        Select a project
-        </div>
-        <div class="content">
-        <div class="ui search" id="search-client">
-          <div class="ui icon input">
-            <input class="prompt"  id="projName" type="text" placeholder="Search projects...">
-            <i class="search icon"></i>
-          </div>
-          <div class="results"></div>
-        </div>
-        </div>
-        <div class="title">
-        <i class="dropdown icon"></i>
-        Start Date
-        </div>
-        <div class="content">
-        <div class="ui left icon input">
-        <input type="text" id="dateStart" placeholder="Start Date"><i class="calendar  icon"></i>
-        </div>
-        <div id="datepikstart"></div>
-        </div>
-        <div class="title">
-        <i class="dropdown icon"></i>
-        End Date
-        </div>
-        <div class="content">
-        <div class="ui left icon input">
-        <input type="text" id="dateEnd" placeholder="End Date"><i class="calendar  icon"></i>
-        </div>
-        <div id="datepikend"></div>
-        </div>
-
-        <div class="title">
-        <i class="dropdown icon"></i>
-        Allocation
-        </div>
-        <div class="content">
-        <label class="radio">
-        <input data-input="hoursInput" name="optionsRadios" class="hourRadio" value="" type="radio"> Hours / Day </label>
-        <div class="allocationDropInput"> <input class="bookingHrs" id="bookingHrs" value="8" type="text"> hrs   </div>
-        </div>
-        <div class="title">
-        <button id="schedule-proj"> Schedule project</button>
-        </div>
-        </div>
-        </div>
-        </div>
-        <div class="item">
-        <i class="dropdown icon"></i>
-        Holiday booking
-        <div class="menu">
-
-
-          <div class="ui styled accordion" id="hdaccordion">
-        <div class="title">
-        <i class="dropdown icon"></i>
-        Leave Type
-        </div>
-        <div class="content">
-        <div class="ui left icon input">
-        <input type="text" class="contextMenuFilter" placeholder="Type to Filter Projects">
-        <i class="users icon"></i>
-        </div>
-        <div class="ui list">
-        <div class="item">Apples</div>
-        <div class="item">Pears</div>
-        <div class="item">Oranges</div>
-        </div>
-
-        </div>
-
-
-        </div>
-        </div>
-        </div>
-        <div class="item">
-        <i class="edit icon"></i>  Edit resource
-        </div>
-
-        </div>
-        </div>
-
-
-
-            <!--- ending -->
             <div id="conflictsbtn" class="ui floating labeled icon dropdown button">
                 <i class="filter icon"></i>
                 <span class="text">Filter By Conflicts</span>
@@ -273,7 +178,7 @@
         </div>
 
     </div>
-    <div class="">
+    <div class="wrapper">
         <div id="calendar-container">
             <div id="dp"></div>
         </div>
@@ -430,6 +335,200 @@
             </div>
         </footer>
     </div>
+
+
+  <!-- custom context menu for event creating rightclick -->
+    <div class="ui pointing vertical menu" id="scheduleproMenur" style="display:none">
+        <div class="item pasteBooking">  Paste  </div>
+
+
+      <div class="item ui dropdown">
+        <i class="dropdown icon"></i>   Schedule project
+        <div class="menu">
+          <div class="ui styled accordion" id="spaccordion">
+
+            <div class="title">
+            <i class="dropdown icon"></i>
+            Select a project
+            </div>
+            <div class="content">
+            <div class="ui search" id="searchClient">
+              <div class="ui icon input">
+                <input class="prompt"  id="projName" type="text" placeholder="Search projects" >
+                <i class="search icon"></i>
+              </div>
+
+            </div>
+              <div class="ui results"></div>
+            </div>
+
+
+            <div class="title">
+            <i class="dropdown icon"></i>
+            Task Type
+            </div>
+            <div class="content">
+              <div class="ui left icon input">
+              <input type="text" class="contextMenuFilter" placeholder="Type to Filter Tasktype">
+              <i class="users icon"></i>
+              </div>
+              <div class="ui list">
+              <div class="item">1041</div>
+              <div class="item">1040</div>
+              <div class="item">1042</div>
+              </div>
+
+            </div>
+
+
+            <div class="title">
+            <i class="dropdown icon"></i>
+            Start Date
+            </div>
+            <div class="content">
+            <div class="ui left icon input">
+            <input type="text" id="dateStart" placeholder="Start Date"><i class="calendar  icon"></i>
+            </div>
+            <div id="datepikstart"></div>
+            </div>
+
+            <div class="title">
+            <i class="dropdown icon"></i>
+            End Date
+            </div>
+
+            <div class="content">
+            <div class="ui left icon input">
+            <input type="text" id="dateEnd" placeholder="End Date"><i class="calendar  icon"></i>
+            </div>
+            <div id="datepikend"></div>
+            </div>
+
+            <div class="title">
+            <i class="dropdown icon"></i>
+            Allocation
+            </div>
+            <div class="content">
+            <label class="radio">
+            <input data-input="hoursInput" name="optionsRadios" class="hourRadio" value="" type="radio"> Hours / Day </label>
+            <div class="allocationDropInput"> <input class="bookingHrs" id="bookingHrs" value="8" type="text"> hrs   </div>
+            </div>
+
+            <div class="title">
+            <button class="ui button blue" id="scheduleProject"> Schedule project</button>
+            </div>
+
+
+          </div>
+          </div>
+        </div>
+
+
+
+        <div class="ui dropdown item">
+        <i class="dropdown icon"></i>
+        Holiday booking
+              <div class="menu">
+                <div class="ui styled accordion" id="hdaccordion">
+              <div class="title">
+              <i class="dropdown icon"></i>
+              Leave Type
+              </div>
+              <div class="content">
+              <div class="ui left icon input">
+              <input type="text" class="contextMenuFilter" placeholder="Type to Filter Projects">
+              <i class="users icon"></i>
+              </div>
+              <div class="ui list">
+              <div class="item">Apples</div>
+              <div class="item">Pears</div>
+              <div class="item">Oranges</div>
+              </div>
+
+              </div>
+
+              </div>
+              </div>
+        </div>
+
+
+
+
+        <div class="item">
+        <i class="edit icon"></i>  Edit resource
+        </div>
+      </div>
+
+
+      <!-- custom context menu for event editing  rightclick -->
+        <div class="ui pointing vertical menu" id="eventActions" style="display:none">
+
+          <div class="ui dropdown item">
+          <i class="dropdown icon"></i>
+        Actions
+                <div class="menu">
+                  <a class="item cutBooking">Cut</a>
+                  <a class="item copyBooking">Copy</a>
+                  <a class="item delBooking">Delete</a>
+                  <a class="item dupBooking">Duplicate</a>
+                  <a class="item editTitleBooking">Edit Title</a>
+                </div>
+          </div>
+
+          <div class="item ui dropdown">
+            <i class="dropdown icon"></i>   Dates
+            <div class="menu">
+              <div class="ui styled accordion" id="evactions">
+                <div class="title">
+                <i class="dropdown icon"></i>
+                Start Date
+                </div>
+                <div class="content">
+                <div class="ui left icon input">
+                <input type="text" id="dateStart1" placeholder="Start Date"><i class="calendar  icon"></i>
+                </div>
+                <div id="datepikstart1"></div>
+                </div>
+
+                <div class="title">
+                <i class="dropdown icon"></i>
+                End Date
+                </div>
+                <div class="content">
+                <div class="ui left icon input">
+                <input type="text" id="dateEnd1" placeholder="End Date"><i class="calendar  icon"></i>
+                </div>
+                <div id="datepikend1"></div>
+                </div>
+
+                <div class="title">
+                <i class="dropdown icon"></i>
+                Allocation
+                </div>
+                <div class="content">
+                <label class="radio">
+                <input data-input="hoursInput" name="optionsRadios" class="hourRadio" value="" type="radio"> Hours / Day </label>
+                <div class="allocationDropInput"> <input class="bookingHrs" id="bookingHrs1" value="8" type="text"> hrs   </div>
+                </div>
+
+                <div class="title">
+                <button class="ui button blue" id="updateBooking">Update Booking</button>
+                </div>
+
+
+              </div>
+              </div>
+            </div>
+
+            <div class="item">
+            <i class="edit icon"></i>  Edit
+            </div>
+          </div>
+
+
+
+
+
     <script type="text/javascript" src="./assets/daypilot-all.min.js"></script>
     <script src="https://cdnjs.cloudflare.com/ajax/libs/jquery/3.1.1/jquery.min.js"></script>
     <script src="assets/semantic.min.js"></script>

@@ -1,13 +1,11 @@
 'use strict';
 
-// (() => {
-
 var showGrid = 'numbers';
 var weekdays = ['sun', 'mon', 'tue', 'wed', 'thu', 'fri', 'sat'];
 
 var bookingType = '';
 var bookingObj = {};
-
+var copied = null;
 var dp = new DayPilot.Scheduler("dp");
 
 dp.theme = "scheduler_8";
@@ -217,6 +215,8 @@ dp.onBeforeTimeHeaderRender = function (args) {
 
 dp.onTimeRangeSelecting = function (args) {
 
+  document.getElementById('scheduleproMenur').style.display = "none";
+  document.getElementById('eventActions').style.display = "none";
   args.right.enabled = true;
   args.left.enabled = true;
   args.allowed = true;
@@ -224,35 +224,52 @@ dp.onTimeRangeSelecting = function (args) {
 
 dp.onTimeRangeSelected = function (args) {
 
-  $('.schedulepop').removeClass('disabled');
-
   bookingObj = args;
 
-  dp.contextMenuSelection = new DayPilot.Menu({
+  document.querySelector('.scheduler_8_shadow_inner').addEventListener('contextmenu', function (e) {
+    document.getElementById('scheduleproMenur').style.display = "block";
+    $("#scheduleproMenur").css({
+      position: "absolute",
+      top: e.pageY,
+      left: e.pageX,
+      zIndex: 999999
+    });
+    e.preventDefault();
+  }, false);
 
-    items: [{ text: "Schedule Project", onclick: function onclick() {
-
-        var name = prompt("New event name:", "Event");
-        if (!name) return;
-        dp.clearSelection();
-        var data = { start: args.start,
-          end: args.end,
-          id: DayPilot.guid(),
-          resource: args.resource,
-          total: 8,
-          text: name
-        };
-
-        var e = new DayPilot.Event(data);
-        dp.events.add(e);
-        dp.message("Created");
-        dp.clearSelection();
-      } }, { text: "Add new Project", onclick: function onclick() {} }, { text: "Edit Resource", onclick: function onclick() {} }, { text: "Paste", onclick: function onclick() {} }]
+  $('.schedulepop').removeClass('disabled');
+  $('.schedulepop').click(function (e) {
+    $('#scheduleproMenur').css({ position: "absolute",
+      display: "block",
+      top: e.pageY,
+      left: e.pageX,
+      zIndex: 999999 });
   });
 
-  if (document.getElementsByClassName('cellSelectionMenu').length) {
-    //  document.getElementsByClassName('cellSelectionMenu').remove();
+  if (!copied) {
+    $('.pasteBooking').addClass('disabled');
+  } else {
+    $('.pasteBooking').removeClass('disabled');
   }
+  $('.pasteBooking').on('click', function (args) {
+
+    //  var selection = this.source;
+    var duration = copied.end().getTime() - copied.start().getTime(); // milliseconds
+    var newEvent = new DayPilot.Event({
+      start: bookingObj.start,
+      end: bookingObj.start.addMilliseconds(duration),
+      text: copied.text(),
+      resource: bookingObj.resource,
+      id: DayPilot.guid(),
+      total: copied.data.total,
+      tags: copied.data.tags });
+    dp.events.add(newEvent);
+    copied = null;
+  });
+
+  //if (document.getElementsByClassName('cellSelectionMenu').length) {
+  //  document.getElementsByClassName('cellSelectionMenu').remove();
+  //  }
 
   var el = document.querySelector('.scheduler_8_shadow');
   var elChild = document.createElement('div');
@@ -265,7 +282,7 @@ dp.onTimeRangeSelected = function (args) {
   //  csm.addEventListener('click', function(){ customdropMenu.show(args);  });
 };
 
-dp.dynamicEventRenderingCacheSweeping = true;
+//dp.dynamicEventRenderingCacheSweeping = true;
 dp.eventMovingStartEndEnabled = false;
 dp.eventResizingStartEndEnabled = true;
 dp.timeRangeSelectingStartEndEnabled = false;
@@ -319,123 +336,7 @@ dp.events.list = [{
   tags: { bookingType: 'schedule', taskType: 1041 } // custom event property
 }];
 
-dp.contextMenu = new DayPilot.Menu({
-  items: [{ text: "Edit", onclick: function onclick() {} }, { text: "Delete", onclick: function onclick() {
-      var res = confirm("Are you sure want to delete ");if (res) dp.events.remove(this.source);
-    } }, { text: "Copy", onclick: function onclick() {
-      dp.clipBoard = this.source;
-    } }, { text: "Select", onclick: function onclick() {
-      dp.multiselect.add(this.source);
-    } }, { text: "-" }, { text: "Reassign to", items: dp.resources.map(function (res) {
-      return { text: res.name };
-    }) }]
-});
-
-dp.contextMenuSelection = new DayPilot.Menu({ items: [{
-    text: "Paste", onclick: function onclick() {
-      if (!dp.clipBoard) {
-        alert('You need to copy an event first.');return;
-      }
-      var selection = this.source;
-      var duration = dp.clipBoard.end().getTime() - dp.clipBoard.start().getTime(); // milliseconds
-      var newEvent = new DayPilot.Event({
-        start: selection.start,
-        end: selection.start.addMilliseconds(duration),
-        text: dp.clipBoard.text(),
-        resource: selection.resource,
-        id: DayPilot.guid(),
-        total: dp.clipBoard.data.total,
-        tags: dp.clipBoard.data.tags });
-      dp.events.add(newEvent);
-    }
-  }]
-});
-
 dp.init();
-
-//-------------------------------------------------------------------------------------------------
-/*   let picker = new Pikaday({
-     field: document.getElementById('select-cal'),
-     format: 'YYYY-MM-DD',
-     onSelect: function() {
-       dp.scrollTo(picker.getMoment().format('YYYY-MM-DD'), false, 'middle')
-     }
-   })*/
-
-var picker = new Pikaday({ field: document.getElementById('select-cal') });
-
-$(document).ready(function () {
-
-  $('#setting').click(function () {
-    $('.ui.sidebar').sidebar('setting', { 'transition': 'overlay', dimPage: true }).sidebar("toggle");
-    e.preventDefault();
-  });
-  // $('#addresource-form .item').click(function(e){
-  //  e.preventDefault();
-  // });
-  $('#addresource-submit').click(function () {
-    // $('#addresource-form').parent('active visible);
-
-  });
-
-  /* vig code */
-
-  var taskList = dp.events.list;
-  var taskTitle = '';
-  var projectStartDate = new Pikaday({
-    field: $("#dateStart")[0],
-    theme: 'triangle',
-    container: $("#datepikstart")[0]
-  }),
-      projectEndDate = new Pikaday({
-    field: $("#dateEnd")[0],
-    theme: 'triangle',
-    container: $("#datepikend")[0]
-  });
-
-  $('.ui.dropdown').dropdown();
-  $('.ui.accordion').accordion();
-  $('.draghelp').popup();
-
-  $('#search-client').search({
-    source: taskList,
-    searchFields: ['title'],
-
-    onSelect: function onSelect(result, response) {
-      taskTitle = result.title;
-    }
-  });
-
-  var scheduleproj = $("#schedule-proj");
-  $(scheduleproj).click(function (event) {
-
-    var bookingHours = parseInt($("#bookingHrs").val()) ? parseInt($("#bookingHrs").val()) : 8,
-        bookingTitle = $('#projName').val(),
-        projStartDate = $("#dateStart").val(),
-        projEndDate = $("#dateEnd").val();
-
-    createBooking();
-    function createBooking() {
-      var newBooking = new DayPilot.Event({
-        start: bookingObj.start,
-        end: bookingObj.end,
-        id: DayPilot.guid(),
-        resource: bookingObj.resource,
-        text: bookingTitle,
-        total: bookingHours,
-        color: '#ffffff',
-        barBackColor: 'transparent',
-        tags: {
-          bookingType: bookingType ? bookingType : 'schedule'
-        }
-      });
-      dp.events.add(newBooking);
-      dp.message("Created");
-      dp.clearSelection();
-    }
-  });
-  /* ends here */
-});
 
 var addRippleEffect = function addRippleEffect(e) {
   var target = e.target;
@@ -459,16 +360,140 @@ var addRippleEffect = function addRippleEffect(e) {
 
 document.addEventListener('click', addRippleEffect, false);
 
-// })()
+var picker = new Pikaday({ field: document.getElementById('select-cal') });
 
+$(document).ready(function () {
 
-/*   // height of grid container as per window and list of resources
-   function gridCalendarHeight() {
-       var totalHeight = $("#calendar-container").height() + $("#calendar-container").offset().top + $(".footer").height();
-       if(  totalHeight >= $(window).height() ){
-           dp.heightSpec = "Fixed";
-           dp.height = $(window).height() - $("#calendar-container").offset().top  - $(".footer").height() - 80;
-           dp.update();
-       }
-   }
-   gridCalendarHeight();*/
+  $('#setting').click(function () {
+    $('.ui.sidebar').sidebar('setting', { 'transition': 'overlay', dimPage: true }).sidebar("toggle");
+    e.preventDefault();
+  });
+  // $('#addresource-form .item').click(function(e){
+  //  e.preventDefault();
+  // });
+  $('#addresource-submit').click(function () {
+    // $('#addresource-form').parent('active visible);
+
+  });
+
+  /* vigfox code */
+
+  var taskList = dp.events.list;
+  var taskTitle = '';
+  var projectStartDate = new Pikaday({
+    field: $("#dateStart")[0],
+    theme: 'triangle',
+    container: $("#datepikstart")[0]
+  }),
+      projectEndDate = new Pikaday({
+    field: $("#dateEnd")[0],
+    theme: 'triangle',
+    container: $("#datepikend")[0]
+  });
+
+  $('.ui.dropdown').dropdown();
+  $('.ui.accordion').accordion();
+  $('.draghelp').popup();
+
+  $('#searchClient').search({
+    source: taskList,
+    searchFields: ['title'],
+
+    onSelect: function onSelect(result, response) {
+      taskTitle = result.title;
+    }
+  });
+
+  var scheduleproj = $("#scheduleProject");
+  $(scheduleproj).click(function (event) {
+
+    var bookingHours = parseInt($("#bookingHrs").val()) ? parseInt($("#bookingHrs").val()) : 8,
+        bookingTitle = $('#projName').val(),
+        projStartDate = $("#dateStart").val(),
+        projEndDate = $("#dateEnd").val();
+
+    bookingObj.start = projStartDate ? projStartDate : bookingObj.start;
+    bookingObj.end = projEndDate ? projEndDate : bookingObj.end;
+
+    createBooking();
+    function createBooking() {
+      var newBooking = new DayPilot.Event({
+        start: bookingObj.start,
+        end: bookingObj.end,
+        id: DayPilot.guid(),
+        resource: bookingObj.resource,
+        text: bookingTitle,
+        total: bookingHours,
+        color: '#ffffff',
+        barBackColor: 'transparent',
+        tags: {
+          bookingType: bookingType ? bookingType : 'schedule'
+        }
+      });
+      dp.events.add(newBooking);
+      document.getElementById('scheduleproMenur').style.display = "none";
+      dp.message("Created");
+      dp.clearSelection();
+    }
+  });
+
+  /* ends vf  here */
+});
+
+dp.onEventClick = function (args) {
+  $('#scheduleproMenur').css({ display: "none" });
+  dp.clearSelection();
+  $("#eventActions").css({ display: "block",
+    position: "absolute",
+    top: event.pageY,
+    left: event.pageX,
+    zIndex: 999999
+  });
+
+  $('.copyBooking').on('click', function () {
+    copied = args.e;
+
+    $("#eventActions").css({ display: "none" });
+  });
+};
+
+/*  dp.onEventRightClick = function(args) {
+
+    $("#eventActions").css(
+              { display:"block",
+                position: "absolute",
+                top: event.pageY,
+                left: event.pageX,
+                zIndex: 999999
+              }
+            );
+};*/
+
+$(function () {
+
+  $(".item.dropdown").on('mouseenter mouseleave', function (e) {
+
+    if ($('.menu', this).length) {
+      console.log($('.menu', this).length);
+      var elm = $('.dropdown', this);
+
+      var off = elm.offset();
+      console.log(off);
+      var l = off.left;
+      var w = elm.width();
+
+      var docH = $("#calendar-container").height();
+      var docW = $("#calendar-container").width();
+
+      var isEntirelyVisible = l + w <= docW;
+
+      if (!isEntirelyVisible) {
+        console.log(true);
+        $(this).addClass('edge');
+      } else {
+        $(this).removeClass('edge');
+        console.log(false);
+      }
+    }
+  });
+});
