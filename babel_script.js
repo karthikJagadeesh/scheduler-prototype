@@ -1,474 +1,502 @@
 'use strict';
 
-// (() => {
+function _toConsumableArray(arr) { if (Array.isArray(arr)) { for (var i = 0, arr2 = Array(arr.length); i < arr.length; i++) { arr2[i] = arr[i]; } return arr2; } else { return Array.from(arr); } }
 
-var showGrid = 'numbers';
-var weekdays = ['sun', 'mon', 'tue', 'wed', 'thu', 'fri', 'sat'];
+(function () {
 
-var bookingType = '';
-var bookingObj = {};
+  var showGrid = 'numbers';
+  var weekdays = ['sun', 'mon', 'tue', 'wed', 'thu', 'fri', 'sat'];
 
-var dp = new DayPilot.Scheduler("dp");
+  var bookingType = '';
 
-dp.theme = "scheduler_8";
-dp.clipBoard = null;
+  var dp = new DayPilot.Scheduler("dp");
 
-dp.cellWidth = 60;
-dp.eventHeight = 50;
-dp.headerHeight = 40;
-dp.startDate = new DayPilot.Date().firstDayOfMonth();
-var cacheStart = dp.startDate;
-dp.days = 900;
-dp.cellDuration = 8;
-dp.scale = 'Day';
+  dp.theme = "scheduler_8";
+  dp.clipBoard = null;
 
-dp.timeHeaders = [{ groupBy: 'Month', format: 'MMMM yyyy' }, { groupBy: 'Cell', format: 'ddd d' }];
-dp.separators = [{ color: "red", location: new DayPilot.Date(), width: 2 }];
-
-dp.heightSpec = "Max";
-dp.height = 360;
-dp.width = '98%';
-
-dp.businessBeginsHour = 10;
-dp.businessEndsHour = 18;
-
-//Navigate toolbar Handlers
-// - change Time Headers view to Days, Weeks, Months, Year
-document.querySelector('#show-hours').addEventListener('click', function () {
-  dp.scale = "Manual";
-  dp.timeline = [];
-  dp.timeHeaders = [{ groupBy: 'Day', format: 'dddd, MMM dd' }, { groupBy: 'Hour' }];
-  dp.scale = 'Hour';
-  dp.days = 100;
-  dp.update();
-});
-document.querySelector('#show-days').addEventListener('click', function () {
-  dp.timeHeaders = [{ groupBy: 'Month', format: 'MMMM yyyy' }, { groupBy: 'Cell', format: 'ddd d' }];
+  dp.cellWidth = 60;
+  dp.eventHeight = 50;
+  dp.headerHeight = 40;
+  dp.startDate = new DayPilot.Date().firstDayOfMonth();
+  var cacheStart = dp.startDate;
+  dp.days = 900;
+  dp.cellDuration = 8;
   dp.scale = 'Day';
-  dp.days = 900;
-  dp.update();
-});
-document.querySelector('#show-weeks').addEventListener('click', function () {
-  dp.timeHeaders = [{ groupBy: 'Month', format: 'MMMM yyyy' }, { groupBy: 'Week' }];
-  dp.scale = 'Week';
-  dp.days = 900;
-  dp.update();
-});
-document.querySelector('#show-months').addEventListener('click', function () {
-  dp.timeHeaders = [{ groupBy: 'Year', format: 'yyyy' }, { groupBy: 'Cell', format: 'MM' }];
-  dp.scale = 'Month';
-  dp.days = 900;
-  dp.update();
-});
 
-//Scroll forward, backward and today
-var scroll = function scroll() {
-  switch (dp.scale) {
-    case 'Hour':
-      return dp.scrollTo(dp.getDate(dp.getScrollX()).addDays(arguments.length <= 0 ? undefined : arguments[0]));
+  dp.timeHeaders = [{ groupBy: 'Month', format: 'MMMM yyyy' }, { groupBy: 'Cell', format: 'ddd d' }];
+  dp.separators = [{ color: "red", location: new DayPilot.Date(), width: 2 }];
 
-    case 'Day':
-      return dp.scrollTo(dp.getDate(dp.getScrollX()).addDays(arguments.length <= 1 ? undefined : arguments[1]));
+  dp.heightSpec = "Max";
+  dp.height = 360;
+  dp.width = '98%';
 
-    case 'Week':
-      return dp.scrollTo(dp.getDate(dp.getScrollX()).addDays(arguments.length <= 2 ? undefined : arguments[2]));
+  dp.businessBeginsHour = 10;
+  dp.businessEndsHour = 18;
 
-    case 'Month':
-      return dp.scrollTo(dp.getDate(dp.getScrollX()).addMonths(arguments.length <= 3 ? undefined : arguments[3]));
+  var picker = new Pikaday({
+    field: document.getElementById('select-cal'),
+    format: 'YYYY-MM-DD',
+    onSelect: function onSelect() {
+      dp.scrollTo(picker.getMoment().format('YYYY-MM-DD'), false, 'middle');
+    }
+  });
+
+  //Navigate toolbar Handlers
+  // - change Time Headers view to Days, Weeks, Months, Year
+  function getTimeFormatProperties(scale, timeHeader, days, cellWidth, startDate) {
+    dp.timeHeaders = [{ groupBy: timeHeader.groupBy1, format: timeHeader.format1 }, { groupBy: timeHeader.groupBy2, format: timeHeader.format2 }];
+    dp.scale = scale;
+    dp.days = days;
+    dp.cellWidth = cellWidth;
+    dp.startDate = startDate;
   }
-};
+  var navigator = {
+    '#show-hours': {
+      timeFormat: ['Hour', { groupBy1: 'Day', groupBy2: 'Hour', format1: 'dddd, MMM dd', format2: undefined }, 100, 60, new DayPilot.Date().firstDayOfMonth()]
+    },
+    '#show-days': {
+      timeFormat: ['Day', { groupBy1: 'Month', groupBy2: 'Cell', format1: 'MMMM yyyy', format2: 'ddd d' }, 900, 60, new DayPilot.Date().firstDayOfMonth()]
+    },
+    '#show-weeks': {
+      timeFormat: ['Week', { groupBy1: 'Month', groupBy2: 'Week', format1: 'MMMM yyyy', format2: undefined }, 900, 60, new DayPilot.Date().firstDayOfMonth()]
+    },
+    '#show-months': {
+      timeFormat: ['Month', { groupBy1: 'Year', groupBy2: 'Cell', format1: 'yyyy', format2: 'MM' }, 900, 60, new DayPilot.Date().firstDayOfMonth()]
+    },
+    '#show-this-week': {
+      timeFormat: ['Day', { groupBy1: 'Month', groupBy2: 'Cell', format1: 'MMMM yyyy', format2: 'ddd d' }, 7, 180, new DayPilot.Date()]
+    },
+    '#show-this-month': {
+      timeFormat: ['Day', { groupBy1: 'Month', groupBy2: 'Cell', format1: 'MMMM yyyy', format2: 'ddd d' }, 31, 60, new DayPilot.Date()]
+    }
+  };
+  var navigatorKeys = Object.keys(navigator);
 
-document.querySelector('#scroll-next').addEventListener('click', function () {
-  scroll(1, 7, 21, 1);
-  if (dp.getViewPort().end.addDays(-1).value === dp.getDate().value) {
-    dp.days += 100;
-    dp.scrollTo(dp.getDate(dp.getScrollX()).addDays(-100));
-    dp.update();
-  }
-});
-document.querySelector('#scroll-back').addEventListener('click', function () {
-
-  if (dp.getViewPort().start === cacheStart) {
-    cacheStart = dp.startDate = dp.getViewPort().start.addDays(-100);
-    dp.days += 100;
-    dp.scrollTo(dp.getDate(dp.getScrollX()).addDays(100));
-    dp.update();
-  }
-
-  scroll(-1, -7, -21, -1);
-});
-document.querySelector('#scroll-today').addEventListener('click', function () {
-  // cacheStart = dp.startDate = (new DayPilot.Date()).addDays(-10)
-  dp.scrollTo(new DayPilot.Date(), false, 'middle');
-  dp.update();
-});
-
-var addResourceForm = document.querySelector('#add-resource-form');
-addResourceForm.addEventListener('submit', function (event) {
-  event.preventDefault();
-
-  var firstName = event.target[0].value;
-  var lastName = event.target[1].value;
-
-  if (firstName !== '' && lastName !== '') {
-    dp.resources.unshift({
-      name: firstName + ' ' + lastName,
-      id: '' + firstName
+  var _loop = function _loop(i) {
+    var props = navigator[navigatorKeys[i]];
+    document.querySelector(navigatorKeys[i]).addEventListener('click', function () {
+      var timeHeader = props.timeHeader;
+      getTimeFormatProperties.apply(undefined, _toConsumableArray(props.timeFormat));
+      dp.update();
     });
-    dp.message("Added new Resource");
+  };
+
+  for (var i = 0; i < navigatorKeys.length; i++) {
+    _loop(i);
   }
 
-  event.target[0].value = '';
-  event.target[1].value = '';
-  dp.update();
-});
+  //Scroll forward, backward and today
+  var scroll = function scroll() {
+    switch (dp.scale) {
+      case 'Hour':
+        return dp.scrollTo(dp.getDate(dp.getScrollX()).addDays(arguments.length <= 0 ? undefined : arguments[0]));
 
-var cellHeights = {
-  '#xtrasmall': 30,
-  '#small': 40,
-  '#medium': 50,
-  '#large': 70,
-  '#xtralarge': 100
-};
-var heightKeys = Object.keys(cellHeights);
+      case 'Day':
+        return dp.scrollTo(dp.getDate(dp.getScrollX()).addDays(arguments.length <= 1 ? undefined : arguments[1]));
 
-var _loop = function _loop(i) {
-  document.querySelector(heightKeys[i]).addEventListener('click', function () {
-    dp.eventHeight = cellHeights[heightKeys[i]];
+      case 'Week':
+        return dp.scrollTo(dp.getDate(dp.getScrollX()).addDays(arguments.length <= 2 ? undefined : arguments[2]));
+
+      case 'Month':
+        return dp.scrollTo(dp.getDate(dp.getScrollX()).addMonths(arguments.length <= 3 ? undefined : arguments[3]));
+    }
+  };
+
+  document.querySelector('#scroll-next').addEventListener('click', function () {
+    scroll(1, 7, 21, 1);
+    if (dp.getViewPort().end.addDays(-1).value === dp.getDate().value) {
+      dp.days += 100;
+      dp.scrollTo(dp.getDate(dp.getScrollX()).addDays(-100));
+      dp.update();
+    }
+  });
+  document.querySelector('#scroll-back').addEventListener('click', function () {
+
+    if (dp.getViewPort().start === cacheStart) {
+      cacheStart = dp.startDate = dp.getViewPort().start.addDays(-100);
+      dp.days += 100;
+      dp.scrollTo(dp.getDate(dp.getScrollX()).addDays(100));
+      dp.update();
+    }
+
+    scroll(-1, -7, -21, -1);
+  });
+  document.querySelector('#scroll-today').addEventListener('click', function () {
+    // cacheStart = dp.startDate = (new DayPilot.Date()).addDays(-10)
+    dp.scrollTo(new DayPilot.Date(), false, 'middle');
     dp.update();
   });
-};
 
-for (var i = 0; i < heightKeys.length; i++) {
-  _loop(i);
-}
+  var addResourceForm = document.querySelector('#add-resource-form');
+  addResourceForm.addEventListener('submit', function (event) {
+    event.preventDefault();
 
-dp.onBeforeCellRender = function (args) {
-  //highlight today's column
-  if (args.cell.start <= DayPilot.Date.today() && DayPilot.Date.today() < args.cell.end) {
-    args.cell.backColor = "#83D6DE";
-  }
+    var firstName = event.target[0].value;
+    var lastName = event.target[1].value;
 
-  var firmAvailableHours = 8;
-  // var weekDay = weekdays[args.cell.start.getDayOfWeek()];
-  // utilization color
-  var utilization = args.cell.utilization("total");
-
-  var visibleUtilization = utilization > 0;
-
-  // cell bar color
-  var bgColor = '';
-  var utilizationText = '';
-  var utilizationHrs = 0;
-  if (utilization > firmAvailableHours) {
-    bgColor = '#c0504d';
-    utilizationHrs = utilization - firmAvailableHours;
-    utilizationText = 'over';
-  } else if (utilization == firmAvailableHours) {
-    bgColor = '#9bbb59;';
-    utilizationText = 'ok';
-    utilizationHrs = firmAvailableHours;
-  } else {
-    bgColor = '#4F81BD;';
-    utilizationText = 'under';
-    utilizationHrs = firmAvailableHours - utilization;
-  }
-
-  firmAvailableHours = firmAvailableHours > 0 ? firmAvailableHours : '-';
-
-  // showing numbers only
-  if (showGrid == 'numbers' && visibleUtilization == true) {
-    args.cell.html = "<div class='booking-bg booking-numbers' style='background-color: " + bgColor + ";'><span class='utilization-span'>" + utilizationHrs + "hr " + utilizationText + "</span></div>";
-  } else if (showGrid == 'numbers' && visibleUtilization == false) {
-    args.cell.html = "<div class='booking-bg unscheduled-booking'><span>" + firmAvailableHours + "</span></div>";
-  }
-  // showing bars only
-  /*if (showGrid == 'bar' && visibleUtilization == true) {
-      args.cell.html = "<div class='booking-bg booking-bar' style='background-color: " + bgColor + ";'><span class='utilization-span'>" + utilizationHrs + "hr " + utilizationText + "</span></div>";
-  } else if (showGrid == 'bar' && visibleUtilization == false) {
-      args.cell.html = "<div class='booking-bg booking-bar unscheduled-booking'></div>";
-  }
-  // disable
-  if (showGrid == 'none' && visibleUtilization == true) {
-      args.cell.html = "<div class='booking-bg booking-disable' style='background-color: " + bgColor + ";'><span class='utilization-span'>" + utilizationHrs + "hr " + utilizationText + "</span></div>";
-  } else if (showGrid == 'none' && visibleUtilization == false) {
-      args.cell.html = "<div class='booking-bg booking-disable unscheduled-booking'></div>";
-  }*/
-  // for weekends
-  if (dp.scale == "Day" && (args.cell.start.getDayOfWeek() === 0 || args.cell.start.getDayOfWeek() === 6)) {
-    args.cell.backColor = "#FCFBF8";
-  }
-};
-
-// adding holidays to the caleneder beore loading
-
-dp.onBeforeTimeHeaderRender = function (args) {
-
-  var firmHolidays = [{ startDate: '2017-03-25T00:00:00', endDate: '2017-03-26T00:00:00', title: 'Good Friday' }, { startDate: '2017-01-26T00:00:00', endDate: '2017-01-27T00:00:00', title: 'Republic Day' }, { startDate: '2017-01-05-01T00:00:00', endDate: '2017-05-02T00:00:00', title: 'Worker Day' }, { startDate: '2017-08-15T00:00:00', endDate: '2017-08-16T00:00:00', title: 'Independence Day' }, { startDate: '2017-09-05T00:00:00', endDate: '2017-09-06T00:00:00', title: 'Teachers Day' }];
-  for (var i = 0; i < firmHolidays.length; i++) {
-    if (args.header.start == firmHolidays[i].startDate && args.header.end == firmHolidays[i].endDate) {
-      args.header.cssClass = "firm-holiday";
-      args.header.toolTip = firmHolidays[i].title + " " + args.header.toolTip;
+    if (firstName !== '' && lastName !== '') {
+      dp.resources.unshift({
+        name: firstName + ' ' + lastName,
+        id: '' + firstName
+      });
+      dp.message("Added new Resource");
     }
+
+    event.target[0].value = '';
+    event.target[1].value = '';
+    dp.update();
+  });
+
+  var cellHeights = {
+    '#xtrasmall': 30,
+    '#small': 40,
+    '#medium': 50,
+    '#large': 70,
+    '#xtralarge': 100
+  };
+  var heightKeys = Object.keys(cellHeights);
+
+  var _loop2 = function _loop2(_i) {
+    document.querySelector(heightKeys[_i]).addEventListener('click', function () {
+      dp.eventHeight = cellHeights[heightKeys[_i]];
+      dp.update();
+    });
+  };
+
+  for (var _i = 0; _i < heightKeys.length; _i++) {
+    _loop2(_i);
   }
-};
 
-// event creating
+  //View Modes
+  var modesGroupedLabel = document.querySelector('#label-modes-grouped');
+  var modesSingleProjectResourceLabel = document.querySelector('#label-modes-single-project-resource');
+  var modesSingleResourceLabel = document.querySelector('#label-modes-single-resource');
+  var modesStyle = function modesStyle() {
+    return modesGroupedLabel.style.display = arguments.length <= 0 ? undefined : arguments[0], modesSingleProjectResourceLabel.style.display = arguments.length <= 1 ? undefined : arguments[1], modesSingleResourceLabel.style.display = arguments.length <= 2 ? undefined : arguments[2];
+  };
+  var changeModeTo = function changeModeTo(mode) {
+    if (mode === 'grouped') return dp.treeEnabled = true, dp.resources = [{ name: "Task 1", id: "A", expanded: true, children: [{ name: "Resource 1", id: "r1" }, { name: "Resource 2", id: "r2" }, { name: "Resource 3", id: "r3" }, { name: "Resource 4", id: "r4" }, { name: "Resource 5", id: "r5" }, { name: "Resource 6", id: "r6" }]
+    }];else if (mode === 'singleRowResource') return dp.treeEnabled = false, dp.resources = [{ name: "Resource 1", id: "r1" }, { name: "Resource 2", id: "r2" }, { name: "Resource 3", id: "r3" }, { name: "Resource 4", id: "r4" }, { name: "Resource 5", id: "r5" }, { name: "Resource 6", id: "r6" }];
+  };
 
-dp.onTimeRangeSelecting = function (args) {
+  document.querySelector('#modes-grouped').addEventListener('click', function () {
+    return modesStyle('inline', 'none', 'none'), changeModeTo('grouped'), dp.update();
+  });
+  document.querySelector('#modes-single-project-resource').addEventListener('click', function () {
+    return modesStyle('none', 'inline', 'none');
+  });
+  document.querySelector('#modes-single-resource').addEventListener('click', function () {
+    return modesStyle('none', 'none', 'inline'), changeModeTo('singleRowResource'), dp.update();
+  });
 
-  args.right.enabled = true;
-  args.left.enabled = true;
-  args.allowed = true;
-};
+  dp.onBeforeCellRender = function (args) {
+    //highlight today's column
+    if (args.cell.start <= DayPilot.Date.today() && DayPilot.Date.today() < args.cell.end) {
+      args.cell.backColor = "#83D6DE";
+    }
 
-dp.onTimeRangeSelected = function (args) {
+    var firmAvailableHours = 8;
+    // var weekDay = weekdays[args.cell.start.getDayOfWeek()];
+    // utilization color
+    var utilization = args.cell.utilization("total");
 
-  $('.schedulepop').removeClass('disabled');
+    var visibleUtilization = utilization > 0;
 
-  bookingObj = args;
+    // cell bar color
+    var bgColor = '';
+    var utilizationText = '';
+    var utilizationHrs = 0;
+    if (utilization > firmAvailableHours) {
+      bgColor = '#c0504d';
+      utilizationHrs = utilization - firmAvailableHours;
+      utilizationText = 'over';
+    } else if (utilization == firmAvailableHours) {
+      bgColor = '#9bbb59;';
+      utilizationText = 'ok';
+      utilizationHrs = firmAvailableHours;
+    } else {
+      bgColor = '#4F81BD;';
+      utilizationText = 'under';
+      utilizationHrs = firmAvailableHours - utilization;
+    }
 
-  dp.contextMenuSelection = new DayPilot.Menu({
+    firmAvailableHours = firmAvailableHours > 0 ? firmAvailableHours : '-';
 
-    items: [{ text: "Schedule Project", onclick: function onclick() {
+    // showing numbers only
+    if (showGrid == 'numbers' && visibleUtilization == true) {
+      args.cell.html = "<div class='booking-bg booking-numbers' style='background-color: " + bgColor + ";'><span class='utilization-span'>" + utilizationHrs + "hr " + utilizationText + "</span></div>";
+    } else if (showGrid == 'numbers' && visibleUtilization == false) {
+      args.cell.html = "<div class='booking-bg unscheduled-booking'><span>" + firmAvailableHours + "</span></div>";
+    }
+    // showing bars only
+    /*if (showGrid == 'bar' && visibleUtilization == true) {
+        args.cell.html = "<div class='booking-bg booking-bar' style='background-color: " + bgColor + ";'><span class='utilization-span'>" + utilizationHrs + "hr " + utilizationText + "</span></div>";
+    } else if (showGrid == 'bar' && visibleUtilization == false) {
+        args.cell.html = "<div class='booking-bg booking-bar unscheduled-booking'></div>";
+    }
+    // disable
+    if (showGrid == 'none' && visibleUtilization == true) {
+        args.cell.html = "<div class='booking-bg booking-disable' style='background-color: " + bgColor + ";'><span class='utilization-span'>" + utilizationHrs + "hr " + utilizationText + "</span></div>";
+    } else if (showGrid == 'none' && visibleUtilization == false) {
+        args.cell.html = "<div class='booking-bg booking-disable unscheduled-booking'></div>";
+    }*/
+    // for weekends
+    if (dp.scale == "Day" && (args.cell.start.getDayOfWeek() === 0 || args.cell.start.getDayOfWeek() === 6)) {
+      args.cell.backColor = "#FCFBF8";
+    }
+  };
 
-        var name = prompt("New event name:", "Event");
-        if (!name) return;
-        dp.clearSelection();
-        var data = { start: args.start,
-          end: args.end,
+  // adding holidays to the caleneder beore loading
+
+  dp.onBeforeTimeHeaderRender = function (args) {
+
+    var firmHolidays = [{ startDate: '2017-03-25T00:00:00', endDate: '2017-03-26T00:00:00', title: 'Good Friday' }, { startDate: '2017-01-26T00:00:00', endDate: '2017-01-27T00:00:00', title: 'Republic Day' }, { startDate: '2017-01-05-01T00:00:00', endDate: '2017-05-02T00:00:00', title: 'Worker Day' }, { startDate: '2017-08-15T00:00:00', endDate: '2017-08-16T00:00:00', title: 'Independence Day' }, { startDate: '2017-09-05T00:00:00', endDate: '2017-09-06T00:00:00', title: 'Teachers Day' }];
+    for (var i = 0; i < firmHolidays.length; i++) {
+      if (args.header.start == firmHolidays[i].startDate && args.header.end == firmHolidays[i].endDate) {
+        args.header.cssClass = "firm-holiday";
+        args.header.toolTip = firmHolidays[i].title + " " + args.header.toolTip;
+      }
+    }
+  };
+
+  // event creating
+
+  dp.onTimeRangeSelecting = function (args) {
+
+    args.right.enabled = true;
+    args.left.enabled = true;
+    args.allowed = true;
+  };
+
+  dp.onTimeRangeSelected = function (args) {
+
+    $('.schedulepop').removeClass('disabled');
+
+    var bookingObj = {};
+
+    bookingObj = args;
+
+    dp.contextMenuSelection = new DayPilot.Menu({
+
+      items: [{ text: "Schedule Project", onclick: function onclick() {
+
+          var name = prompt("New event name:", "Event");
+          if (!name) return;
+          dp.clearSelection();
+          var data = { start: args.start,
+            end: args.end,
+            id: DayPilot.guid(),
+            resource: args.resource,
+            total: 8,
+            text: name
+          };
+
+          var e = new DayPilot.Event(data);
+          dp.events.add(e);
+          dp.message("Created");
+          dp.clearSelection();
+        } }, { text: "Add new Project", onclick: function onclick() {} }, { text: "Edit Resource", onclick: function onclick() {} }, { text: "Paste", onclick: function onclick() {} }]
+    });
+
+    if (document.getElementsByClassName('cellSelectionMenu').length) {
+      //  document.getElementsByClassName('cellSelectionMenu').remove();
+    }
+
+    var el = document.querySelector('.scheduler_8_shadow');
+    var elChild = document.createElement('div');
+    elChild.className = 'cellSelectionMenu';
+    el.prepend(elChild);
+    var el2 = document.querySelector('.cellSelectionMenu');
+    el2.innerHTML = "<i class='fa fa-ellipsis-v fa-2x' aria-hidden='true'></i>";
+
+    var csm = document.querySelector('.cellSelectionMenu');
+    //  csm.addEventListener('click', function(){ customdropMenu.show(args);  });
+  };
+
+  dp.dynamicEventRenderingCacheSweeping = true;
+  dp.eventMovingStartEndEnabled = false;
+  dp.eventResizingStartEndEnabled = true;
+  dp.timeRangeSelectingStartEndEnabled = false;
+
+  // see also DayPilot.Event.data.staticBubbleHTML property
+  dp.bubble = new DayPilot.Bubble({
+    onLoad: function onLoad(args) {
+      var ev = args.source,
+          parentElement;
+      var noDaysBooked = new DayPilot.Date(ev.data.end).getDay() - new DayPilot.Date(ev.data.start).getDay();
+      if (noDaysBooked == 0) noDaysBooked = 1;
+      var bookedHrs = ev.data.total;
+      args.html = '<div class="bubble-class"> ' + ev.text() + ' ' + ' : ' + bookedHrs + '  hrs for  ' + noDaysBooked + ' day </div>';
+    }
+  });
+
+  // header columns
+  // dp.rowHeaderColumns = [{ title: 'Name' }];
+  dp.treeEnabled = false;
+  dp.resources = [{ name: "Resource 1", id: "r1" }, { name: "Resource 2", id: "r2" }, { name: "Resource 3", id: "r3" }, { name: "Resource 4", id: "r4" }, { name: "Resource 5", id: "r5" }, { name: "Resource 6", id: "r6" }];
+
+  dp.events.list = [{
+    start: "2016-12-04",
+    end: "2016-12-09",
+    id: "1",
+    resource: "r1",
+    text: "2's,A Stitch In Time's, 1040, 40 ",
+    title: "2's,A Stitch In Time's, 1040, 40 ",
+
+    total: 8,
+
+    tags: { bookingType: 'schedule', taskType: 1040 } // custom event property
+  }, {
+    start: "2016-12-04",
+    end: "2016-12-09",
+    id: "2",
+    resource: "r2",
+    text: "1's,A Stitch, 1041, 40 ",
+    title: "1's,A Stitch, 1041, 40 ",
+
+    total: 13,
+    tags: { bookingType: 'schedule', taskType: 1041 } // custom event property
+  }, {
+    start: "2016-12-10",
+    end: "2016-12-15",
+    id: "3",
+    resource: "r2",
+    text: "1's,A Stitch, 1041, 40 ",
+    title: "1's,A Stitch, 1041, 40 ",
+
+    total: 13,
+    tags: { bookingType: 'schedule', taskType: 1041 } // custom event property
+  }];
+
+  dp.contextMenu = new DayPilot.Menu({
+    items: [{ text: "Edit", onclick: function onclick() {} }, { text: "Delete", onclick: function onclick() {
+        var res = confirm("Are you sure want to delete ");if (res) dp.events.remove(this.source);
+      } }, { text: "Copy", onclick: function onclick() {
+        dp.clipBoard = this.source;
+      } }, { text: "Select", onclick: function onclick() {
+        dp.multiselect.add(this.source);
+      } }, { text: "-" }, { text: "Reassign to", items: dp.resources.map(function (res) {
+        return { text: res.name };
+      }) }]
+  });
+
+  dp.contextMenuSelection = new DayPilot.Menu({ items: [{
+      text: "Paste", onclick: function onclick() {
+        if (!dp.clipBoard) {
+          alert('You need to copy an event first.');return;
+        }
+        var selection = this.source;
+        var duration = dp.clipBoard.end().getTime() - dp.clipBoard.start().getTime(); // milliseconds
+        var newEvent = new DayPilot.Event({
+          start: selection.start,
+          end: selection.start.addMilliseconds(duration),
+          text: dp.clipBoard.text(),
+          resource: selection.resource,
           id: DayPilot.guid(),
-          resource: args.resource,
-          total: 8,
-          text: name
-        };
+          total: dp.clipBoard.data.total,
+          tags: dp.clipBoard.data.tags });
+        dp.events.add(newEvent);
+      }
+    }]
+  });
 
-        var e = new DayPilot.Event(data);
-        dp.events.add(e);
+  dp.init();
+
+  //-------------------------------------------------------------------------------------------------
+
+
+  $(document).ready(function () {
+
+    $('#setting').click(function (e) {
+      $('.ui.sidebar').sidebar('setting', { 'transition': 'overlay', dimPage: true }).sidebar("toggle");
+      e.preventDefault();
+    });
+    // $('#addresource-form .item').click(function(e){
+    //  e.preventDefault();
+    // });
+    $('#addresource-submit').click(function () {
+      // $('#addresource-form').parent('active visible);
+
+    });
+
+    /* vig code */
+
+    var taskList = dp.events.list;
+    var taskTitle = '';
+    var projectStartDate = new Pikaday({
+      field: $("#dateStart")[0],
+      theme: 'triangle',
+      container: $("#datepikstart")[0]
+    }),
+        projectEndDate = new Pikaday({
+      field: $("#dateEnd")[0],
+      theme: 'triangle',
+      container: $("#datepikend")[0]
+    });
+
+    $('.ui.dropdown').dropdown();
+    $('.ui.accordion').accordion();
+    $('.draghelp').popup();
+
+    $('#search-client').search({
+      source: taskList,
+      searchFields: ['title'],
+
+      onSelect: function onSelect(result, response) {
+        taskTitle = result.title;
+      }
+    });
+
+    var scheduleproj = $("#schedule-proj");
+    $(scheduleproj).click(function (event) {
+
+      var bookingHours = parseInt($("#bookingHrs").val()) ? parseInt($("#bookingHrs").val()) : 8,
+          bookingTitle = $('#projName').val(),
+          projStartDate = $("#dateStart").val(),
+          projEndDate = $("#dateEnd").val();
+
+      createBooking();
+      function createBooking() {
+        var newBooking = new DayPilot.Event({
+          start: bookingObj.start,
+          end: bookingObj.end,
+          id: DayPilot.guid(),
+          resource: bookingObj.resource,
+          text: bookingTitle,
+          total: bookingHours,
+          color: '#ffffff',
+          barBackColor: 'transparent',
+          tags: {
+            bookingType: bookingType ? bookingType : 'schedule'
+          }
+        });
+        dp.events.add(newBooking);
         dp.message("Created");
         dp.clearSelection();
-      } }, { text: "Add new Project", onclick: function onclick() {} }, { text: "Edit Resource", onclick: function onclick() {} }, { text: "Paste", onclick: function onclick() {} }]
-  });
-
-  if (document.getElementsByClassName('cellSelectionMenu').length) {
-    //  document.getElementsByClassName('cellSelectionMenu').remove();
-  }
-
-  var el = document.querySelector('.scheduler_8_shadow');
-  var elChild = document.createElement('div');
-  elChild.className = 'cellSelectionMenu';
-  el.prepend(elChild);
-  var el2 = document.querySelector('.cellSelectionMenu');
-  el2.innerHTML = "<i class='fa fa-ellipsis-v fa-2x' aria-hidden='true'></i>";
-
-  var csm = document.querySelector('.cellSelectionMenu');
-  //  csm.addEventListener('click', function(){ customdropMenu.show(args);  });
-};
-
-dp.dynamicEventRenderingCacheSweeping = true;
-dp.eventMovingStartEndEnabled = false;
-dp.eventResizingStartEndEnabled = true;
-dp.timeRangeSelectingStartEndEnabled = false;
-
-// see also DayPilot.Event.data.staticBubbleHTML property
-dp.bubble = new DayPilot.Bubble({
-  onLoad: function onLoad(args) {
-    var ev = args.source,
-        parentElement;
-    var noDaysBooked = new DayPilot.Date(ev.data.end).getDay() - new DayPilot.Date(ev.data.start).getDay();
-    if (noDaysBooked == 0) noDaysBooked = 1;
-    var bookedHrs = ev.data.total;
-    args.html = '<div class="bubble-class"> ' + ev.text() + ' ' + ' : ' + bookedHrs + '  hrs for  ' + noDaysBooked + ' day </div>';
-  }
-});
-
-// header columns
-dp.rowHeaderColumns = [{ title: 'Name' }];
-dp.treeEnabled = false;
-dp.resources = [{ name: "Resource 1", id: "r1" }, { name: "Resource 2", id: "r2" }, { name: "Resource 3", id: "r3" }, { name: "Resource 4", id: "r4" }, { name: "Resource 5", id: "r5" }, { name: "Resource 6", id: "r6" }];
-dp.events.list = [{
-  start: "2016-12-04",
-  end: "2016-12-09",
-  id: "1",
-  resource: "r1",
-  text: "2's,A Stitch In Time's, 1040, 40 ",
-  title: "2's,A Stitch In Time's, 1040, 40 ",
-
-  total: 8,
-
-  tags: { bookingType: 'schedule', taskType: 1040 } // custom event property
-}, {
-  start: "2016-12-04",
-  end: "2016-12-09",
-  id: "2",
-  resource: "r2",
-  text: "1's,A Stitch, 1041, 40 ",
-  title: "1's,A Stitch, 1041, 40 ",
-
-  total: 13,
-  tags: { bookingType: 'schedule', taskType: 1041 } // custom event property
-}, {
-  start: "2016-12-10",
-  end: "2016-12-15",
-  id: "3",
-  resource: "r2",
-  text: "1's,A Stitch, 1041, 40 ",
-  title: "1's,A Stitch, 1041, 40 ",
-
-  total: 13,
-  tags: { bookingType: 'schedule', taskType: 1041 } // custom event property
-}];
-
-dp.contextMenu = new DayPilot.Menu({
-  items: [{ text: "Edit", onclick: function onclick() {} }, { text: "Delete", onclick: function onclick() {
-      var res = confirm("Are you sure want to delete ");if (res) dp.events.remove(this.source);
-    } }, { text: "Copy", onclick: function onclick() {
-      dp.clipBoard = this.source;
-    } }, { text: "Select", onclick: function onclick() {
-      dp.multiselect.add(this.source);
-    } }, { text: "-" }, { text: "Reassign to", items: dp.resources.map(function (res) {
-      return { text: res.name };
-    }) }]
-});
-
-dp.contextMenuSelection = new DayPilot.Menu({ items: [{
-    text: "Paste", onclick: function onclick() {
-      if (!dp.clipBoard) {
-        alert('You need to copy an event first.');return;
       }
-      var selection = this.source;
-      var duration = dp.clipBoard.end().getTime() - dp.clipBoard.start().getTime(); // milliseconds
-      var newEvent = new DayPilot.Event({
-        start: selection.start,
-        end: selection.start.addMilliseconds(duration),
-        text: dp.clipBoard.text(),
-        resource: selection.resource,
-        id: DayPilot.guid(),
-        total: dp.clipBoard.data.total,
-        tags: dp.clipBoard.data.tags });
-      dp.events.add(newEvent);
+    });
+    /* ends here */
+  });
+
+  var addRippleEffect = function addRippleEffect(e) {
+    var target = e.target;
+    if (target.tagName.toLowerCase() !== 'button') return false;
+    var rect = target.getBoundingClientRect();
+    var ripple = target.querySelector('.ripple');
+    if (!ripple) {
+      ripple = document.createElement('span');
+      ripple.className = 'ripple';
+      ripple.style.height = ripple.style.width = Math.max(rect.width, rect.height) + 'px';
+      target.appendChild(ripple);
     }
-  }]
-});
+    ripple.classList.remove('show');
+    var top = e.pageY - rect.top - ripple.offsetHeight / 2 - document.body.scrollTop;
+    var left = e.pageX - rect.left - ripple.offsetWidth / 2 - document.body.scrollLeft;
+    ripple.style.top = top + 'px';
+    ripple.style.left = left + 'px';
+    ripple.classList.add('show');
+    return false;
+  };
 
-dp.init();
-
-//-------------------------------------------------------------------------------------------------
-/*   let picker = new Pikaday({
-     field: document.getElementById('select-cal'),
-     format: 'YYYY-MM-DD',
-     onSelect: function() {
-       dp.scrollTo(picker.getMoment().format('YYYY-MM-DD'), false, 'middle')
-     }
-   })*/
-
-var picker = new Pikaday({ field: document.getElementById('select-cal') });
-
-$(document).ready(function () {
-
-  $('#setting').click(function () {
-    $('.ui.sidebar').sidebar('setting', { 'transition': 'overlay', dimPage: true }).sidebar("toggle");
-    e.preventDefault();
-  });
-  // $('#addresource-form .item').click(function(e){
-  //  e.preventDefault();
-  // });
-  $('#addresource-submit').click(function () {
-    // $('#addresource-form').parent('active visible);
-
-  });
-
-  /* vig code */
-
-  var taskList = dp.events.list;
-  var taskTitle = '';
-  var projectStartDate = new Pikaday({
-    field: $("#dateStart")[0],
-    theme: 'triangle',
-    container: $("#datepikstart")[0]
-  }),
-      projectEndDate = new Pikaday({
-    field: $("#dateEnd")[0],
-    theme: 'triangle',
-    container: $("#datepikend")[0]
-  });
-
-  $('.ui.dropdown').dropdown();
-  $('.ui.accordion').accordion();
-  $('.draghelp').popup();
-
-  $('#search-client').search({
-    source: taskList,
-    searchFields: ['title'],
-
-    onSelect: function onSelect(result, response) {
-      taskTitle = result.title;
-    }
-  });
-
-  var scheduleproj = $("#schedule-proj");
-  $(scheduleproj).click(function (event) {
-
-    var bookingHours = parseInt($("#bookingHrs").val()) ? parseInt($("#bookingHrs").val()) : 8,
-        bookingTitle = $('#projName').val(),
-        projStartDate = $("#dateStart").val(),
-        projEndDate = $("#dateEnd").val();
-
-    createBooking();
-    function createBooking() {
-      var newBooking = new DayPilot.Event({
-        start: bookingObj.start,
-        end: bookingObj.end,
-        id: DayPilot.guid(),
-        resource: bookingObj.resource,
-        text: bookingTitle,
-        total: bookingHours,
-        color: '#ffffff',
-        barBackColor: 'transparent',
-        tags: {
-          bookingType: bookingType ? bookingType : 'schedule'
-        }
-      });
-      dp.events.add(newBooking);
-      dp.message("Created");
-      dp.clearSelection();
-    }
-  });
-  /* ends here */
-});
-
-var addRippleEffect = function addRippleEffect(e) {
-  var target = e.target;
-  if (target.tagName.toLowerCase() !== 'button') return false;
-  var rect = target.getBoundingClientRect();
-  var ripple = target.querySelector('.ripple');
-  if (!ripple) {
-    ripple = document.createElement('span');
-    ripple.className = 'ripple';
-    ripple.style.height = ripple.style.width = Math.max(rect.width, rect.height) + 'px';
-    target.appendChild(ripple);
-  }
-  ripple.classList.remove('show');
-  var top = e.pageY - rect.top - ripple.offsetHeight / 2 - document.body.scrollTop;
-  var left = e.pageX - rect.left - ripple.offsetWidth / 2 - document.body.scrollLeft;
-  ripple.style.top = top + 'px';
-  ripple.style.left = left + 'px';
-  ripple.classList.add('show');
-  return false;
-};
-
-document.addEventListener('click', addRippleEffect, false);
-
-// })()
-
-
-/*   // height of grid container as per window and list of resources
-   function gridCalendarHeight() {
-       var totalHeight = $("#calendar-container").height() + $("#calendar-container").offset().top + $(".footer").height();
-       if(  totalHeight >= $(window).height() ){
-           dp.heightSpec = "Fixed";
-           dp.height = $(window).height() - $("#calendar-container").offset().top  - $(".footer").height() - 80;
-           dp.update();
-       }
-   }
-   gridCalendarHeight();*/
+  document.addEventListener('click', addRippleEffect, false);
+})();

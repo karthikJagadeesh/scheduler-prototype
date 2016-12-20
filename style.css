@@ -114,6 +114,7 @@ body.pushable>.pusher {
     font-family: lato;
 }
 
+/* removed background  */
 button {
   position: relative;
   display: block;
@@ -123,7 +124,6 @@ button {
   overflow: hidden;
   user-select: none;
   border-radius: 2px;
-  background: #FFFFFF !important;
 }
 
 #sidebar-hours:after{
@@ -304,7 +304,10 @@ footer.mdl-mini-footer {
     margin-top: 0px;
 }
 
-
+.dropdown-desc{
+   color: #B3B3B3;
+   padding: 5px;
+}
 
 #addresource-submit {
 

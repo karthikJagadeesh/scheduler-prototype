@@ -1,15 +1,16 @@
-// (() => {
+(() => {
+
 
   const showGrid = 'numbers'
   const weekdays = ['sun', 'mon', 'tue', 'wed', 'thu', 'fri', 'sat']
 
   let bookingType = '';
-  var bookingObj = {};
 
   const dp = new DayPilot.Scheduler("dp")
 
   dp.theme = "scheduler_8"
   dp.clipBoard = null
+
 
   dp.cellWidth = 60
   dp.eventHeight = 50
@@ -35,46 +36,67 @@
   dp.businessBeginsHour = 10
   dp.businessEndsHour = 18
 
+  const picker = new Pikaday({
+    field: document.getElementById('select-cal'),
+    format: 'YYYY-MM-DD',
+    onSelect: function() {
+      dp.scrollTo(picker.getMoment().format('YYYY-MM-DD'), false, 'middle')
+    }
+  })
+
   //Navigate toolbar Handlers
   // - change Time Headers view to Days, Weeks, Months, Year
-  document.querySelector('#show-hours').addEventListener('click', () => {
-    dp.scale = "Manual";
-    dp.timeline = [];
+  function getTimeFormatProperties(scale, timeHeader, days, cellWidth, startDate) {
     dp.timeHeaders = [
-      { groupBy: 'Day', format: 'dddd, MMM dd'},
-      { groupBy: 'Hour' }
+      { groupBy: timeHeader.groupBy1, format: timeHeader.format1},
+      { groupBy: timeHeader.groupBy2, format: timeHeader.format2 }
     ]
-    dp.scale = 'Hour'
-    dp.days = 100
-    dp.update()
-  })
-  document.querySelector('#show-days').addEventListener('click', () => {
-    dp.timeHeaders = [
-      { groupBy: 'Month', format: 'MMMM yyyy' },
-      { groupBy: 'Cell', format: 'ddd d' }
-    ]
-    dp.scale = 'Day'
-    dp.days = 900
-    dp.update()
-  })
-  document.querySelector('#show-weeks').addEventListener('click', () => {
-    dp.timeHeaders = [
-      { groupBy: 'Month', format: 'MMMM yyyy' },
-      { groupBy: 'Week' }
-    ]
-    dp.scale = 'Week'
-    dp.days = 900
-    dp.update()
-  })
-  document.querySelector('#show-months').addEventListener('click', () => {
-    dp.timeHeaders = [
-      { groupBy: 'Year', format: 'yyyy' },
-      { groupBy: 'Cell', format: 'MM' }
-    ]
-    dp.scale = 'Month'
-    dp.days = 900
-    dp.update()
-  })
+    dp.scale = scale
+    dp.days = days
+    dp.cellWidth = cellWidth
+    dp.startDate = startDate
+  }
+  const navigator = {
+    '#show-hours': {
+      timeFormat: ['Hour',
+      { groupBy1: 'Day', groupBy2: 'Hour', format1: 'dddd, MMM dd', format2: undefined },
+      100, 60, (new DayPilot.Date().firstDayOfMonth())]
+    },
+    '#show-days': {
+      timeFormat: ['Day',
+      { groupBy1: 'Month', groupBy2: 'Cell', format1: 'MMMM yyyy', format2: 'ddd d' },
+      900, 60, (new DayPilot.Date().firstDayOfMonth())]
+    },
+    '#show-weeks': {
+      timeFormat: ['Week',
+      { groupBy1: 'Month', groupBy2: 'Week', format1: 'MMMM yyyy', format2: undefined },
+      900, 60, (new DayPilot.Date().firstDayOfMonth())]
+    },
+    '#show-months': {
+      timeFormat: ['Month',
+      { groupBy1: 'Year', groupBy2: 'Cell', format1: 'yyyy', format2: 'MM' },
+      900, 60, (new DayPilot.Date().firstDayOfMonth())]
+    },
+    '#show-this-week': {
+      timeFormat: ['Day',
+      { groupBy1: 'Month', groupBy2: 'Cell', format1: 'MMMM yyyy', format2: 'ddd d' },
+      7, 180, (new DayPilot.Date())]
+    },
+    '#show-this-month': {
+      timeFormat: ['Day',
+      { groupBy1: 'Month', groupBy2: 'Cell', format1: 'MMMM yyyy', format2: 'ddd d'},
+      31, 60, (new DayPilot.Date())]
+    }
+  }
+  const navigatorKeys = Object.keys(navigator)
+  for (let i=0; i<navigatorKeys.length; i++) {
+    const props = navigator[navigatorKeys[i]]
+    document.querySelector(navigatorKeys[i]).addEventListener('click', () => {
+      const timeHeader = props.timeHeader
+      getTimeFormatProperties(...props.timeFormat)
+      dp.update()
+    })
+  }
 
   //Scroll forward, backward and today
   const scroll = (...distance) => {
@@ -154,11 +176,58 @@
     })
   }
 
+  //View Modes
+  const modesGroupedLabel = document.querySelector('#label-modes-grouped')
+  const modesSingleProjectResourceLabel = document.querySelector('#label-modes-single-project-resource')
+  const modesSingleResourceLabel = document.querySelector('#label-modes-single-resource')
+  const modesStyle = (...types) => (
+    modesGroupedLabel.style.display = types[0],
+    modesSingleProjectResourceLabel.style.display = types[1],
+    modesSingleResourceLabel.style.display = types[2]
+  )
+  const changeModeTo = mode => {
+    if (mode === 'grouped') return (
+      dp.treeEnabled = true,
+      dp.resources = [
+        { name: "Task 1", id: "A", expanded: true, children:[
+          { name : "Resource 1", id : "r1" },
+          { name : "Resource 2", id : "r2" },
+          { name: "Resource 3", id: "r3" },
+          { name: "Resource 4", id: "r4" },
+          { name : "Resource 5", id : "r5" },
+          { name : "Resource 6", id : "r6" }]
+        }]
+    )
+    else if (mode === 'singleRowResource') return (
+      dp.treeEnabled = false,
+      dp.resources = [
+        { name : "Resource 1", id : "r1" },
+        { name : "Resource 2", id : "r2" },
+        { name: "Resource 3", id: "r3" },
+        { name: "Resource 4", id: "r4" },
+        { name : "Resource 5", id : "r5" },
+        { name : "Resource 6", id : "r6" }]
+    )
+  }
+
+  document.querySelector('#modes-grouped').addEventListener('click', () => (
+    modesStyle('inline', 'none', 'none'),
+    changeModeTo('grouped'),
+    dp.update()
+  ))
+  document.querySelector('#modes-single-project-resource').addEventListener('click', () => modesStyle('none', 'inline', 'none'))
+  document.querySelector('#modes-single-resource').addEventListener('click', () => (
+    modesStyle('none', 'none', 'inline'),
+    changeModeTo('singleRowResource'),
+    dp.update()
+  ))
+
   dp.onBeforeCellRender = args => {
     //highlight today's column
     if (args.cell.start <= DayPilot.Date.today() && DayPilot.Date.today() < args.cell.end) {
         args.cell.backColor = "#83D6DE";
     }
+
 
     let firmAvailableHours = 8;
     // var weekDay = weekdays[args.cell.start.getDayOfWeek()];
@@ -246,6 +315,7 @@
 
 
 
+        var bookingObj = {};
 
         bookingObj = args;
 
@@ -316,19 +386,16 @@
   });
 
   // header columns
-  dp.rowHeaderColumns = [{ title: 'Name' }];
+  // dp.rowHeaderColumns = [{ title: 'Name' }];
   dp.treeEnabled = false;
   dp.resources = [
+    { name : "Resource 1", id : "r1" },
+    { name : "Resource 2", id : "r2" },
+    { name: "Resource 3", id: "r3" },
+    { name: "Resource 4", id: "r4" },
+    { name : "Resource 5", id : "r5" },
+    { name : "Resource 6", id : "r6" }];
 
-                  { name : "Resource 1", id : "r1" },
-                  { name : "Resource 2", id : "r2" },
-                  { name: "Resource 3", id: "r3" },
-                  { name: "Resource 4", id: "r4" },
-                  { name : "Resource 5", id : "r5" },
-                  { name : "Resource 6", id : "r6" }
-
-
-                 ];
    dp.events.list = [{
                      start: "2016-12-04",
                      end: "2016-12-09",
@@ -402,22 +469,13 @@
 
 
 //-------------------------------------------------------------------------------------------------
-  /*   let picker = new Pikaday({
-       field: document.getElementById('select-cal'),
-       format: 'YYYY-MM-DD',
-       onSelect: function() {
-         dp.scrollTo(picker.getMoment().format('YYYY-MM-DD'), false, 'middle')
-       }
-     })*/
-
-      var picker = new Pikaday({ field: document.getElementById('select-cal') });
 
 
       $(document).ready(function() {
 
 
 
-        $('#setting').click(function(){
+        $('#setting').click(function(e){
          $('.ui.sidebar').sidebar('setting',{'transition': 'overlay',dimPage: true}).sidebar("toggle");
          e.preventDefault();
         });
@@ -521,18 +579,4 @@
 
      document.addEventListener('click', addRippleEffect, false)
 
-// })()
-
-
-
-
-/*   // height of grid container as per window and list of resources
-   function gridCalendarHeight() {
-       var totalHeight = $("#calendar-container").height() + $("#calendar-container").offset().top + $(".footer").height();
-       if(  totalHeight >= $(window).height() ){
-           dp.heightSpec = "Fixed";
-           dp.height = $(window).height() - $("#calendar-container").offset().top  - $(".footer").height() - 80;
-           dp.update();
-       }
-   }
-   gridCalendarHeight();*/
+})()
