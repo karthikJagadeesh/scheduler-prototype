@@ -194,8 +194,12 @@
 
 .scheduler_8_timeheader_float_inner {
     padding: 3px;
+    display: flex;
+    justify-content: center;
+    height: 100%;
+    align-items: center;
 }
-
+.scheduler_8_timeheadercol_inner, .scheduler_8_rowheader{display:flex;align-items: center;justify-content: center;}
 .scheduler_8_event_float_inner {
     padding: 5px 4px 4px 8px;
 }

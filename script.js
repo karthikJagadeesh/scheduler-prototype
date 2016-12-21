@@ -322,11 +322,19 @@ let copied = null;
 
     document.querySelector('.scheduler_8_shadow_inner').addEventListener('contextmenu', function(e) {
     document.getElementById('scheduleproMenur').style.display= "block";
+    var windowWidth = $(window).width();
+
+    //firmAvailableHours > 0 ? firmAvailableHours : '-'
+
+    console.log(windowWidth);
+    console.log(e.pageX);
+    console.log($(window).width());
+
     $("#scheduleproMenur").css(
               {
                 position: "absolute",
                 top: e.pageY,
-                left: e.pageX,
+                left: e.pageX <= windowWidth- 300 ? e.pageX : windowWidth-300,
                 zIndex: 999999
               }
             );
@@ -446,9 +454,6 @@ let copied = null;
 
 
      dp.init();
-
-
-
 
      const addRippleEffect = function(e) {
          let target = e.target;
@@ -595,33 +600,25 @@ let copied = null;
 };*/
 
 
-$(function () {
+
 
     $(".item.dropdown").on('mouseenter mouseleave', function (e) {
 
         if ($('.menu', this).length) {
-          console.log($('.menu', this).length);
-            var elm = $('.dropdown', this);
-
-            var off = elm.offset();
-            console.log(off);
-            var l = off.left;
-            var w = elm.width();
-
+          var elm = $('.dropdown', this);
+          var off = elm.offset();
+          var l = off.left;
+            var w = elm.width() + 300;
             var docH = $("#calendar-container").height();
             var docW = $("#calendar-container").width();
-
             var isEntirelyVisible = (l + w <= docW);
-
             if (!isEntirelyVisible) {
-              console.log(true);
-                $(this).addClass('edge');
+              $(this).addClass('edge');
             } else {
-                $(this).removeClass('edge');
-                console.log(false);
+              $(this).removeClass('edge');
             }
         }
     });
-});
+
 
 })()
