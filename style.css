@@ -255,6 +255,9 @@ footer.mdl-mini-footer {
 /* vigfox css */
 .ui.basic.button{background: #fff !important}
 .ui.vertical.menu .dropdown.item.edge .menu{left:-100%;}
+.ui.button{background:#fff;}
+.booking-numbers{color:#fff}
+.ui.six.wide.column{display: flex;  justify-content: flex-end;  align-items: center;}
 /* vf css ends */
 
 /* custom css  */
