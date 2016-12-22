@@ -68,7 +68,9 @@ a {
 .ui.labeled.icon.buttons .button {
     border-right: 1px solid rgba(0, 0, 0, 0.08)
 }
-
+.ui.button {
+    background: #FFFFFF !important;
+}
 
 /*resetting background after pusher activates*/
 

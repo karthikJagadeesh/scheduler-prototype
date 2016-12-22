@@ -1,5 +1,5 @@
 
-(() => {
+// (() => {
 
   const showGrid = 'numbers'
   const weekdays = ['sun', 'mon', 'tue', 'wed', 'thu', 'fri', 'sat']
@@ -7,7 +7,7 @@
   let bookingType = '';
 
   var bookingObj = {};
-let copied = null;
+  let copied = null;
 
   const dp = new DayPilot.Scheduler("dp")
 
@@ -49,57 +49,125 @@ let copied = null;
 
   //Navigate toolbar Handlers
   // - change Time Headers view to Days, Weeks, Months, Year
-  function getTimeFormatProperties(scale, timeHeader, days, cellWidth, startDate) {
+  // function getTimeFormatProperties(scale, timeHeader, days, cellWidth, startDate) {
+  //   dp.timeHeaders = [
+  //     { groupBy: timeHeader.groupBy1, format: timeHeader.format1},
+  //     { groupBy: timeHeader.groupBy2, format: timeHeader.format2 }
+  //   ]
+  //   dp.scale = scale
+  //   dp.days = days
+  //   dp.cellWidth = cellWidth
+  //   cacheStart = dp.startDate = startDate
+  // }
+  // const _navigator = {
+  //   '#show-hours': {
+  //     timeFormat: ['Hour',
+  //     { groupBy1: 'Day', groupBy2: 'Hour', format1: 'dddd, MMM dd', format2: undefined },
+  //     100, 60, (new DayPilot.Date())]
+  //   },
+  //   '#show-days': {
+  //     timeFormat: ['Day',
+  //     { groupBy1: 'Month', groupBy2: 'Cell', format1: 'MMMM yyyy', format2: 'ddd d' },
+  //     900, 60, (new DayPilot.Date())]
+  //   },
+  //   '#show-weeks': {
+  //     timeFormat: ['Week',
+  //     { groupBy1: 'Month', groupBy2: 'Week', format1: 'MMMM yyyy', format2: undefined },
+  //     900, 60, (new DayPilot.Date())]
+  //   },
+  //   '#show-months': {
+  //     timeFormat: ['Month',
+  //     { groupBy1: 'Year', groupBy2: 'Cell', format1: 'yyyy', format2: 'MM' },
+  //     900, 60, (new DayPilot.Date())]
+  //   },
+  //   '#show-this-week': {
+  //     timeFormat: ['Day',
+  //     { groupBy1: 'Month', groupBy2: 'Cell', format1: 'MMMM yyyy', format2: 'ddd d' },
+  //     7, 180, (new DayPilot.Date())]
+  //   },
+  //   '#show-this-month': {
+  //     timeFormat: ['Day',
+  //     { groupBy1: 'Month', groupBy2: 'Cell', format1: 'MMMM yyyy', format2: 'ddd d'},
+  //     31, 60, (new DayPilot.Date())]
+  //   }
+  // }
+  // const navigatorKeys = Object.keys(_navigator)
+  // for (let i=0; i<navigatorKeys.length; i++) {
+  //   const props = _navigator[navigatorKeys[i]]
+  //   document.querySelector(navigatorKeys[i]).addEventListener('click', () => {
+  //     getTimeFormatProperties(...props.timeFormat)
+  //     dp.update()
+  //   })
+  // }
+  document.querySelector('#show-hours').addEventListener('click', () => {
     dp.timeHeaders = [
-      { groupBy: timeHeader.groupBy1, format: timeHeader.format1},
-      { groupBy: timeHeader.groupBy2, format: timeHeader.format2 }
+      { groupBy: 'Day', format: 'dddd, MMM dd' },
+      { groupBy: 'Hour'}
     ]
-    dp.scale = scale
-    dp.days = days
-    dp.cellWidth = cellWidth
-    dp.startDate = startDate
-  }
-  const navigator = {
-    '#show-hours': {
-      timeFormat: ['Hour',
-      { groupBy1: 'Day', groupBy2: 'Hour', format1: 'dddd, MMM dd', format2: undefined },
-      100, 60, (new DayPilot.Date().firstDayOfMonth())]
-    },
-    '#show-days': {
-      timeFormat: ['Day',
-      { groupBy1: 'Month', groupBy2: 'Cell', format1: 'MMMM yyyy', format2: 'ddd d' },
-      900, 60, (new DayPilot.Date().firstDayOfMonth())]
-    },
-    '#show-weeks': {
-      timeFormat: ['Week',
-      { groupBy1: 'Month', groupBy2: 'Week', format1: 'MMMM yyyy', format2: undefined },
-      900, 60, (new DayPilot.Date().firstDayOfMonth())]
-    },
-    '#show-months': {
-      timeFormat: ['Month',
-      { groupBy1: 'Year', groupBy2: 'Cell', format1: 'yyyy', format2: 'MM' },
-      900, 60, (new DayPilot.Date().firstDayOfMonth())]
-    },
-    '#show-this-week': {
-      timeFormat: ['Day',
-      { groupBy1: 'Month', groupBy2: 'Cell', format1: 'MMMM yyyy', format2: 'ddd d' },
-      7, 180, (new DayPilot.Date())]
-    },
-    '#show-this-month': {
-      timeFormat: ['Day',
-      { groupBy1: 'Month', groupBy2: 'Cell', format1: 'MMMM yyyy', format2: 'ddd d'},
-      31, 60, (new DayPilot.Date())]
-    }
-  }
-  const navigatorKeys = Object.keys(navigator)
-  for (let i=0; i<navigatorKeys.length; i++) {
-    const props = navigator[navigatorKeys[i]]
-    document.querySelector(navigatorKeys[i]).addEventListener('click', () => {
-      const timeHeader = props.timeHeader
-      getTimeFormatProperties(...props.timeFormat)
-      dp.update()
-    })
-  }
+    cacheStart = dp.startDate = new DayPilot.Date()
+    dp.scale = 'Hour'
+    dp.days = 100
+    dp.cellWidth = 60
+    dp.update()
+  })
+  document.querySelector('#show-days').addEventListener('click', () => {
+    dp.timeHeaders = [
+      { groupBy: 'Month', format: 'MMMM yyyy' },
+      { groupBy: 'Cell', format: 'ddd d' }
+    ]
+    cacheStart = dp.startDate = new DayPilot.Date()
+    dp.scale = 'Day'
+    dp.days = 900
+    dp.cellWidth = 60
+    dp.update()
+  })
+  document.querySelector('#show-weeks').addEventListener('click', () => {
+    dp.timeHeaders = [
+      { groupBy: 'Month', format: 'MMMM yyyy' },
+      { groupBy: 'Week' }
+    ]
+    cacheStart = dp.startDate = new DayPilot.Date()
+    dp.scale = 'Week'
+    dp.days = 900
+    dp.cellWidth = 60
+    dp.update()
+  })
+  document.querySelector('#show-months').addEventListener('click', () => {
+    dp.timeHeaders = [
+      { groupBy: 'Year', format: 'yyyy' },
+      { groupBy: 'Cell', format: 'MM' }
+    ]
+    cacheStart = dp.startDate = new DayPilot.Date()
+    dp.scale = 'Month'
+    dp.days = 900
+    dp.cellWidth = 60
+    dp.update()
+  })
+  document.querySelector('#show-this-week').addEventListener('click', () => {
+    dp.timeHeaders = [
+      { groupBy: 'Month', format: 'MMMM yyyy' },
+      { groupBy: 'Cell', format: 'ddd d' }
+    ]
+    cacheStart = dp.startDate = new DayPilot.Date()
+    dp.scale = 'Day'
+    dp.days = 7
+    dp.startDate = new DayPilot.Date()
+    dp.cellWidth = 180
+    dp.update()
+  })
+  document.querySelector('#show-this-month').addEventListener('click', () => {
+    dp.timeHeaders = [
+      { groupBy: 'Month', format: 'MMMM yyyy' },
+      { groupBy: 'Cell', format: 'ddd d' }
+    ]
+    cacheStart = dp.startDate = new DayPilot.Date() 
+    dp.scale = 'Day'
+    dp.days = 31
+    dp.startDate = new DayPilot.Date()
+    dp.cellWidth = 60
+    dp.update()
+  })
+
 
   //Scroll forward, backward and today
   const scroll = (...distance) => {
@@ -119,12 +187,13 @@ let copied = null;
   }
 
   document.querySelector('#scroll-next').addEventListener('click', () => {
-    scroll(1, 7, 21, 1)
+
     if (dp.getViewPort().end.addDays(-1).value === dp.getDate().value) {
       dp.days += 100
       dp.scrollTo(dp.getDate(dp.getScrollX()).addDays(-100))
       dp.update()
     }
+    scroll(1, 7, 21, 1)
   })
   document.querySelector('#scroll-back').addEventListener('click', () => {
 
@@ -624,4 +693,4 @@ $(function () {
     });
 });
 
-})()
+// })()
