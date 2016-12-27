@@ -20,7 +20,6 @@
   },
   "homepage": "https://github.com/karthikJagadeesh/scheduler-prototype#readme",
   "dependencies": {
-    "material-design-lite": "^1.2.1",
     "pikaday": "^1.5.1"
   },
   "devDependencies": {
