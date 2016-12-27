@@ -4,6 +4,7 @@
 
 var showGrid = 'numbers';
 var weekdays = ['sun', 'mon', 'tue', 'wed', 'thu', 'fri', 'sat'];
+var firmHolidays = [{ startDate: '2017-03-25T00:00:00', endDate: '2017-03-26T00:00:00', title: 'Good Friday' }, { startDate: '2017-01-26T00:00:00', endDate: '2017-01-27T00:00:00', title: 'Republic Day' }, { startDate: '2017-01-05-01T00:00:00', endDate: '2017-05-02T00:00:00', title: 'Worker Day' }, { startDate: '2017-08-15T00:00:00', endDate: '2017-08-16T00:00:00', title: 'Independence Day' }, { startDate: '2017-09-05T00:00:00', endDate: '2017-09-06T00:00:00', title: 'Teachers Day' }];
 
 var bookingType = '';
 
@@ -256,6 +257,26 @@ dp.onBeforeCellRender = function (args) {
     args.cell.backColor = "#83D6DE";
   }
 
+  dp.onEventClick = function (args) {
+
+    $('#scheduleproMenur').css({ display: "none" });
+    dp.clearSelection();
+    $("#eventActions").css({ display: "block",
+      position: "absolute",
+      top: event.pageY,
+      left: event.pageX,
+      zIndex: 999999
+    });
+
+    $('.copyBooking').on('click', function () {
+      copied = args.e;
+
+      $("#eventActions").css({ display: "none" });
+    });
+  };
+
+  dp.onTimeRangeRightClick = function (args) {};
+
   var firmAvailableHours = 8;
   // var weekDay = weekdays[args.cell.start.getDayOfWeek()];
   // utilization color
@@ -303,21 +324,18 @@ dp.onBeforeCellRender = function (args) {
   }*/
   // for weekends
   if (dp.scale == "Day" && (args.cell.start.getDayOfWeek() === 0 || args.cell.start.getDayOfWeek() === 6)) {
-    args.cell.backColor = "#FCFBF8";
+    args.cell.backColor = "#f9f6ed";
   }
 };
 
 // adding holidays to the caleneder beore loading
-
 dp.onBeforeTimeHeaderRender = function (args) {
-
-  var firmHolidays = [{ startDate: '2017-03-25T00:00:00', endDate: '2017-03-26T00:00:00', title: 'Good Friday' }, { startDate: '2017-01-26T00:00:00', endDate: '2017-01-27T00:00:00', title: 'Republic Day' }, { startDate: '2017-01-05-01T00:00:00', endDate: '2017-05-02T00:00:00', title: 'Worker Day' }, { startDate: '2017-08-15T00:00:00', endDate: '2017-08-16T00:00:00', title: 'Independence Day' }, { startDate: '2017-09-05T00:00:00', endDate: '2017-09-06T00:00:00', title: 'Teachers Day' }];
-  for (var i = 0; i < firmHolidays.length; i++) {
-    if (args.header.start == firmHolidays[i].startDate && args.header.end == firmHolidays[i].endDate) {
-      args.header.cssClass = "firm-holiday";
-      args.header.toolTip = firmHolidays[i].title + " " + args.header.toolTip;
+  firmHolidays.forEach(function (holiday) {
+    if (args.header.start.value === holiday.startDate && args.header.end.value === holiday.endDate) {
+      args.header.html = '<div class="header-holiday">' + holiday.title + '</div>';
+      args.header.toolTip = holiday.title + ' ' + args.header.toolTip;
     }
-  }
+  });
 };
 
 // event creating
@@ -452,7 +470,7 @@ dp.events.list = [{
   text: "1's,A Stitch, 1041, 40 ",
   title: "1's,A Stitch, 1041, 40 ",
 
-  total: 13,
+  total: 5,
   tags: { bookingType: 'schedule', taskType: 1041 } // custom event property
 }];
 
@@ -479,6 +497,36 @@ var addRippleEffect = function addRippleEffect(e) {
 };
 
 document.addEventListener('click', addRippleEffect, false);
+
+/*  dp.onEventRightClick = function(args) {
+
+    $("#eventActions").css(
+              { display:"block",
+                position: "absolute",
+                top: event.pageY,
+                left: event.pageX,
+                zIndex: 999999
+              }
+            );
+};*/
+
+$(".item.dropdown").on('mouseenter mouseleave', function (e) {
+
+  if ($('.menu', this).length) {
+    var elm = $('.dropdown', this);
+    var off = elm.offset();
+    var l = off.left;
+    var w = elm.width() + 300;
+    var docH = $("#calendar-container").height();
+    var docW = $("#calendar-container").width();
+    var isEntirelyVisible = l + w <= docW;
+    if (!isEntirelyVisible) {
+      $(this).addClass('edge');
+    } else {
+      $(this).removeClass('edge');
+    }
+  }
+});
 
 $(document).ready(function () {
 
@@ -557,53 +605,6 @@ $(document).ready(function () {
   });
 
   /* ends vf  here */
-});
-
-dp.onEventClick = function (args) {
-  $('#scheduleproMenur').css({ display: "none" });
-  dp.clearSelection();
-  $("#eventActions").css({ display: "block",
-    position: "absolute",
-    top: event.pageY,
-    left: event.pageX,
-    zIndex: 999999
-  });
-
-  $('.copyBooking').on('click', function () {
-    copied = args.e;
-
-    $("#eventActions").css({ display: "none" });
-  });
-};
-
-/*  dp.onEventRightClick = function(args) {
-
-    $("#eventActions").css(
-              { display:"block",
-                position: "absolute",
-                top: event.pageY,
-                left: event.pageX,
-                zIndex: 999999
-              }
-            );
-};*/
-
-$(".item.dropdown").on('mouseenter mouseleave', function (e) {
-
-  if ($('.menu', this).length) {
-    var elm = $('.dropdown', this);
-    var off = elm.offset();
-    var l = off.left;
-    var w = elm.width() + 300;
-    var docH = $("#calendar-container").height();
-    var docW = $("#calendar-container").width();
-    var isEntirelyVisible = l + w <= docW;
-    if (!isEntirelyVisible) {
-      $(this).addClass('edge');
-    } else {
-      $(this).removeClass('edge');
-    }
-  }
 });
 
 // })()

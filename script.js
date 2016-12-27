@@ -3,6 +3,14 @@
 
   const showGrid = 'numbers'
   const weekdays = ['sun', 'mon', 'tue', 'wed', 'thu', 'fri', 'sat']
+  const firmHolidays = [
+    { startDate: '2017-03-25T00:00:00', endDate:'2017-03-26T00:00:00', title: 'Good Friday'},
+    { startDate: '2017-01-26T00:00:00', endDate:'2017-01-27T00:00:00', title: 'Republic Day'},
+    { startDate: '2017-01-05-01T00:00:00', endDate:'2017-05-02T00:00:00', title: 'Worker Day'},
+    { startDate: '2017-08-15T00:00:00', endDate:'2017-08-16T00:00:00', title: 'Independence Day'},
+    { startDate: '2017-09-05T00:00:00', endDate:'2017-09-06T00:00:00', title: 'Teachers Day'},
+  ]
+
 
   let bookingType = '';
 
@@ -300,6 +308,28 @@
         args.cell.backColor = "#83D6DE";
     }
 
+    dp.onEventClick = args => {
+
+      $('#scheduleproMenur').css({ display:"none"});
+      dp.clearSelection();
+          $("#eventActions").css(
+                    { display:"block",
+                      position: "absolute",
+                      top: event.pageY,
+                      left: event.pageX,
+                      zIndex: 999999
+                    }
+                  );
+
+        $('.copyBooking').on('click', function(){
+              copied = args.e;
+
+              $("#eventActions").css(  { display:"none"});
+        });
+    }
+
+    dp.onTimeRangeRightClick = args => {}
+
 
     let firmAvailableHours = 8;
     // var weekDay = weekdays[args.cell.start.getDayOfWeek()];
@@ -348,28 +378,19 @@
     }*/
     // for weekends
     if (dp.scale == "Day" && (args.cell.start.getDayOfWeek() === 0 || args.cell.start.getDayOfWeek() === 6)) {
-        args.cell.backColor = "#FCFBF8";
+        args.cell.backColor = "#f9f6ed";
     }
   };
 
   // adding holidays to the caleneder beore loading
-
-  dp.onBeforeTimeHeaderRender = function(args) {
-
-  		var firmHolidays = [
-  			{ startDate: '2017-03-25T00:00:00', endDate:'2017-03-26T00:00:00', title: 'Good Friday'},
-  			{ startDate: '2017-01-26T00:00:00', endDate:'2017-01-27T00:00:00', title: 'Republic Day'},
-  			{ startDate: '2017-01-05-01T00:00:00', endDate:'2017-05-02T00:00:00', title: 'Worker Day'},
-  			{ startDate: '2017-08-15T00:00:00', endDate:'2017-08-16T00:00:00', title: 'Independence Day'},
-  			{ startDate: '2017-09-05T00:00:00', endDate:'2017-09-06T00:00:00', title: 'Teachers Day'},
-  		];
-  		for(var i=0; i< firmHolidays.length; i++ ){
-  		   if (args.header.start == firmHolidays[i].startDate && args.header.end  ==  firmHolidays[i].endDate ) {
-  				args.header.cssClass = "firm-holiday";
-  				args.header.toolTip =  firmHolidays[i].title +" " + args.header.toolTip;
-  		    }
-  		}
-  };
+  dp.onBeforeTimeHeaderRender = args => {
+      firmHolidays.forEach(holiday => {
+        if (args.header.start.value === holiday.startDate && args.header.end.value === holiday.endDate) {
+          args.header.html = `<div class="header-holiday">${holiday.title}</div>`
+          args.header.toolTip = holiday.title + ' ' + args.header.toolTip
+        }
+      })
+  }
 
   // event creating
 
@@ -516,7 +537,7 @@
                      text: "1's,A Stitch, 1041, 40 ",
                      title: "1's,A Stitch, 1041, 40 ",
 
-                     total: 13,
+                     total: 5,
                      tags: { bookingType: 'schedule',  taskType: 1041 } // custom event property
                  }];
 
@@ -546,115 +567,8 @@
 
      document.addEventListener('click', addRippleEffect, false);
 
-      $(document).ready(function() {
 
 
-
-        $('#setting').click(function(e){
-
-         $('.ui.sidebar').sidebar('setting',{'transition': 'overlay',dimPage: true}).sidebar("toggle");
-         e.preventDefault();
-        });
-        // $('#addresource-form .item').click(function(e){
-        //  e.preventDefault();
-        // });
-        $('#addresource-submit').click(function(){
-           // $('#addresource-form').parent('active visible);
-
-        });
-
-        /* vigfox code */
-
-        var taskList = dp.events.list;
-        var taskTitle = '';
-        var projectStartDate = new Pikaday({
-                field: $("#dateStart")[0],
-                theme :'triangle',
-                container: $("#datepikstart")[0],
-            }),
-
-            projectEndDate = new Pikaday({
-              field: $("#dateEnd")[0],
-              theme :'triangle',
-              container: $("#datepikend")[0],
-            });
-
-          $('.ui.dropdown').dropdown();
-          $('.ui.accordion').accordion();
-              $('.draghelp').popup();
-
-          $('#searchClient').search({
-              source: taskList,
-              searchFields: ['title'],
-
-              onSelect: function(result, response) {
-               taskTitle = result.title;
-              }
-          });
-
-            var scheduleproj = $("#scheduleProject");
-            $(scheduleproj).click(function(event) {
-
-             var bookingHours = parseInt($("#bookingHrs").val()) ? parseInt($("#bookingHrs").val()) : 8,
-             bookingTitle = $('#projName').val(),
-             projStartDate = $("#dateStart").val(),
-             projEndDate = $("#dateEnd").val();
-
-             bookingObj.start = projStartDate ? projStartDate : bookingObj.start;
-             bookingObj.end = projEndDate ? projEndDate : bookingObj.end;
-
-             createBooking();
-             function createBooking() {
-             var newBooking = new DayPilot.Event({
-               start: bookingObj.start,
-               end: bookingObj.end,
-               id: DayPilot.guid(),
-               resource: bookingObj.resource,
-               text: bookingTitle,
-               total: bookingHours,
-               color: '#ffffff',
-               barBackColor: 'transparent',
-               tags: {
-                 bookingType: bookingType ? bookingType : 'schedule',
-                 //taskType: taskType,
-               }
-             });
-           dp.events.add(newBooking);
-           document.getElementById('scheduleproMenur').style.display= "none";
-           dp.message("Created");
-           dp.clearSelection();
-
-               }
-
-
-
-            });
-
-
-
-
-/* ends vf  here */
-
-      });
-
-  dp.onEventClick = function(args) {
-  $('#scheduleproMenur').css({ display:"none"});
-     dp.clearSelection();
-        $("#eventActions").css(
-                  { display:"block",
-                    position: "absolute",
-                    top: event.pageY,
-                    left: event.pageX,
-                    zIndex: 999999
-                  }
-                );
-
-      $('.copyBooking').on('click', function(){
-            copied = args.e;
-
-            $("#eventActions").css(  { display:"none"});
-      });
-  };
 
 /*  dp.onEventRightClick = function(args) {
 
@@ -689,5 +603,95 @@
         }
     });
 
+    $(document).ready(function() {
+
+
+
+      $('#setting').click(function(e){
+
+       $('.ui.sidebar').sidebar('setting',{'transition': 'overlay',dimPage: true}).sidebar("toggle");
+       e.preventDefault();
+      });
+      // $('#addresource-form .item').click(function(e){
+      //  e.preventDefault();
+      // });
+      $('#addresource-submit').click(function(){
+         // $('#addresource-form').parent('active visible);
+
+      });
+
+      /* vigfox code */
+
+      var taskList = dp.events.list;
+      var taskTitle = '';
+      var projectStartDate = new Pikaday({
+              field: $("#dateStart")[0],
+              theme :'triangle',
+              container: $("#datepikstart")[0],
+          }),
+
+          projectEndDate = new Pikaday({
+            field: $("#dateEnd")[0],
+            theme :'triangle',
+            container: $("#datepikend")[0],
+          });
+
+        $('.ui.dropdown').dropdown();
+        $('.ui.accordion').accordion();
+            $('.draghelp').popup();
+
+        $('#searchClient').search({
+            source: taskList,
+            searchFields: ['title'],
+
+            onSelect: function(result, response) {
+             taskTitle = result.title;
+            }
+        });
+
+          var scheduleproj = $("#scheduleProject");
+          $(scheduleproj).click(function(event) {
+
+           var bookingHours = parseInt($("#bookingHrs").val()) ? parseInt($("#bookingHrs").val()) : 8,
+           bookingTitle = $('#projName').val(),
+           projStartDate = $("#dateStart").val(),
+           projEndDate = $("#dateEnd").val();
+
+           bookingObj.start = projStartDate ? projStartDate : bookingObj.start;
+           bookingObj.end = projEndDate ? projEndDate : bookingObj.end;
+
+           createBooking();
+           function createBooking() {
+           var newBooking = new DayPilot.Event({
+             start: bookingObj.start,
+             end: bookingObj.end,
+             id: DayPilot.guid(),
+             resource: bookingObj.resource,
+             text: bookingTitle,
+             total: bookingHours,
+             color: '#ffffff',
+             barBackColor: 'transparent',
+             tags: {
+               bookingType: bookingType ? bookingType : 'schedule',
+               //taskType: taskType,
+             }
+           });
+         dp.events.add(newBooking);
+         document.getElementById('scheduleproMenur').style.display= "none";
+         dp.message("Created");
+         dp.clearSelection();
+
+             }
+
+
+
+          });
+
+
+
+
+/* ends vf  here */
+
+    });
 
 // })()
