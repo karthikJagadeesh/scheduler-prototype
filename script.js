@@ -354,6 +354,42 @@
       })
     }
 
+    // dp.contextMenu = new DayPilot.Menu({
+    //   items: [
+    //     {
+    //       text: 'Actions',
+    //       items: [
+    //         {
+    //           text: 'Cut',
+    //           onclick: function() {
+    //             alert('Hello')
+    //           }
+    //         }, {
+    //           text: 'Copy'
+    //         }, {
+    //           text: 'Delete'
+    //         }, {
+    //           text: 'Duplicate'
+    //         }, {
+    //           text: 'Edit Title'
+    //         }
+    //       ]
+    //     }, {
+    //       text: 'Dates',
+    //       onclick: function() {
+    //
+    //       }
+    //     }, {
+    //       text: 'Allocation',
+    //       onclick: function() {
+    //
+    //       }
+    //     }, {
+    //       text: 'Split'
+    //     }
+    //   ]
+    // })
+
     dp.contextMenuSelection = new DayPilot.Menu({ items: [
       {
        text:"Paste", onclick: function() {
@@ -381,13 +417,14 @@
 
     dp.onTimeRangeRightClick = args => {}
 
-
     let firmAvailableHours = 8;
     // var weekDay = weekdays[args.cell.start.getDayOfWeek()];
     // utilization color
     var utilization = args.cell.utilization("total");
 
     var visibleUtilization = utilization > 0
+    if (args.cell.start.getDayOfWeek() === 0 || args.cell.start.getDayOfWeek() === 6)
+      visibleUtilization = false
 
     // cell bar color
     var bgColor = '';
@@ -756,18 +793,8 @@
                   dp.setHeight(height)
              }, 1)
 
-           } else {
+           } else
              dp.setHeight(360)
-            //  let height = 450
-            //  const change = setInterval(() => {
-            //    height -= 6
-            //    console.log(`${height}, ${dp.height}`)
-            //    if (dp.height <= 360)
-            //       clearInterval(change)
-            //    else
-            //       dp.setHeight(height)
-            //  }, 1)
-           }
         });
 
 

@@ -360,3 +360,9 @@ footer.mdl-mini-footer {
    /*top: 0; */
    /*left: 0; */
 }
+.menu_default_item {
+  padding: 6px;
+}
+.menu_default_item:hover {
+  border-left: 6px solid #60728C;
+}

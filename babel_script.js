@@ -301,6 +301,42 @@ dp.onBeforeCellRender = function (args) {
     });
   };
 
+  // dp.contextMenu = new DayPilot.Menu({
+  //   items: [
+  //     {
+  //       text: 'Actions',
+  //       items: [
+  //         {
+  //           text: 'Cut',
+  //           onclick: function() {
+  //             alert('Hello')
+  //           }
+  //         }, {
+  //           text: 'Copy'
+  //         }, {
+  //           text: 'Delete'
+  //         }, {
+  //           text: 'Duplicate'
+  //         }, {
+  //           text: 'Edit Title'
+  //         }
+  //       ]
+  //     }, {
+  //       text: 'Dates',
+  //       onclick: function() {
+  //
+  //       }
+  //     }, {
+  //       text: 'Allocation',
+  //       onclick: function() {
+  //
+  //       }
+  //     }, {
+  //       text: 'Split'
+  //     }
+  //   ]
+  // })
+
   dp.contextMenuSelection = new DayPilot.Menu({ items: [{
       text: "Paste", onclick: function onclick() {
         if (!copied) {
@@ -332,6 +368,7 @@ dp.onBeforeCellRender = function (args) {
   var utilization = args.cell.utilization("total");
 
   var visibleUtilization = utilization > 0;
+  if (args.cell.start.getDayOfWeek() === 0 || args.cell.start.getDayOfWeek() === 6) visibleUtilization = false;
 
   // cell bar color
   var bgColor = '';
@@ -668,18 +705,7 @@ $(document).ready(function () {
           if (dp.height >= 450) clearInterval(change);else dp.setHeight(height);
         }, 1);
       })();
-    } else {
-      dp.setHeight(360);
-      //  let height = 450
-      //  const change = setInterval(() => {
-      //    height -= 6
-      //    console.log(`${height}, ${dp.height}`)
-      //    if (dp.height <= 360)
-      //       clearInterval(change)
-      //    else
-      //       dp.setHeight(height)
-      //  }, 1)
-    }
+    } else dp.setHeight(360);
   });
 });
 
