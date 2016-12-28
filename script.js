@@ -204,7 +204,7 @@ let copied = null;
     else if (mode === 'singleRowResource') return (
       dp.treeEnabled = false,
       dp.resources = [
-        { name : "Resource 1", id : "r1" },
+        { name : "Resource 1", id : "r1"},
         { name : "Resource 2", id : "r2" },
         { name: "Resource 3", id: "r3" },
         { name: "Resource 4", id: "r4" },
@@ -312,10 +312,10 @@ let copied = null;
         args.left.enabled = true;
         args.allowed = true;
 
+
   };
 
   dp.onTimeRangeSelected = function (args) {
-
     $('.schedulepop').removeClass('disabled');
 
         bookingObj = args;
@@ -323,12 +323,6 @@ let copied = null;
     document.querySelector('.scheduler_8_shadow_inner').addEventListener('contextmenu', function(e) {
     document.getElementById('scheduleproMenur').style.display= "block";
     var windowWidth = $(window).width();
-
-    //firmAvailableHours > 0 ? firmAvailableHours : '-'
-
-    console.log(windowWidth);
-    console.log(e.pageX);
-    console.log($(window).width());
 
     $("#scheduleproMenur").css(
               {
@@ -406,6 +400,21 @@ let copied = null;
       }
   });
 
+  // before event load callback
+  dp.onBeforeEventRender = function(args) {
+          args.data.barHidden = true;
+          args.data.barBackColor = 'transparent';
+         if( args.data.tags.bookingType == 'vacation'){
+          	args.data.cssClass = "bookingtype-vacation";
+          }
+          else if(args.data.tags.bookingType == 'sickleave'){
+          	args.data.cssClass = "bookingtype-sickleave";
+          }
+          else {
+              args.data.cssClass = "bookingtype-schedule";
+          }
+  }
+
   // header columns
   // dp.rowHeaderColumns = [{ title: 'Name' }];
   dp.treeEnabled = false;
@@ -444,10 +453,10 @@ let copied = null;
                      end: "2016-12-15",
                      id: "3",
                      resource: "r2",
-                     text: "1's,A Stitch, 1041, 40 ",
-                     title: "1's,A Stitch, 1041, 40 ",
+                     text: "1's, branchse, 1043, 50 ",
+                     title: "1's, branchse, 1043, 50 ",
 
-                     total: 13,
+                     total: 6,
                      tags: { bookingType: 'schedule',  taskType: 1041 } // custom event property
                  }];
 
@@ -508,11 +517,45 @@ let copied = null;
               field: $("#dateEnd")[0],
               theme :'triangle',
               container: $("#datepikend")[0],
-            });
+            }),
+            eventStartDate = new Pikaday({
+                    field: $("#edateStart")[0],
+                    theme :'triangle',
+                    container: $("#edatepikstart")[0],
+                }),
+
+                eventEndDate = new Pikaday({
+                  field: $("#edateEnd")[0],
+                  theme :'triangle',
+                  container: $("#edatepikend")[0],
+                });
 
           $('.ui.dropdown').dropdown();
+          $('.ui.checkbox').checkbox();
+          $(".ui.fluid.dropdown").dropdown({allowLabels:true})
+          $(".close-booking").on("click", function(){$('.ui.scheduleproj-modal').modal("hide");});
+          $('.ui.fluid.dropdown').dropdown({'set selected': 'Resource 1,Resource 2'});
+
+
+
+            $('.ui.radio.checkbox').checkbox({
+                  onChange: function() {
+                    var tval = $(this).val();
+                $("div.desc").hide();
+                    $("#byday" + tval).show();
+                  },
+                  onChecked: function() {
+                    var tval = $(this).val();
+                $("div.desc").hide();
+                    $("#byday" + tval).show();
+                  }
+
+
+   });
+
+        $('.ui.accordion').dropdown({ exclusive: false });
           $('.ui.accordion').accordion();
-              $('.draghelp').popup();
+          $('.draghelp').popup();
 
           $('#searchClient').search({
               source: taskList,
@@ -523,8 +566,27 @@ let copied = null;
               }
           });
 
-            var scheduleproj = $("#scheduleProject");
-            $(scheduleproj).click(function(event) {
+            var submitProj = $("#submitProject");
+            var submitEvent = $("#submitEvent");
+            let scheduleEvent = $("#scheduleEvent");
+            let scheduleProject = $("#scheduleProject");
+
+            $(scheduleEvent).click(function(event) {
+
+                  createBookingModal();
+                  document.getElementById('scheduleproMenur').style.display= "none";
+
+            });
+
+            $(scheduleProject).click(function(event) {
+
+                  scheduleProjectModal();
+                  document.getElementById('scheduleproMenur').style.display= "none";
+
+            });
+
+
+            $(submitProj).click(function(event) {
 
              var bookingHours = parseInt($("#bookingHrs").val()) ? parseInt($("#bookingHrs").val()) : 8,
              bookingTitle = $('#projName').val(),
@@ -552,7 +614,8 @@ let copied = null;
              });
            dp.events.add(newBooking);
            document.getElementById('scheduleproMenur').style.display= "none";
-           dp.message("Created");
+           $('.ui.scheduleproj-modal').modal("hide");
+           dp.message(`New Task assigned to ${bookingObj.resource}`);
            dp.clearSelection();
 
                }
@@ -560,6 +623,51 @@ let copied = null;
 
 
             });
+
+
+// submit event
+
+
+
+
+
+            $(submitEvent).click(function(event) {
+              var bookingHours = parseInt($("#bookingHrs").val()) ? parseInt($("#bookingHrs").val()) : 8,
+
+             eventStartDate = $("#edateStart").val(),
+             eventEndDate = $("#edateEnd").val();
+
+
+              var bookingTitle = $('.dropdown.eventleave').dropdown('get text');
+              var bookingType = $('.dropdown.eventleave').dropdown('get value');
+              bookingObj.start = eventStartDate ? eventStartDate : bookingObj.start;
+             bookingObj.end = eventEndDate ? eventEndDate : bookingObj.end;
+
+             createeBooking();
+             function createeBooking() {
+
+             var newBooking = new DayPilot.Event({
+               start: bookingObj.start,
+               end: bookingObj.end,
+               id: DayPilot.guid(),
+               resource: bookingObj.resource,
+               text: bookingTitle,
+               total: bookingHours,
+               color: '#ffffff',
+               barBackColor: 'transparent',
+               tags: {
+                 bookingType: bookingType,
+                 //taskType: taskType,
+               }
+             });
+           dp.events.add(newBooking);
+           document.getElementById('scheduleproMenur').style.display= "none";
+           $('.ui.event-booking-modal').modal("hide");
+           dp.message(`New event created`);
+           dp.clearSelection();
+
+               }
+             });
 
 
 
@@ -587,6 +695,42 @@ let copied = null;
       });
   };
 
+
+
+
+
+
+  function createBookingModal(){
+      $('.ui.event-booking-modal').modal({
+              closable: true,
+              blurring: false,
+              onApprove: function() {
+                  dp.clearSelection();
+              },
+              onDeny: function() {
+                  dp.clearSelection();
+                  $('#booking-form').form('reset');
+              }
+          })
+          .modal("show");
+  }
+
+
+  function scheduleProjectModal(){
+      $('.ui.scheduleproj-modal').modal({
+              closable: true,
+              blurring: false,
+              onApprove: function() {
+                  dp.clearSelection();
+              },
+              onDeny: function() {
+                  dp.clearSelection();
+                  $('#booking-form').form('reset');
+              }
+          })
+          .modal("show");
+  }
+
 /*  dp.onEventRightClick = function(args) {
 
     $("#eventActions").css(
@@ -602,7 +746,7 @@ let copied = null;
 
 
 
-    $(".item.dropdown").on('mouseenter mouseleave', function (e) {
+  /*  $(".item.dropdown").on('mouseenter mouseleave', function (e) {
 
         if ($('.menu', this).length) {
           var elm = $('.dropdown', this);
@@ -618,7 +762,7 @@ let copied = null;
               $(this).removeClass('edge');
             }
         }
-    });
+    });*/
 
 
 })()

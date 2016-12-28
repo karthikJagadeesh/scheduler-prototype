@@ -29,6 +29,13 @@
     background: #81a489;
     border: 1px solid #81a489;
 }
+.bookingtype-vacation  .scheduler_8_event_inner,.bookingtype-vacation:hover  .scheduler_8_event_inner
+{  background: #7f7f7f !important;
+  border: 1px solid #7f7f7f;}
+  .bookingtype-sickleave  .scheduler_8_event_inner,   .bookingtype-sickleave:hover  .scheduler_8_event_inner
+  {  background: #f79646 !important;
+    border: 1px solid #f79646;}
+
 
 .scheduler_8_event_inner
 {

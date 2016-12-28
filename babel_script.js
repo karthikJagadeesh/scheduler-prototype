@@ -274,7 +274,6 @@ function _toConsumableArray(arr) { if (Array.isArray(arr)) { for (var i = 0, arr
   };
 
   dp.onTimeRangeSelected = function (args) {
-
     $('.schedulepop').removeClass('disabled');
 
     bookingObj = args;
@@ -282,12 +281,6 @@ function _toConsumableArray(arr) { if (Array.isArray(arr)) { for (var i = 0, arr
     document.querySelector('.scheduler_8_shadow_inner').addEventListener('contextmenu', function (e) {
       document.getElementById('scheduleproMenur').style.display = "block";
       var windowWidth = $(window).width();
-
-      //firmAvailableHours > 0 ? firmAvailableHours : '-'
-
-      console.log(windowWidth);
-      console.log(e.pageX);
-      console.log($(window).width());
 
       $("#scheduleproMenur").css({
         position: "absolute",
@@ -360,6 +353,19 @@ function _toConsumableArray(arr) { if (Array.isArray(arr)) { for (var i = 0, arr
     }
   });
 
+  // before event load callback
+  dp.onBeforeEventRender = function (args) {
+    args.data.barHidden = true;
+    args.data.barBackColor = 'transparent';
+    if (args.data.tags.bookingType == 'vacation') {
+      args.data.cssClass = "bookingtype-vacation";
+    } else if (args.data.tags.bookingType == 'sickleave') {
+      args.data.cssClass = "bookingtype-sickleave";
+    } else {
+      args.data.cssClass = "bookingtype-schedule";
+    }
+  };
+
   // header columns
   // dp.rowHeaderColumns = [{ title: 'Name' }];
   dp.treeEnabled = false;
@@ -391,10 +397,10 @@ function _toConsumableArray(arr) { if (Array.isArray(arr)) { for (var i = 0, arr
     end: "2016-12-15",
     id: "3",
     resource: "r2",
-    text: "1's,A Stitch, 1041, 40 ",
-    title: "1's,A Stitch, 1041, 40 ",
+    text: "1's, branchse, 1043, 50 ",
+    title: "1's, branchse, 1043, 50 ",
 
-    total: 13,
+    total: 6,
     tags: { bookingType: 'schedule', taskType: 1041 } // custom event property
   }];
 
@@ -450,9 +456,41 @@ function _toConsumableArray(arr) { if (Array.isArray(arr)) { for (var i = 0, arr
       field: $("#dateEnd")[0],
       theme: 'triangle',
       container: $("#datepikend")[0]
+    }),
+        eventStartDate = new Pikaday({
+      field: $("#edateStart")[0],
+      theme: 'triangle',
+      container: $("#edatepikstart")[0]
+    }),
+        eventEndDate = new Pikaday({
+      field: $("#edateEnd")[0],
+      theme: 'triangle',
+      container: $("#edatepikend")[0]
     });
 
     $('.ui.dropdown').dropdown();
+    $('.ui.checkbox').checkbox();
+    $(".ui.fluid.dropdown").dropdown({ allowLabels: true });
+    $(".close-booking").on("click", function () {
+      $('.ui.scheduleproj-modal').modal("hide");
+    });
+    $('.ui.fluid.dropdown').dropdown({ 'set selected': 'Resource 1,Resource 2' });
+
+    $('.ui.radio.checkbox').checkbox({
+      onChange: function onChange() {
+        var tval = $(this).val();
+        $("div.desc").hide();
+        $("#byday" + tval).show();
+      },
+      onChecked: function onChecked() {
+        var tval = $(this).val();
+        $("div.desc").hide();
+        $("#byday" + tval).show();
+      }
+
+    });
+
+    $('.ui.accordion').dropdown({ exclusive: false });
     $('.ui.accordion').accordion();
     $('.draghelp').popup();
 
@@ -465,8 +503,24 @@ function _toConsumableArray(arr) { if (Array.isArray(arr)) { for (var i = 0, arr
       }
     });
 
-    var scheduleproj = $("#scheduleProject");
-    $(scheduleproj).click(function (event) {
+    var submitProj = $("#submitProject");
+    var submitEvent = $("#submitEvent");
+    var scheduleEvent = $("#scheduleEvent");
+    var scheduleProject = $("#scheduleProject");
+
+    $(scheduleEvent).click(function (event) {
+
+      createBookingModal();
+      document.getElementById('scheduleproMenur').style.display = "none";
+    });
+
+    $(scheduleProject).click(function (event) {
+
+      scheduleProjectModal();
+      document.getElementById('scheduleproMenur').style.display = "none";
+    });
+
+    $(submitProj).click(function (event) {
 
       var bookingHours = parseInt($("#bookingHrs").val()) ? parseInt($("#bookingHrs").val()) : 8,
           bookingTitle = $('#projName').val(),
@@ -493,7 +547,45 @@ function _toConsumableArray(arr) { if (Array.isArray(arr)) { for (var i = 0, arr
         });
         dp.events.add(newBooking);
         document.getElementById('scheduleproMenur').style.display = "none";
-        dp.message("Created");
+        $('.ui.scheduleproj-modal').modal("hide");
+        dp.message('New Task assigned to ' + bookingObj.resource);
+        dp.clearSelection();
+      }
+    });
+
+    // submit event
+
+
+    $(submitEvent).click(function (event) {
+      var bookingHours = parseInt($("#bookingHrs").val()) ? parseInt($("#bookingHrs").val()) : 8,
+          eventStartDate = $("#edateStart").val(),
+          eventEndDate = $("#edateEnd").val();
+
+      var bookingTitle = $('.dropdown.eventleave').dropdown('get text');
+      var bookingType = $('.dropdown.eventleave').dropdown('get value');
+      bookingObj.start = eventStartDate ? eventStartDate : bookingObj.start;
+      bookingObj.end = eventEndDate ? eventEndDate : bookingObj.end;
+
+      createeBooking();
+      function createeBooking() {
+
+        var newBooking = new DayPilot.Event({
+          start: bookingObj.start,
+          end: bookingObj.end,
+          id: DayPilot.guid(),
+          resource: bookingObj.resource,
+          text: bookingTitle,
+          total: bookingHours,
+          color: '#ffffff',
+          barBackColor: 'transparent',
+          tags: {
+            bookingType: bookingType
+          }
+        });
+        dp.events.add(newBooking);
+        document.getElementById('scheduleproMenur').style.display = "none";
+        $('.ui.event-booking-modal').modal("hide");
+        dp.message('New event created');
         dp.clearSelection();
       }
     });
@@ -518,6 +610,34 @@ function _toConsumableArray(arr) { if (Array.isArray(arr)) { for (var i = 0, arr
     });
   };
 
+  function createBookingModal() {
+    $('.ui.event-booking-modal').modal({
+      closable: true,
+      blurring: false,
+      onApprove: function onApprove() {
+        dp.clearSelection();
+      },
+      onDeny: function onDeny() {
+        dp.clearSelection();
+        $('#booking-form').form('reset');
+      }
+    }).modal("show");
+  }
+
+  function scheduleProjectModal() {
+    $('.ui.scheduleproj-modal').modal({
+      closable: true,
+      blurring: false,
+      onApprove: function onApprove() {
+        dp.clearSelection();
+      },
+      onDeny: function onDeny() {
+        dp.clearSelection();
+        $('#booking-form').form('reset');
+      }
+    }).modal("show");
+  }
+
   /*  dp.onEventRightClick = function(args) {
   
       $("#eventActions").css(
@@ -530,21 +650,20 @@ function _toConsumableArray(arr) { if (Array.isArray(arr)) { for (var i = 0, arr
               );
   };*/
 
-  $(".item.dropdown").on('mouseenter mouseleave', function (e) {
-
-    if ($('.menu', this).length) {
-      var elm = $('.dropdown', this);
-      var off = elm.offset();
-      var l = off.left;
-      var w = elm.width() + 300;
-      var docH = $("#calendar-container").height();
-      var docW = $("#calendar-container").width();
-      var isEntirelyVisible = l + w <= docW;
-      if (!isEntirelyVisible) {
-        $(this).addClass('edge');
-      } else {
-        $(this).removeClass('edge');
-      }
-    }
-  });
+  /*  $(".item.dropdown").on('mouseenter mouseleave', function (e) {
+          if ($('.menu', this).length) {
+          var elm = $('.dropdown', this);
+          var off = elm.offset();
+          var l = off.left;
+            var w = elm.width() + 300;
+            var docH = $("#calendar-container").height();
+            var docW = $("#calendar-container").width();
+            var isEntirelyVisible = (l + w <= docW);
+            if (!isEntirelyVisible) {
+              $(this).addClass('edge');
+            } else {
+              $(this).removeClass('edge');
+            }
+        }
+    });*/
 })();
