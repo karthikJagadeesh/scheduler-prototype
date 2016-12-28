@@ -334,3 +334,29 @@ footer.mdl-mini-footer {
 .scheduler_8_timeheadercol {
   white-space: normal !important;
 }
+
+
+#header-menu.hidden {
+   transform: translateY(-100%);
+   transition: .8s ease-in-out;
+   /*display:none;*/
+}
+
+.bring-down {
+   transition: .4s ease-in;
+}
+
+#footer.hidden {
+   display: none;
+}
+
+#workspace.fullscreen {
+   transform: translateY(-8%);
+   transition: .8s ease-in-out;
+   z-index: 9999;
+   width: 100%;
+   height: 100%;
+   position: fixed;
+   /*top: 0; */
+   /*left: 0; */
+}

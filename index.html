@@ -14,7 +14,7 @@
 </head>
 
 <body>
-    <div class="ui inverted menu" style="margin:0; border-radius:0;background-color: #445978; @*background-color: rgb(68,89,120);*@">
+    <div id="header-menu" class="ui inverted menu" style="margin:0; border-radius:0;background-color: #445978; @*background-color: rgb(68,89,120);*@">
         <a class="item" style="width:83px"><img alt="XCM Scheduler" src="assets/images/xcm-logo.png" style="width:55px"></a>
         <a class="item" href="#">My View</a>
         <a class="item" href="#">Reports</a>
@@ -37,6 +37,7 @@
             <div class="item" id="displayfirmname" style="max-width: 200px;white-space: nowrap;overflow: hidden;color: rgb(247, 178, 51);text-overflow: ellipsis;">
                 XCM Solutions, LLC
             </div>
+
             <div class="item ui icon">
                 <a href="#">
                     <i class="setting icon"></i>
@@ -52,6 +53,7 @@
             </div>
         </div>
     </div>
+    <div id="workspace">
     <div class="ui grid pad15" style="padding-bottom:0 !important">
         <!-- <div style="padding:15px 15px 0px  !important;display:inline-block;width:292px;"> -->
         <div class="ui four wide column" style="padding-bottom:0 !important">
@@ -86,6 +88,7 @@
             </span>
         </div>
     </div>
+
     <div class="ui grid pad15" style="padding-top: 0!important">
         <div class="ui ten wide column">
             <div class="ui icon buttons" style="border: 1px solid rgba(0,0,0,0.1)">
@@ -192,18 +195,22 @@
                         Availablity & Conflicts
                     </div>
                 </div>
-            </div>
+            </div><button class="ui icon button" id="expand-btn">
+                   <i class="expand icon"></i>
+               </button>
             <button id="setting" class="ui icon button" style="border: 1px solid rgba(0,0,0,0.1)">
                 <i class="setting icon"></i>
             </button>
         </div>
 
     </div>
+
     <div class="wrapper">
         <div id="calendar-container">
             <div id="dp"></div>
         </div>
     </div>
+  </div>
     <!-- Rightsidebar -->
     <div id="sidebar-area" class="ui right sidebar inverted vertical menu">
         <div class="sidebar-header">Scheduler Customization</div>
@@ -541,14 +548,22 @@
               </div>
             </div>
 
+            <div class="ui dropdown item">
+            <i class="dropdown icon"></i>
+              Split
+                  <div class="menu">
+                    <a class="item cutBooking">Cut</a>
+                    <a class="item copyBooking">Copy</a>
+                    <a class="item delBooking">Delete</a>
+                    <a class="item dupBooking">Duplicate</a>
+                    <a class="item editTitleBooking">Edit Title</a>
+                  </div>
+            </div>
+
             <div class="item">
             <i class="edit icon"></i>  Edit
             </div>
           </div>
-
-
-
-
 
     <script type="text/javascript" src="./assets/daypilot-all.min.js"></script>
     <script src="https://cdnjs.cloudflare.com/ajax/libs/jquery/3.1.1/jquery.min.js"></script>

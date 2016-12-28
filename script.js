@@ -310,23 +310,74 @@
 
     dp.onEventClick = args => {
 
-      $('#scheduleproMenur').css({ display:"none"});
+      // $('#scheduleproMenur').css({ display:"none"});
+      document.querySelector('#scheduleproMenur').style.display = 'none'
       dp.clearSelection();
-          $("#eventActions").css(
-                    { display:"block",
-                      position: "absolute",
-                      top: event.pageY,
-                      left: event.pageX,
-                      zIndex: 999999
-                    }
-                  );
+      $("#eventActions").css(
+                { display:"block",
+                  position: "absolute",
+                  top: event.pageY,
+                  left: event.pageX,
+                  zIndex: 999999
+                }
+              );
 
-        $('.copyBooking').on('click', function(){
-              copied = args.e;
+      document.querySelector('.copyBooking').addEventListener('click', () => {
+        copied = args.e;
+        document.querySelector('#eventActions').style.display = 'none'
+      })
+      document.querySelector('.cutBooking').addEventListener('click', () => {
+        copied = args.e;
+        dp.events.remove(args.e)
+        document.querySelector('#eventActions').style.display = 'none'
+      })
+      document.querySelector('.delBooking').addEventListener('click', () => {
+        dp.events.remove(args.e)
+        document.querySelector('#eventActions').style.display = 'none'
+      })
+      document.querySelector('.dupBooking').addEventListener('click', () => {
 
-              $("#eventActions").css(  { display:"none"});
-        });
+        const selection = args.e
+        const duration = args.e.end().getTime() - args.e.start().getTime()
+        const newEvent = new DayPilot.Event({
+          start: selection.start(),
+          end: selection.start().addMilliseconds(duration),
+          text: selection.text(),
+          resource: selection.resource(),
+          id: DayPilot.guid(),
+          total: selection.data.total,
+          tags: selection.data.tags,
+        })
+        dp.events.add(newEvent)
+        console.log(args)
+        document.querySelector('#eventActions').style.display = 'none'
+      })
     }
+
+    dp.contextMenuSelection = new DayPilot.Menu({ items: [
+      {
+       text:"Paste", onclick: function() {
+        if (!copied) {
+          dp.message('You need to copy/cut an event first.')
+          return
+        }
+        const selection = this.source
+        const duration = copied.end().getTime() - copied.start().getTime()
+        const newEvent = new DayPilot.Event({
+          start: selection.start,
+          end: selection.start.addMilliseconds(duration),
+          text: copied.text(),
+          resource: selection.resource,
+          id: DayPilot.guid(),
+          total: copied.data.total,
+          tags: copied.data.tags,
+        })
+        dp.events.add(newEvent)
+       }
+     }
+    ],
+      className: "context_menu"
+    })
 
     dp.onTimeRangeRightClick = args => {}
 
@@ -688,9 +739,37 @@
           });
 
 
+          // fullscreen
+        $('#expand-btn').click(function(e) {
+           $('#workspace').toggleClass('fullscreen');
+           $('#header-menu, #footer').toggleClass('hidden');
+           $('#header-menu').addClass('bring-down');
 
+           const workspace = document.querySelector('#workspace');
+           if (workspace.classList.contains('fullscreen')) {
+             let height = 360
+             const change = setInterval(() => {
+               height += 6
+               if (dp.height >= 450)
+                  clearInterval(change)
+               else
+                  dp.setHeight(height)
+             }, 1)
 
-/* ends vf  here */
+           } else {
+             dp.setHeight(360)
+            //  let height = 450
+            //  const change = setInterval(() => {
+            //    height -= 6
+            //    console.log(`${height}, ${dp.height}`)
+            //    if (dp.height <= 360)
+            //       clearInterval(change)
+            //    else
+            //       dp.setHeight(height)
+            //  }, 1)
+           }
+        });
+
 
     });
 
