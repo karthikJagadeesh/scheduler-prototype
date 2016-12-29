@@ -37,7 +37,11 @@ dp.businessEndsHour = 18;
 
 var picker = new Pikaday({
   field: document.getElementById('select-cal'),
-  //  format: 'YYYY-MM-DD',
+  disableDayFn: function disableDayFn(date) {
+    var sun = date.getDay() === 0;
+    var sat = date.getDay() === 6;
+    return sun + sat;
+  },
   onSelect: function onSelect() {
     dp.scrollTo(picker.getMoment().format('YYYY-MM-DD'), false, 'middle');
   }
@@ -251,116 +255,39 @@ document.querySelector('#modes-single-resource').addEventListener('click', funct
   return modesStyle('none', 'none', 'inline'), changeModeTo('singleRowResource'), dp.update();
 });
 
+dp.onEventClick = function (args) {
+  // $('#scheduleproMenur').css({ display:"none"});
+  document.querySelector('#scheduleproMenur').style.display = 'none';
+  $("#eventActions").css({ display: "block",
+    position: "absolute",
+    top: event.pageY,
+    left: event.pageX,
+    zIndex: 999999
+  });
+
+  document.querySelector('.copyBooking').addEventListener('click', function () {
+    copied = args.e;
+    document.querySelector('#eventActions').style.display = 'none';
+  });
+  document.querySelector('.cutBooking').addEventListener('click', function () {
+    copied = args.e;
+    dp.events.remove(args.e);
+    document.querySelector('#eventActions').style.display = 'none';
+  });
+  document.querySelector('.delBooking').addEventListener('click', function () {
+    dp.events.remove(args.e);
+    document.querySelector('#eventActions').style.display = 'none';
+  });
+  document.querySelector('.dupBooking').addEventListener('click', function () {});
+};
+
+dp.onTimeRangeRightClick = function (args) {};
+
 dp.onBeforeCellRender = function (args) {
   //highlight today's column
   if (args.cell.start <= DayPilot.Date.today() && DayPilot.Date.today() < args.cell.end) {
     args.cell.backColor = "#83D6DE";
   }
-
-  dp.onEventClick = function (args) {
-
-    // $('#scheduleproMenur').css({ display:"none"});
-    document.querySelector('#scheduleproMenur').style.display = 'none';
-    dp.clearSelection();
-    $("#eventActions").css({ display: "block",
-      position: "absolute",
-      top: event.pageY,
-      left: event.pageX,
-      zIndex: 999999
-    });
-
-    document.querySelector('.copyBooking').addEventListener('click', function () {
-      copied = args.e;
-      document.querySelector('#eventActions').style.display = 'none';
-    });
-    document.querySelector('.cutBooking').addEventListener('click', function () {
-      copied = args.e;
-      dp.events.remove(args.e);
-      document.querySelector('#eventActions').style.display = 'none';
-    });
-    document.querySelector('.delBooking').addEventListener('click', function () {
-      dp.events.remove(args.e);
-      document.querySelector('#eventActions').style.display = 'none';
-    });
-    document.querySelector('.dupBooking').addEventListener('click', function () {
-
-      var selection = args.e;
-      var duration = args.e.end().getTime() - args.e.start().getTime();
-      var newEvent = new DayPilot.Event({
-        start: selection.start(),
-        end: selection.start().addMilliseconds(duration),
-        text: selection.text(),
-        resource: selection.resource(),
-        id: DayPilot.guid(),
-        total: selection.data.total,
-        tags: selection.data.tags
-      });
-      dp.events.add(newEvent);
-      console.log(args);
-      document.querySelector('#eventActions').style.display = 'none';
-    });
-  };
-
-  // dp.contextMenu = new DayPilot.Menu({
-  //   items: [
-  //     {
-  //       text: 'Actions',
-  //       items: [
-  //         {
-  //           text: 'Cut',
-  //           onclick: function() {
-  //             alert('Hello')
-  //           }
-  //         }, {
-  //           text: 'Copy'
-  //         }, {
-  //           text: 'Delete'
-  //         }, {
-  //           text: 'Duplicate'
-  //         }, {
-  //           text: 'Edit Title'
-  //         }
-  //       ]
-  //     }, {
-  //       text: 'Dates',
-  //       onclick: function() {
-  //
-  //       }
-  //     }, {
-  //       text: 'Allocation',
-  //       onclick: function() {
-  //
-  //       }
-  //     }, {
-  //       text: 'Split'
-  //     }
-  //   ]
-  // })
-
-  dp.contextMenuSelection = new DayPilot.Menu({ items: [{
-      text: "Paste", onclick: function onclick() {
-        if (!copied) {
-          dp.message('You need to copy/cut an event first.');
-          return;
-        }
-        var selection = this.source;
-        var duration = copied.end().getTime() - copied.start().getTime();
-        var newEvent = new DayPilot.Event({
-          start: selection.start,
-          end: selection.start.addMilliseconds(duration),
-          text: copied.text(),
-          resource: selection.resource,
-          id: DayPilot.guid(),
-          total: copied.data.total,
-          tags: copied.data.tags
-        });
-        dp.events.add(newEvent);
-      }
-    }],
-    className: "context_menu"
-  });
-
-  dp.onTimeRangeRightClick = function (args) {};
 
   var firmAvailableHours = 8;
   // var weekDay = weekdays[args.cell.start.getDayOfWeek()];
@@ -368,7 +295,8 @@ dp.onBeforeCellRender = function (args) {
   var utilization = args.cell.utilization("total");
 
   var visibleUtilization = utilization > 0;
-  if (args.cell.start.getDayOfWeek() === 0 || args.cell.start.getDayOfWeek() === 6) visibleUtilization = false;
+  // if (args.cell.start.getDayOfWeek() === 0 || args.cell.start.getDayOfWeek() === 6)
+  //   visibleUtilization = false
 
   // cell bar color
   var bgColor = '';
@@ -391,26 +319,13 @@ dp.onBeforeCellRender = function (args) {
   firmAvailableHours = firmAvailableHours > 0 ? firmAvailableHours : '-';
 
   // showing numbers only
-  if (showGrid == 'numbers' && visibleUtilization == true) {
+  if (dp.scale == "Day" && (args.cell.start.getDayOfWeek() === 0 || args.cell.start.getDayOfWeek() === 6)) {
+    args.cell.backColor = "#f9f6ed";
+    console.log(args.cell);
+  } else if (showGrid == 'numbers' && visibleUtilization == true) {
     args.cell.html = "<div class='booking-bg booking-numbers' style='background-color: " + bgColor + ";'><span class='utilization-span'>" + utilizationHrs + "hr " + utilizationText + "</span></div>";
   } else if (showGrid == 'numbers' && visibleUtilization == false) {
     args.cell.html = "<div class='booking-bg unscheduled-booking'><span>" + firmAvailableHours + "</span></div>";
-  }
-  // showing bars only
-  /*if (showGrid == 'bar' && visibleUtilization == true) {
-      args.cell.html = "<div class='booking-bg booking-bar' style='background-color: " + bgColor + ";'><span class='utilization-span'>" + utilizationHrs + "hr " + utilizationText + "</span></div>";
-  } else if (showGrid == 'bar' && visibleUtilization == false) {
-      args.cell.html = "<div class='booking-bg booking-bar unscheduled-booking'></div>";
-  }
-  // disable
-  if (showGrid == 'none' && visibleUtilization == true) {
-      args.cell.html = "<div class='booking-bg booking-disable' style='background-color: " + bgColor + ";'><span class='utilization-span'>" + utilizationHrs + "hr " + utilizationText + "</span></div>";
-  } else if (showGrid == 'none' && visibleUtilization == false) {
-      args.cell.html = "<div class='booking-bg booking-disable unscheduled-booking'></div>";
-  }*/
-  // for weekends
-  if (dp.scale == "Day" && (args.cell.start.getDayOfWeek() === 0 || args.cell.start.getDayOfWeek() === 6)) {
-    args.cell.backColor = "#f9f6ed";
   }
 };
 
@@ -436,7 +351,6 @@ dp.onTimeRangeSelecting = function (args) {
 };
 
 dp.onTimeRangeSelected = function (args) {
-
   $('.schedulepop').removeClass('disabled');
 
   bookingObj = args;
@@ -444,12 +358,6 @@ dp.onTimeRangeSelected = function (args) {
   document.querySelector('.scheduler_8_shadow_inner').addEventListener('contextmenu', function (e) {
     document.getElementById('scheduleproMenur').style.display = "block";
     var windowWidth = $(window).width();
-
-    //firmAvailableHours > 0 ? firmAvailableHours : '-'
-
-    console.log(windowWidth);
-    console.log(e.pageX);
-    console.log($(window).width());
 
     $("#scheduleproMenur").css({
       position: "absolute",
@@ -522,6 +430,19 @@ dp.bubble = new DayPilot.Bubble({
   }
 });
 
+// before event load callback
+dp.onBeforeEventRender = function (args) {
+  args.data.barHidden = true;
+  args.data.barBackColor = 'transparent';
+  if (args.data.tags.bookingType == 'vacation') {
+    args.data.cssClass = "bookingtype-vacation";
+  } else if (args.data.tags.bookingType == 'sickleave') {
+    args.data.cssClass = "bookingtype-sickleave";
+  } else {
+    args.data.cssClass = "bookingtype-schedule";
+  }
+};
+
 // header columns
 // dp.rowHeaderColumns = [{ title: 'Name' }];
 dp.treeEnabled = false;
@@ -553,10 +474,9 @@ dp.events.list = [{
   end: "2016-12-15",
   id: "3",
   resource: "r2",
-  text: "1's,A Stitch, 1041, 40 ",
-  title: "1's,A Stitch, 1041, 40 ",
-
-  total: 5,
+  text: "1's, branchse, 1043, 50 ",
+  title: "1's, branchse, 1043, 50 ",
+  total: 6,
   tags: { bookingType: 'schedule', taskType: 1041 } // custom event property
 }];
 
@@ -583,36 +503,6 @@ var addRippleEffect = function addRippleEffect(e) {
 };
 
 document.addEventListener('click', addRippleEffect, false);
-
-/*  dp.onEventRightClick = function(args) {
-
-    $("#eventActions").css(
-              { display:"block",
-                position: "absolute",
-                top: event.pageY,
-                left: event.pageX,
-                zIndex: 999999
-              }
-            );
-};*/
-
-$(".item.dropdown").on('mouseenter mouseleave', function (e) {
-
-  if ($('.menu', this).length) {
-    var elm = $('.dropdown', this);
-    var off = elm.offset();
-    var l = off.left;
-    var w = elm.width() + 300;
-    var docH = $("#calendar-container").height();
-    var docW = $("#calendar-container").width();
-    var isEntirelyVisible = l + w <= docW;
-    if (!isEntirelyVisible) {
-      $(this).addClass('edge');
-    } else {
-      $(this).removeClass('edge');
-    }
-  }
-});
 
 $(document).ready(function () {
 
@@ -642,9 +532,41 @@ $(document).ready(function () {
     field: $("#dateEnd")[0],
     theme: 'triangle',
     container: $("#datepikend")[0]
+  }),
+      eventStartDate = new Pikaday({
+    field: $("#edateStart")[0],
+    theme: 'triangle',
+    container: $("#edatepikstart")[0]
+  }),
+      eventEndDate = new Pikaday({
+    field: $("#edateEnd")[0],
+    theme: 'triangle',
+    container: $("#edatepikend")[0]
   });
 
   $('.ui.dropdown').dropdown();
+  $('.ui.checkbox').checkbox();
+  $(".ui.fluid.dropdown").dropdown({ allowLabels: true });
+  $(".close-booking").on("click", function () {
+    $('.ui.scheduleproj-modal').modal("hide");
+  });
+  $('.ui.fluid.dropdown').dropdown({ 'set selected': 'Resource 1,Resource 2' });
+
+  $('.ui.radio.checkbox').checkbox({
+    onChange: function onChange() {
+      var tval = $(this).val();
+      $("div.desc").hide();
+      $("#byday" + tval).show();
+    },
+    onChecked: function onChecked() {
+      var tval = $(this).val();
+      $("div.desc").hide();
+      $("#byday" + tval).show();
+    }
+
+  });
+
+  $('.ui.accordion').dropdown({ exclusive: false });
   $('.ui.accordion').accordion();
   $('.draghelp').popup();
 
@@ -657,8 +579,24 @@ $(document).ready(function () {
     }
   });
 
-  var scheduleproj = $("#scheduleProject");
-  $(scheduleproj).click(function (event) {
+  var submitProj = $("#submitProject");
+  var submitEvent = $("#submitEvent");
+  var scheduleEvent = $("#scheduleEvent");
+  var scheduleProject = $("#scheduleProject");
+
+  $(scheduleEvent).click(function (event) {
+
+    createBookingModal();
+    document.getElementById('scheduleproMenur').style.display = "none";
+  });
+
+  $(scheduleProject).click(function (event) {
+
+    scheduleProjectModal();
+    document.getElementById('scheduleproMenur').style.display = "none";
+  });
+
+  $(submitProj).click(function (event) {
 
     var bookingHours = parseInt($("#bookingHrs").val()) ? parseInt($("#bookingHrs").val()) : 8,
         bookingTitle = $('#projName').val(),
@@ -685,28 +623,138 @@ $(document).ready(function () {
       });
       dp.events.add(newBooking);
       document.getElementById('scheduleproMenur').style.display = "none";
-      dp.message("Created");
+      $('.ui.scheduleproj-modal').modal("hide");
+      dp.message('New Task assigned to ' + bookingObj.resource);
       dp.clearSelection();
     }
   });
 
-  // fullscreen
-  $('#expand-btn').click(function (e) {
-    $('#workspace').toggleClass('fullscreen');
-    $('#header-menu, #footer').toggleClass('hidden');
-    $('#header-menu').addClass('bring-down');
+  // submit event
 
-    var workspace = document.querySelector('#workspace');
-    if (workspace.classList.contains('fullscreen')) {
-      (function () {
-        var height = 360;
-        var change = setInterval(function () {
-          height += 6;
-          if (dp.height >= 450) clearInterval(change);else dp.setHeight(height);
-        }, 1);
-      })();
-    } else dp.setHeight(360);
+
+  $(submitEvent).click(function (event) {
+    var bookingHours = parseInt($("#bookingHrs").val()) ? parseInt($("#bookingHrs").val()) : 8,
+        eventStartDate = $("#edateStart").val(),
+        eventEndDate = $("#edateEnd").val();
+
+    var bookingTitle = $('.dropdown.eventleave').dropdown('get text');
+    var bookingType = $('.dropdown.eventleave').dropdown('get value');
+    bookingObj.start = eventStartDate ? eventStartDate : bookingObj.start;
+    bookingObj.end = eventEndDate ? eventEndDate : bookingObj.end;
+
+    createeBooking();
+    function createeBooking() {
+
+      var newBooking = new DayPilot.Event({
+        start: bookingObj.start,
+        end: bookingObj.end,
+        id: DayPilot.guid(),
+        resource: bookingObj.resource,
+        text: bookingTitle,
+        total: bookingHours,
+        color: '#ffffff',
+        barBackColor: 'transparent',
+        tags: {
+          bookingType: bookingType
+        }
+      });
+      dp.events.add(newBooking);
+      document.getElementById('scheduleproMenur').style.display = "none";
+      $('.ui.event-booking-modal').modal("hide");
+      dp.message('New event created');
+      dp.clearSelection();
+    }
   });
+
+  /* ends vf  here */
 });
+
+function createBookingModal() {
+  $('.ui.event-booking-modal').modal({
+    closable: true,
+    blurring: false,
+    onApprove: function onApprove() {
+      dp.clearSelection();
+    },
+    onDeny: function onDeny() {
+      dp.clearSelection();
+      $('#booking-form').form('reset');
+    }
+  }).modal("show");
+}
+
+function scheduleProjectModal() {
+  $('.ui.scheduleproj-modal').modal({
+    closable: true,
+    blurring: false,
+    onApprove: function onApprove() {
+      dp.clearSelection();
+    },
+    onDeny: function onDeny() {
+      dp.clearSelection();
+      $('#booking-form').form('reset');
+    }
+  }).modal("show");
+}
+
+/*  dp.onEventRightClick = function(args) {
+
+    $("#eventActions").css(
+              { display:"block",
+                position: "absolute",
+                top: event.pageY,
+                left: event.pageX,
+                zIndex: 999999
+              }
+            );
+};*/
+
+// fullscreen
+$('#expand-btn').click(function (e) {
+  $('#workspace').toggleClass('fullscreen');
+  $('#header-menu, #footer').toggleClass('hidden');
+  $('#header-menu').addClass('bring-down');
+
+  var workspace = document.querySelector('#workspace');
+  if (workspace.classList.contains('fullscreen')) {
+    (function () {
+      var height = 360;
+      var change = setInterval(function () {
+        height += 6;
+        if (dp.height >= 450) clearInterval(change);else dp.setHeight(height);
+      }, 1);
+    })();
+  } else dp.setHeight(360);
+});
+
+// Split Dates and create 2 events
+// let splitdate = new Pikaday({
+//    field: document.getElementById('split'),
+//    container: document.getElementById('split-cal'),
+//    onSelect: function(){
+//
+//      document.querySelector('#eventActions').style.display = "none";
+//    },
+//    minDate: new Date(),
+//    maxDate: new Date("2016-12-31")
+// });
+
+/*  custom contextmenu position
+  $(".item.dropdown").on('mouseenter mouseleave', function (e) {
+        if ($('.menu', this).length) {
+        var elm = $('.dropdown', this);
+        var off = elm.offset();
+        var l = off.left;
+          var w = elm.width() + 300;
+          var docH = $("#calendar-container").height();
+          var docW = $("#calendar-container").width();
+          var isEntirelyVisible = (l + w <= docW);
+          if (!isEntirelyVisible) {
+            $(this).addClass('edge');
+          } else {
+            $(this).removeClass('edge');
+          }
+      }
+  });*/
 
 // })()

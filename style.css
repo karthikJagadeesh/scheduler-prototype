@@ -49,11 +49,11 @@ a {
     background: rgba(154, 170, 195, 0.24) !important;
 }
 
-.ui.dropdown.selection.multiple {
+/*.ui.dropdown.selection.multiple {
     min-width: 101.5% !important;
     margin-left: -18px;
     border: 0;
-}
+}*/
 
 .ui.labeled.icon.button>.icon,
 .ui.labeled.icon.buttons>.button>.icon,
@@ -258,6 +258,11 @@ footer.mdl-mini-footer {
 .ui.button{background:#fff;}
 .booking-numbers{color:#fff}
 .ui.six.wide.column{display: flex;  justify-content: flex-end;  align-items: center;}
+.ui.styled.accordion .result .content{padding: 0}
+ .ui.styled.accordion .result .title{padding:0;border:0;}
+ .ui.form.eventbooking, .ui.form.projschedule{padding:15px 20px;}
+ .ui.form.projschedule .field>label{display: flex;align-items: center;justify-content: flex-end;}
+ .form.projschedule .ui.selection.dropdown{min-width:auto}
 /* vf css ends */
 
 /* custom css  */

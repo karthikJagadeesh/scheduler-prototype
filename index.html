@@ -356,13 +356,13 @@
             </div>
         </div>
     </div>
-    <div id="footer" class="row">
+  <!--  <div id="footer" class="row">
         <footer class="sixteen wide column">
             <div class="ui basic segment">
                 <p>© 2016 <a href="http://xcmsolutions.com">XCM Solutions LLC</a>, All rights reserved.</p>
             </div>
         </footer>
-    </div>
+    </div> -->
 
 
   <!-- custom context menu for event creating rightclick -->
@@ -370,119 +370,19 @@
         <div class="item pasteBooking">  Paste  </div>
 
 
-      <div class="item ui dropdown">
-        <i class="dropdown icon"></i>   Schedule project
-        <div class="menu">
-          <div class="ui styled accordion" id="spaccordion">
+      <div class="item ui dropdown" id="scheduleProject">
+      Schedule project
 
-            <div class="title">
-            <i class="dropdown icon"></i>
-            Select a project
-            </div>
-            <div class="content">
-            <div class="ui search" id="searchClient">
-              <div class="ui icon input">
-                <input class="prompt"  id="projName" type="text" placeholder="Search projects" >
-                <i class="search icon"></i>
-              </div>
-
-            </div>
-              <div class="ui results"></div>
-            </div>
-
-
-            <div class="title">
-            <i class="dropdown icon"></i>
-            Task Type
-            </div>
-            <div class="content">
-              <div class="ui left icon input">
-              <input type="text" class="contextMenuFilter" placeholder="Type to Filter Tasktype">
-              <i class="users icon"></i>
-              </div>
-              <div class="ui list">
-              <div class="item">1041</div>
-              <div class="item">1040</div>
-              <div class="item">1042</div>
-              </div>
-
-            </div>
-
-
-            <div class="title">
-            <i class="dropdown icon"></i>
-            Start Date
-            </div>
-            <div class="content">
-            <div class="ui left icon input">
-            <input type="text" id="dateStart" placeholder="Start Date"><i class="calendar  icon"></i>
-            </div>
-            <div id="datepikstart"></div>
-            </div>
-
-            <div class="title">
-            <i class="dropdown icon"></i>
-            End Date
-            </div>
-
-            <div class="content">
-            <div class="ui left icon input">
-            <input type="text" id="dateEnd" placeholder="End Date"><i class="calendar  icon"></i>
-            </div>
-            <div id="datepikend"></div>
-            </div>
-
-            <div class="title">
-            <i class="dropdown icon"></i>
-            Allocation
-            </div>
-            <div class="content">
-            <label class="radio">
-            <input data-input="hoursInput" name="optionsRadios" class="hourRadio" value="" type="radio"> Hours / Day </label>
-            <div class="allocationDropInput"> <input class="bookingHrs" id="bookingHrs" value="8" type="text"> hrs   </div>
-            </div>
-
-            <div class="title">
-            <button class="ui button blue" id="scheduleProject"> Schedule project</button>
-            </div>
-
-
-          </div>
-          </div>
-        </div>
-
-
-
-        <div class="ui dropdown item">
-        <i class="dropdown icon"></i>
-        Holiday booking
-              <div class="menu">
-                <div class="ui styled accordion" id="hdaccordion">
-              <div class="title">
-              <i class="dropdown icon"></i>
-              Leave Type
-              </div>
-              <div class="content">
-              <div class="ui left icon input">
-              <input type="text" class="contextMenuFilter" placeholder="Type to Filter Projects">
-              <i class="users icon"></i>
-              </div>
-              <div class="ui list">
-              <div class="item">Apples</div>
-              <div class="item">Pears</div>
-              <div class="item">Oranges</div>
-              </div>
-
-              </div>
-
-              </div>
-              </div>
         </div>
 
 
 
 
-        <div class="item">
+
+        <div class="ui item" id="scheduleEvent">
+          Schedule Event
+         </div>
+         <div class="item">
         <i class="edit icon"></i>  Edit resource
         </div>
       </div>
@@ -548,16 +448,218 @@
               </div>
             </div>
 
-            <div class="ui dropdown item">
-            <i class="dropdown icon"></i>
-              Split
-
-            </div>
+            <div class="ui dropdown item" id="split">
+              <i class="dropdown icon"></i> Split
+              <div class="menu">
+               <div class="split-cal-item">
+                   <a class="item disabled" style="display:none">Split dates</a>
+                   <div id="split-cal"></div>
+               </div>
+             </div>
+           </div>
 
             <div class="item">
             <i class="edit icon"></i>  Edit
             </div>
           </div>
+
+          <!-- popup for event booking -->
+
+          <div class="ui small modal event-booking-modal">
+              <div class="header">
+                  <h2 style="font-size:20px;"> <span id="booking-head">Schedule Event </span>  <i class="close icon close-booking" style="float:right;"></i></h2> </div>
+              <form id="booking-form" class="ui  form" action="">
+
+                <div class="ui form eventbooking">
+                  <div class="field ui grid">
+              <label class="four wide column">Select an Event</label>
+              <div class="eight wide column">
+              <div class="ui selection dropdown eventleave">
+              <input type="hidden" name="leave">
+              <i class="dropdown icon"></i>
+              <div class="default text">Select an Event</div>
+              <div class="menu">
+              <div class="item" data-value="notavailable">Not Available</div>
+              <div class="item" data-value="sickleave">Sick Leave</div>
+              <div class="item" data-value="vacation">Vacation</div>
+
+              </div>
+            </div>
+              </div>
+              </div>
+              <div class="field ui grid">
+<label class="four wide column">Start Date</label>
+<div class="six wide column">
+<div class="ui left icon input">
+<input type="text" id="edateStart" placeholder="Start Date"><i class="calendar  icon"></i>
+
+</div>
+<div id="edatepikstart"></div>
+</div>
+
+
+              </div>
+              <div class="field ui grid">
+<label class="four wide column">End Date</label>
+<div class="six wide column">
+<div class="ui left icon input">
+<input type="text" id="edateEnd" placeholder="End Date"><i class="calendar  icon"></i>
+
+</div>
+<div id="edatepikend"></div>
+</div>
+
+
+              </div>
+
+
+              <div class="field">
+
+                 <button id="submitEvent" class="ui primary approve button" name="saveBooking" type="button">Book &amp; close</button>
+            </div>
+                      </div>
+
+
+              </form>
+          </div>
+
+<!-- modal for schedule project -->
+          <div class="ui small modal scheduleproj-modal">
+              <div class="header">
+                  <h2 style="font-size:20px;"> <span id="booking-head">Schedule Project </span>  <i class="close icon close-booking" style="float:right;"></i></h2> </div>
+              <form id="projschedule-form" class="ui  form" action="">
+
+                <div class="ui form projschedule">
+                  <div class="field ui grid">
+                    <label class="five wide column" >Select Employees</label>
+                    <div class="ten wide column">
+                      <select name="employees" multiple="" class="ui fluid search dropdown">
+      						<option value="">Start typing employee name(s)</option>
+      						<option value="Resource1">Resource 1</option>
+                              <option value="Resource2">Resource 2</option>
+                              <option value="Resource3">Resource 3</option>
+
+      					</select>
+                </div></div>
+
+              <div class="field ui grid">
+   <label class="five wide column">Select/ Search Client/ Task</label>
+   <div class="two wide column">
+   <select class="ui search dropdown ">
+   <option value="">Years</option>
+   <option value="2010">2010</option>
+   <option value="2012">2012</option>
+   <option value="2013">2013</option>
+   <option value="2014">2014</option>
+   <option value="2015">2015</option>
+   <option value="2016">2016</option>
+   <option value="2017">2017</option>
+    </select>
+ </div>
+
+ <div class="ui search eight wide column" id="searchClient">
+   <div class="ui icon input">
+     <input class="prompt"  id="projName" type="text" placeholder="Search projects" >
+     <i class="search icon"></i>
+   </div>
+
+ </div>
+   <div class="ui results"></div>
+
+ </div>
+ <div class="field ui grid">
+   <label class="five wide column">Select Task</label>
+   <div class="five wide column">
+   <input type="text" name="first-name" placeholder="Select Task to assign role">
+ </div>
+ </div>
+ <div class="field ui grid">
+   <label class="five wide column">Select Role</label>
+   <div class="five wide column">
+   <input type="text" name="first-name" placeholder="Assign role">
+ </div>
+ </div>
+
+ <div class="inline fields ui grid">
+     <label for="hours" class="five wide column">Schedule Hours</label>
+     <div class="field">
+       <div class="ui radio checkbox">
+         <input type="radio" name="hours" checked="" tabindex="0" class="hidden" value="1">
+         <label>day</label>
+       </div>
+     </div>
+     <div class="field">
+       <div class="ui radio checkbox">
+         <input type="radio" name="hours" tabindex="0" class="hidden">
+         <label>bulk by dates</label>
+       </div>
+     </div>
+     <div class="field">
+       <div class="ui radio checkbox">
+         <input type="radio" name="hours" tabindex="0" class="hidden">
+         <label>bulk by days</label>
+       </div>
+     </div>
+     <div id="byday1" class="desc inline fields ui grid">
+       <input type="text" name="byday" class="one wide column">
+          <div class="five wide column">
+       <div class="ui left icon input">
+       <input type="text" id="dateStart" placeholder="Start Date"><i class="calendar  icon"></i>
+       </div>
+       <div id="datepikstart"></div>
+     </div>
+       <div class="five wide column">
+          <div class="ui left icon input">
+       <input type="text" id="dateEnd" placeholder="End Date"><i class="calendar  icon"></i>
+       </div>
+       <div id="datepikend"></div>
+     </div>
+
+       <input type="text" name="pikstarttime" placeholder="Pick Start time" class="two wide column">
+       on
+       <input type="text" name="pikdays" placeholder="Pick days" class="two wide column">
+
+      </div>
+   </div>
+ <div class="field ui grid">
+   <label class="five wide column">Job Code</label>
+   <div class="five wide column">
+   <input type="text" name="job-code" placeholder="Job Code">
+ </div>
+ </div>
+
+ <div class="field ui grid">
+   <label class="five wide column">Allow</label>
+      <div class="eight wide column">
+   <div class="ui checkbox">
+   <input type="checkbox" name="saturday">
+   <label>Saturday</label>
+ </div>
+    <div class="ui checkbox">
+   <input type="checkbox" name="sunday">
+   <label>Sunday</label>
+ </div>
+ <div class="ui checkbox">
+<input type="checkbox" name="hloidays">
+<label>Holidays</label>
+</div>
+</div>
+
+ </div>
+
+ <div class="field ui grid">
+
+   <div class="five wide column">
+   <input type="button" name="submit" value="Submit" id="submitProject">
+ </div>
+ </div>
+                      </div>
+
+
+              </form>
+
+          </div>
+
 
     <script type="text/javascript" src="./assets/daypilot-all.min.js"></script>
     <script src="https://cdnjs.cloudflare.com/ajax/libs/jquery/3.1.1/jquery.min.js"></script>
