@@ -288,7 +288,7 @@ dp.onBeforeCellRender = function (args) {
   if (args.cell.start <= DayPilot.Date.today() && DayPilot.Date.today() < args.cell.end) {
     args.cell.backColor = "#83D6DE";
   }
-
+  // let blur = false
   var firmAvailableHours = 8;
   // var weekDay = weekdays[args.cell.start.getDayOfWeek()];
   // utilization color
@@ -303,29 +303,33 @@ dp.onBeforeCellRender = function (args) {
   var utilizationText = '';
   var utilizationHrs = 0;
   if (utilization > firmAvailableHours) {
-    bgColor = '#c0504d';
+    bgColor = 'rgba(192,80,77,10)';
     utilizationHrs = utilization - firmAvailableHours;
     utilizationText = 'over';
   } else if (utilization == firmAvailableHours) {
-    bgColor = '#9bbb59;';
+    bgColor = 'rgba(155,187,89,10)';
     utilizationText = 'ok';
     utilizationHrs = firmAvailableHours;
   } else {
-    bgColor = '#4F81BD;';
+    bgColor = 'rgba(79,129,189,10)';
     utilizationText = 'under';
     utilizationHrs = firmAvailableHours - utilization;
   }
-
+  var blurColor = function blurColor(color) {
+    return color.replace('10', '0.3');
+  };
   firmAvailableHours = firmAvailableHours > 0 ? firmAvailableHours : '-';
-
-  // showing numbers only
-  if (dp.scale == "Day" && (args.cell.start.getDayOfWeek() === 0 || args.cell.start.getDayOfWeek() === 6)) {
-    args.cell.backColor = "#f9f6ed";
-    console.log(args.cell);
-  } else if (showGrid == 'numbers' && visibleUtilization == true) {
+  if (showGrid == 'numbers' && visibleUtilization == true) {
     args.cell.html = "<div class='booking-bg booking-numbers' style='background-color: " + bgColor + ";'><span class='utilization-span'>" + utilizationHrs + "hr " + utilizationText + "</span></div>";
+    if (args.cell.start.getDayOfWeek() === 0 || args.cell.start.getDayOfWeek() === 6) {
+      args.cell.backColor = "#f9f6ed";
+      args.cell.html = "<div class='booking-bg booking-numbers' style='background-color: " + blurColor(bgColor) + ";'></div>";
+    }
   } else if (showGrid == 'numbers' && visibleUtilization == false) {
     args.cell.html = "<div class='booking-bg unscheduled-booking'><span>" + firmAvailableHours + "</span></div>";
+  }
+  if (dp.scale == "Day" && (args.cell.start.getDayOfWeek() === 0 || args.cell.start.getDayOfWeek() === 6)) {
+    args.cell.backColor = "#f9f6ed";
   }
 };
 
