@@ -77,7 +77,7 @@ body.pushable>.pusher {
 }
 
 #conflictsbtn {
-    min-width: 242px;
+    min-width: 230px;
 }
 
 #role-selection {
@@ -311,12 +311,12 @@ footer.mdl-mini-footer {
     background-color: transparant !important;
 }
 
-.firm-holiday:before {
+/*.firm-holiday:before {
     content: "Holiday";
     padding-top: 12px;
     display: flex;
     margin-left: 20px;
-}
+}*/
  .scheduler_default_event {}
 #calendar-container {
     margin-top: 0px;
@@ -332,4 +332,47 @@ footer.mdl-mini-footer {
 }
 #dp {
     margin: 0 auto;
+}
+.header-holiday {
+  color: white;
+  font-size: 12px;
+  text-align: center;
+  width: 100%;
+  height: 100%;
+  background: #00B5B5;
+}
+.scheduler_8_timeheadercol {
+  white-space: normal !important;
+}
+
+
+#header-menu.hidden {
+   transform: translateY(-100%);
+   transition: .8s ease-in-out;
+   /*display:none;*/
+}
+
+.bring-down {
+   transition: .4s ease-in;
+}
+
+#footer.hidden {
+   display: none;
+}
+
+#workspace.fullscreen {
+   transform: translateY(-8%);
+   transition: .8s ease-in-out;
+   z-index: 9999;
+   width: 100%;
+   height: 100%;
+   position: fixed;
+   /*top: 0; */
+   /*left: 0; */
+}
+.menu_default_item {
+  padding: 6px;
+}
+.menu_default_item:hover {
+  border-left: 6px solid #60728C;
 }

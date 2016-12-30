@@ -3,6 +3,14 @@
 
   const showGrid = 'numbers'
   const weekdays = ['sun', 'mon', 'tue', 'wed', 'thu', 'fri', 'sat']
+  const firmHolidays = [
+    { startDate: '2017-03-25T00:00:00', endDate:'2017-03-26T00:00:00', title: 'Good Friday'},
+    { startDate: '2017-01-26T00:00:00', endDate:'2017-01-27T00:00:00', title: 'Republic Day'},
+    { startDate: '2017-01-05-01T00:00:00', endDate:'2017-05-02T00:00:00', title: 'Worker Day'},
+    { startDate: '2017-08-15T00:00:00', endDate:'2017-08-16T00:00:00', title: 'Independence Day'},
+    { startDate: '2017-09-05T00:00:00', endDate:'2017-09-06T00:00:00', title: 'Teachers Day'},
+  ]
+
 
   let bookingType = '';
 
@@ -41,7 +49,11 @@
 
   const picker = new Pikaday({
     field: document.getElementById('select-cal'),
-  //  format: 'YYYY-MM-DD',
+    disableDayFn: function(date) {
+        var sun = date.getDay() === 0;
+        var sat = date.getDay() === 6;
+        return sun + sat;
+    },
     onSelect: function() {
       dp.scrollTo(picker.getMoment().format('YYYY-MM-DD'), false, 'middle')
     }
@@ -295,64 +307,87 @@
     dp.update()
   ))
 
+  dp.onEventClick = args => {
+    // $('#scheduleproMenur').css({ display:"none"});
+    document.querySelector('#scheduleproMenur').style.display = 'none'
+    $("#eventActions").css(
+              { display:"block",
+                position: "absolute",
+                top: event.pageY,
+                left: event.pageX,
+                zIndex: 999999
+              }
+            );
+
+    document.querySelector('.copyBooking').addEventListener('click', () => {
+      copied = args.e;
+      document.querySelector('#eventActions').style.display = 'none'
+    })
+    document.querySelector('.cutBooking').addEventListener('click', () => {
+      copied = args.e;
+      dp.events.remove(args.e)
+      document.querySelector('#eventActions').style.display = 'none'
+    })
+    document.querySelector('.delBooking').addEventListener('click', () => {
+      dp.events.remove(args.e)
+      document.querySelector('#eventActions').style.display = 'none'
+    })
+    document.querySelector('.dupBooking').addEventListener('click', () => {
+
+    })
+
+  }
+
+  dp.onTimeRangeRightClick = args => {}
+
   dp.onBeforeCellRender = args => {
     //highlight today's column
     if (args.cell.start <= DayPilot.Date.today() && DayPilot.Date.today() < args.cell.end) {
         args.cell.backColor = "#83D6DE";
     }
-
-
+    // let blur = false
     let firmAvailableHours = 8;
     // var weekDay = weekdays[args.cell.start.getDayOfWeek()];
     // utilization color
-    var utilization = args.cell.utilization("total");
+    let utilization = args.cell.utilization("total");
 
-    var visibleUtilization = utilization > 0
+    let visibleUtilization = utilization > 0
+    // if (args.cell.start.getDayOfWeek() === 0 || args.cell.start.getDayOfWeek() === 6)
+    //   visibleUtilization = false
 
     // cell bar color
-    var bgColor = '';
-    var utilizationText = '';
-    var utilizationHrs = 0;
+    let bgColor = '';
+    let utilizationText = '';
+    let utilizationHrs = 0;
     if (utilization > firmAvailableHours) {
-        bgColor = '#c0504d';
+        bgColor = 'rgba(192,80,77,10)';
         utilizationHrs = utilization - firmAvailableHours;
         utilizationText = 'over';
     } else if (utilization == firmAvailableHours) {
-        bgColor = '#9bbb59;';
+        bgColor = 'rgba(155,187,89,10)';
         utilizationText = 'ok';
         utilizationHrs = firmAvailableHours;
     } else {
-        bgColor = '#4F81BD;';
+        bgColor = 'rgba(79,129,189,10)';
         utilizationText = 'under';
         utilizationHrs = firmAvailableHours - utilization;
     }
-
+    const blurColor = color => color.replace('10', '0.3')
     firmAvailableHours = firmAvailableHours > 0 ? firmAvailableHours : '-';
-
-    // showing numbers only
-    if (showGrid == 'numbers' && visibleUtilization == true) {
+        if (showGrid == 'numbers' && visibleUtilization == true) {
         args.cell.html = "<div class='booking-bg booking-numbers' style='background-color: " + bgColor + ";'><span class='utilization-span'>" + utilizationHrs + "hr " + utilizationText + "</span></div>";
-    } else if (showGrid == 'numbers' && visibleUtilization == false) {
-        args.cell.html = "<div class='booking-bg unscheduled-booking'><span>"+firmAvailableHours+"</span></div>";
+          if (args.cell.start.getDayOfWeek() === 0 || args.cell.start.getDayOfWeek() === 6) {
+            args.cell.backColor = "#f9f6ed"
+            args.cell.html = "<div class='booking-bg booking-numbers' style='background-color: " + blurColor(bgColor) + ";'></div>"
+          }
+        } else if (showGrid == 'numbers' && visibleUtilization == false) {
+            args.cell.html = "<div class='booking-bg unscheduled-booking'><span>"+firmAvailableHours+"</span></div>";
     }
-    // showing bars only
-    /*if (showGrid == 'bar' && visibleUtilization == true) {
-        args.cell.html = "<div class='booking-bg booking-bar' style='background-color: " + bgColor + ";'><span class='utilization-span'>" + utilizationHrs + "hr " + utilizationText + "</span></div>";
-    } else if (showGrid == 'bar' && visibleUtilization == false) {
-        args.cell.html = "<div class='booking-bg booking-bar unscheduled-booking'></div>";
+    if (dp.scale == "Day" && (args.cell.start.getDayOfWeek() === 0 || args.cell.start.getDayOfWeek() === 6)  ) {
+        args.cell.backColor = "#f9f6ed"
     }
-    // disable
-    if (showGrid == 'none' && visibleUtilization == true) {
-        args.cell.html = "<div class='booking-bg booking-disable' style='background-color: " + bgColor + ";'><span class='utilization-span'>" + utilizationHrs + "hr " + utilizationText + "</span></div>";
-    } else if (showGrid == 'none' && visibleUtilization == false) {
-        args.cell.html = "<div class='booking-bg booking-disable unscheduled-booking'></div>";
-    }*/
-    // for weekends
-    if (dp.scale == "Day" && (args.cell.start.getDayOfWeek() === 0 || args.cell.start.getDayOfWeek() === 6)) {
-        args.cell.backColor = "#FCFBF8";
-    }
-  };
 
+      };
 //groupConcurrentEvents by vigfox
 
 dp.groupConcurrentEvents = true;
@@ -385,24 +420,17 @@ dp.onBeforeRowHeaderRender = function(args) {
 
 
 
+
+
   // adding holidays to the caleneder beore loading
-
-  dp.onBeforeTimeHeaderRender = function(args) {
-
-  		var firmHolidays = [
-  			{ startDate: '2017-03-25T00:00:00', endDate:'2017-03-26T00:00:00', title: 'Good Friday'},
-  			{ startDate: '2017-01-26T00:00:00', endDate:'2017-01-27T00:00:00', title: 'Republic Day'},
-  			{ startDate: '2017-01-05-01T00:00:00', endDate:'2017-05-02T00:00:00', title: 'Worker Day'},
-  			{ startDate: '2017-08-15T00:00:00', endDate:'2017-08-16T00:00:00', title: 'Independence Day'},
-  			{ startDate: '2017-09-05T00:00:00', endDate:'2017-09-06T00:00:00', title: 'Teachers Day'},
-  		];
-  		for(var i=0; i< firmHolidays.length; i++ ){
-  		   if (args.header.start == firmHolidays[i].startDate && args.header.end  ==  firmHolidays[i].endDate ) {
-  				args.header.cssClass = "firm-holiday";
-  				args.header.toolTip =  firmHolidays[i].title +" " + args.header.toolTip;
-  		    }
-  		}
-  };
+  dp.onBeforeTimeHeaderRender = args => {
+      firmHolidays.forEach(holiday => {
+        if (args.header.start.value === holiday.startDate && args.header.end.value === holiday.endDate) {
+          args.header.html = `<div class="header-holiday">${holiday.title}</div>`
+          args.header.toolTip = holiday.title + ' ' + args.header.toolTip
+        }
+      })
+  }
 
   // event creating
 
@@ -593,7 +621,6 @@ dp.onBeforeRowHeaderRender = function(args) {
                      resource: "r2",
                      text: "1's, branchse, 1043, 50 ",
                      title: "1's, branchse, 1043, 50 ",
-
                      total: 6,
                      tags: { bookingType: 'schedule',  taskType: 1041 } // custom event property
                  }];
@@ -625,8 +652,6 @@ dp.onBeforeRowHeaderRender = function(args) {
      document.addEventListener('click', addRippleEffect, false);
 
       $(document).ready(function() {
-
-
 
         $('#setting').click(function(e){
 
@@ -762,11 +787,7 @@ dp.onBeforeRowHeaderRender = function(args) {
 
             });
 
-
 // submit event
-
-
-
 
 
             $(submitEvent).click(function(event) {
@@ -814,29 +835,6 @@ dp.onBeforeRowHeaderRender = function(args) {
 
       });
 
-  dp.onEventClick = function(args) {
-  $('#scheduleproMenur').css({ display:"none"});
-     dp.clearSelection();
-        $("#eventActions").css(
-                  { display:"block",
-                    position: "absolute",
-                    top: event.pageY,
-                    left: event.pageX,
-                    zIndex: 999999
-                  }
-                );
-
-      $('.copyBooking').on('click', function(){
-            copied = args.e;
-
-            $("#eventActions").css(  { display:"none"});
-      });
-  };
-
-
-
-
-
 
   function createBookingModal(){
       $('.ui.event-booking-modal').modal({
@@ -869,6 +867,10 @@ dp.onBeforeRowHeaderRender = function(args) {
           .modal("show");
   }
 
+
+
+
+
 /*  dp.onEventRightClick = function(args) {
 
     $("#eventActions").css(
@@ -883,8 +885,43 @@ dp.onBeforeRowHeaderRender = function(args) {
 
 
 
+  // fullscreen
+$('#expand-btn').click(function(e) {
+   $('#workspace').toggleClass('fullscreen');
+   $('#header-menu, #footer').toggleClass('hidden');
+   $('#header-menu').addClass('bring-down');
 
-  /*  $(".item.dropdown").on('mouseenter mouseleave', function (e) {
+   const workspace = document.querySelector('#workspace');
+   if (workspace.classList.contains('fullscreen')) {
+     let height = 360
+     const change = setInterval(() => {
+       height += 6
+       if (dp.height >= 450)
+          clearInterval(change)
+       else
+          dp.setHeight(height)
+     }, 1)
+
+   } else
+     dp.setHeight(360)
+});
+
+
+// Split Dates and create 2 events
+// let splitdate = new Pikaday({
+//    field: document.getElementById('split'),
+//    container: document.getElementById('split-cal'),
+//    onSelect: function(){
+//
+//      document.querySelector('#eventActions').style.display = "none";
+//    },
+//    minDate: new Date(),
+//    maxDate: new Date("2016-12-31")
+// });
+
+  /*  custom contextmenu position
+
+  $(".item.dropdown").on('mouseenter mouseleave', function (e) {
 
         if ($('.menu', this).length) {
           var elm = $('.dropdown', this);
@@ -901,6 +938,7 @@ dp.onBeforeRowHeaderRender = function(args) {
             }
         }
     });*/
+
 
 
 // })()
