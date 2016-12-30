@@ -68,9 +68,7 @@ a {
 .ui.labeled.icon.buttons .button {
     border-right: 1px solid rgba(0, 0, 0, 0.08)
 }
-.ui.button {
-    background: #FFFFFF !important;
-}
+
 
 /*resetting background after pusher activates*/
 
@@ -263,6 +261,13 @@ footer.mdl-mini-footer {
  .ui.form.eventbooking, .ui.form.projschedule{padding:15px 20px;}
  .ui.form.projschedule .field>label{display: flex;align-items: center;justify-content: flex-end;}
  .form.projschedule .ui.selection.dropdown{min-width:auto}
+ .ui.submenu{margin:0; box-shadow: none;}
+ .ui.menu.submenu .item.active{box-shadow: 0em 2px 0em;}
+ .ui.grid>.column:not(.row) {
+    padding-top: .5rem;
+    padding-bottom: .5rem;
+}
+.searchResource{width:75%;}
 /* vf css ends */
 
 /* custom css  */

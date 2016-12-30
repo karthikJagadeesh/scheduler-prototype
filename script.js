@@ -17,7 +17,7 @@
 
   dp.cellWidth = 60
   dp.eventHeight = 50
-  dp.headerHeight = 40
+  dp.headerHeight = 25
   dp.startDate = new DayPilot.Date().firstDayOfMonth()
   let cacheStart = dp.startDate
   dp.days = 900
@@ -268,7 +268,8 @@
           { name: "Resource 4", id: "r4" },
           { name : "Resource 5", id : "r5" },
           { name : "Resource 6", id : "r6" }]
-        }]
+        }
+      ]
     )
     else if (mode === 'singleRowResource') return (
       dp.treeEnabled = false,
@@ -351,6 +352,38 @@
         args.cell.backColor = "#FCFBF8";
     }
   };
+
+//groupConcurrentEvents by vigfox
+
+dp.groupConcurrentEvents = true;
+dp.groupConcurrentEventsLimit = 1;  // don't group if there aren't more than 2 overlapping events
+
+dp.onBeforeRowHeaderRender = function(args) {
+    var hasExpanded = args.row.groups.expanded().length > 0;
+    var hasCollapsed = args.row.groups.collapsed().length > 0;
+
+    if (hasExpanded && hasCollapsed) {
+        args.row.areas = [
+          {v:"Visible", right: 14, top: 0, height: 12, width: 12, style: "cursor:pointer", html: "", action:"JavaScript", js: function(row) {row.groups.expandAll(); } },
+          {v:"Visible", right: 0, top: 0, height: 12, width: 12, style: "cursor:pointer", html: "", action:"JavaScript", js: function(row)
+          { row.groups.collapseAll(); } }
+        ];
+    }
+    else if (hasCollapsed) {
+        args.row.areas = [
+            {v:"Visible", right: 0, top: 0, height: 12, width: 12, style: "cursor:pointer", html: "<i class='pam'>[+]</i>", action:"JavaScript", js: function(row)
+            { row.groups.expandAll(); } },
+        ];
+    }
+    else if (hasExpanded) {
+        args.row.areas = [
+
+            {v:"Visible", right: 0, top: 0, height: 12, width: 12, style: "cursor:pointer", html: "<i class='pam'>[-]</i>", action:"JavaScript", js: function(row) { row.groups.collapseAll(); } }
+        ];
+    }
+};
+
+
 
   // adding holidays to the caleneder beore loading
 
@@ -485,15 +518,27 @@
   }
 
   // header columns
-  // dp.rowHeaderColumns = [{ title: 'Name' }];
-  dp.treeEnabled = false;
+//  dp.rowHeaderColumns = [{ title: 'Resources' }];
+  dp.treeEnabled = true,
   dp.resources = [
-    { name : "Resource 1", id : "r1" },
-    { name : "Resource 2", id : "r2" },
-    { name: "Resource 3", id: "r3" },
-    { name: "Resource 4", id: "r4" },
-    { name : "Resource 5", id : "r5" },
-    { name : "Resource 6", id : "r6" }];
+    { name: "Task 1", id: "A", expanded: true, children:[
+      { name : "Resource 1", id : "r1" },
+      { name : "Resource 2", id : "r2" },
+      { name: "Resource 3", id: "r3" },
+      { name: "Resource 4", id: "r4" },
+      { name : "Resource 5", id : "r5" },
+      { name : "Resource 6", id : "r6" }]
+    },
+    { name: "Task 2", id: "B", expanded: true, children:[
+      { name : "Resource 1", id : "r1" },
+      { name : "Resource 2", id : "r2" },
+      { name: "Resource 3", id: "r3" },
+      { name: "Resource 4", id: "r4" },
+      { name : "Resource 5", id : "r5" },
+      { name : "Resource 6", id : "r6" }]
+    }
+  ];
+
 
    dp.events.list = [{
                      start: "2016-12-04",
@@ -506,7 +551,20 @@
                      total: 8,
 
                   	tags: { bookingType: 'schedule',  taskType: 1040 } // custom event property
-                 }, {
+                 },
+                 {
+                                   start: "2016-12-04",
+                                   end: "2016-12-09",
+                                   id: "8",
+                                   resource: "r1",
+                                   text: "6's,A Stitch In Time's, 1060, 40 ",
+                                   title: "6's,A Stitch In Time's, 1060, 40 ",
+
+                                   total: 8,
+
+                                	tags: { bookingType: 'schedule',  taskType: 1040 } // custom event property
+                               },
+                      {
                      start: "2016-12-04",
                      end: "2016-12-09",
                      id: "2",
@@ -515,6 +573,17 @@
                      title: "1's,A Stitch, 1041, 40 ",
 
                      total: 13,
+                     tags: { bookingType: 'schedule',  taskType: 1041 } // custom event property
+                 },
+                 {
+                     start: "2016-12-21",
+                     end: "2016-12-25",
+                     id: "3",
+                     resource: "r1",
+                     text: "1's, branchse, 1043, 50 ",
+                     title: "1's, branchse, 1043, 50 ",
+
+                     total: 6,
                      tags: { bookingType: 'schedule',  taskType: 1041 } // custom event property
                  },
                  {
