@@ -31,6 +31,10 @@
     background: #81a489;
     border: 1px solid #81a489;
 }
+.scheduler_8_event_group{z-index:1;color:#000;}
+.scheduler_8_event_group div{display:flex;justify-content: center;align-items: center;margin-top: 16px;height: 65%;background: #ccc;
+    opacity: 0.8;}
+.pam{}
 .bookingtype-vacation  .scheduler_8_event_inner,.bookingtype-vacation:hover  .scheduler_8_event_inner
 {  background: #7f7f7f !important;
   border: 1px solid #7f7f7f;}

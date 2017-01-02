@@ -12,25 +12,37 @@ const weekdays = [
 ]
 const firmHolidays = [
     {
-        startDate: '2017-03-25T00:00:00',
-        endDate: '2017-03-26T00:00:00',
+        startDate: '2017-04-14T00:00:00',
+        endDate: '2017-04-15T00:00:00',
         title: 'Good Friday'
     }, {
         startDate: '2017-01-26T00:00:00',
         endDate: '2017-01-27T00:00:00',
         title: 'Republic Day'
     }, {
-        startDate: '2017-01-05-01T00:00:00',
-        endDate: '2017-05-02T00:00:00',
-        title: 'Worker Day'
+        startDate: '2017-03-29T00:00:00',
+        endDate: '2017-03-30T00:00:00',
+        title: 'Ugadi'
     }, {
         startDate: '2017-08-15T00:00:00',
         endDate: '2017-08-16T00:00:00',
         title: 'Independence Day'
     }, {
-        startDate: '2017-09-05T00:00:00',
-        endDate: '2017-09-06T00:00:00',
-        title: 'Teachers Day'
+        startDate: '2017-05-01T00:00:00',
+        endDate: '2017-05-02T00:00:00',
+        title: 'May Day'
+    }, {
+        startDate: '2017-02-10T00:00:00',
+        endDate: '2017-02-11T00:00:00',
+        title: 'Gandhi Jayanthi'
+    }, {
+        startDate: '2017-12-25T00:00:00',
+        endDate: '2017-12-26T00:00:00',
+        title: 'Gandhi Jayanthi'
+    }, {
+        startDate: '2017-10-20T00:00:00',
+        endDate: '2017-10-21T00:00:00',
+        title: 'Diwali'
     }
 ]
 
@@ -62,13 +74,14 @@ dp.timeHeaders = [
         format: 'ddd d'
     }
 ]
+
 dp.separators = [
     {
         color: "red",
         location: new DayPilot.Date(),
         width: 2
     }
-];
+]
 
 dp.heightSpec = "Max";
 dp.height = 360;
@@ -377,6 +390,7 @@ document.querySelector('#modes-grouped').addEventListener('click', () => (modesS
 document.querySelector('#modes-single-project-resource').addEventListener('click', () => modesStyle('none', 'inline', 'none'))
 document.querySelector('#modes-single-resource').addEventListener('click', () => (modesStyle('none', 'none', 'inline'), changeModeTo('singleRowResource'), dp.update()))
 
+
 dp.onEventClick = args => {
     // $('#scheduleproMenur').css({ display:"none"});
     document.querySelector('#scheduleproMenur').style.display = 'none'
@@ -452,9 +466,39 @@ dp.onBeforeCellRender = args => {
 
 };
 
-// adding holidays to the caleneder beore loading
-dp.onBeforeTimeHeaderRender = args => {
-    firmHolidays.forEach(holiday => {
+//groupConcurrentEvents by vigfox
+
+dp.groupConcurrentEvents = true;
+dp.groupConcurrentEventsLimit = 1;  // don't group if there aren't more than 2 overlapping events
+
+dp.onBeforeRowHeaderRender = function(args) {
+    var hasExpanded = args.row.groups.expanded().length > 0;
+    var hasCollapsed = args.row.groups.collapsed().length > 0;
+
+    if (hasExpanded && hasCollapsed) {
+        args.row.areas = [
+          {v:"Visible", right: 14, top: 0, height: 12, width: 12, style: "cursor:pointer", html: "", action:"JavaScript", js: function(row) {row.groups.expandAll(); } },
+          {v:"Visible", right: 0, top: 0, height: 12, width: 12, style: "cursor:pointer", html: "", action:"JavaScript", js: function(row)
+          { row.groups.collapseAll(); } }
+        ];
+    }
+    else if (hasCollapsed) {
+        args.row.areas = [
+            {v:"Visible", right: 0, top: 0, height: 12, width: 12, style: "cursor:pointer", html: "<i class='pam'>[+]</i>", action:"JavaScript", js: function(row)
+            { row.groups.expandAll(); } },
+        ];
+    }
+    else if (hasExpanded) {
+        args.row.areas = [
+
+            {v:"Visible", right: 0, top: 0, height: 12, width: 12, style: "cursor:pointer", html: "<i class='pam'>[-]</i>", action:"JavaScript", js: function(row) { row.groups.collapseAll(); } }
+        ];
+    }
+};
+
+  // adding holidays to the caleneder beore loading
+  dp.onBeforeTimeHeaderRender = args => {
+      firmHolidays.forEach(holiday => {
         if (args.header.start.value === holiday.startDate && args.header.end.value === holiday.endDate) {
             args.header.html = `<div class="header-holiday">${holiday.title}</div>`
             args.header.toolTip = holiday.title + ' ' + args.header.toolTip
@@ -534,8 +578,6 @@ dp.onTimeRangeSelected = function(args) {
     el2.innerHTML = "<i class='fa fa-ellipsis-v fa-2x' aria-hidden='true'></i>";
 
     var csm = document.querySelector('.cellSelectionMenu');
-    //  csm.addEventListener('click', function(){ customdropMenu.show(args);  });
-
 };
 
 //dp.dynamicEventRenderingCacheSweeping = true;
@@ -556,55 +598,85 @@ dp.bubble = new DayPilot.Bubble({
     }
 });
 
-// before event load callback
-dp.onBeforeEventRender = function(args) {
-    args.data.barHidden = true;
-    args.data.barBackColor = 'transparent';
-    if (args.data.tags.bookingType == 'vacation') {
-        args.data.cssClass = "bookingtype-vacation";
-    } else if (args.data.tags.bookingType == 'sickleave') {
-        args.data.cssClass = "bookingtype-sickleave";
-    } else {
-        args.data.cssClass = "bookingtype-schedule";
-    }
-}
+  // before event load callback
+  dp.onBeforeEventRender = function(args) {
+          args.data.barHidden = true;
+          args.data.barBackColor = 'transparent';
+         if( args.data.tags.bookingType == 'vacation'){
+          	args.data.cssClass = "bookingtype-vacation";
+          }
+          else if(args.data.tags.bookingType == 'sickleave'){
+          	args.data.cssClass = "bookingtype-sickleave";
+          }
+          else {
+              args.data.cssClass = "bookingtype-schedule";
+          }
+  }
 
 // header columns
 // dp.rowHeaderColumns = [{ title: 'Name' }];
 dp.treeEnabled = false;
 
-const data = {
+const dataSBC = {
     'r1': {
         id: 'r1',
-        name: 'resource_1',
+        name: 'resource 1',
         tasks: [
             {
                 id: 'r1_t1',
-                name: 'task_1'
-            }
+                name: 'task 1'
+            },   {
+                  id: 'r1_t2',
+                  name: 'task 1'
+              }
         ]
     },
     'r2': {
         id: 'r2',
-        name: 'resource_2',
+        name: 'resource 2',
         tasks: [
             {
                 id: 'r2_t1',
-                name: 'task_1'
+                name: 'task 1'
             }, {
                 id: 'r2_t2',
-                name: 'task_2'
+                name: 'task 2'
+            }
+        ]
+    }
+}
+const dataSBE = {
+    't1': {
+        id: 't1',
+        name: 'task 1',
+        resources: [
+            {
+                id: 't1_r1',
+                name: 'resource 1'
+            }
+        ]
+    },
+    't2': {
+        id: 't2',
+        name: 'task 2',
+        resources: [
+            {
+                id: 't2_r1',
+                name: 'resource 1'
+            }, {
+                id: 't2_r2',
+                name: 'resource 2'
             }
         ]
     }
 }
 
-const eventList = [
+const eventListSBE = [
     {
         start: "2017-01-04",
         end: "2017-01-09",
         id: "1",
-        resource: "r1_t1",
+        resource: "t1_r1",
         text: "2's,A Stitch In Time's, 1040, 40 ",
         title: "2's,A Stitch In Time's, 1040, 40 ",
         total: 8,
@@ -616,7 +688,7 @@ const eventList = [
         start: "2017-01-06",
         end: "2017-01-12",
         id: "2",
-        resource: "r2_t1",
+        resource: "t2_r1",
         text: "1's,A Stitch, 1041, 40 ",
         title: "1's,A Stitch, 1041, 40 ",
         total: 13,
@@ -628,7 +700,7 @@ const eventList = [
         start: "2017-01-10",
         end: "2017-01-15",
         id: "3",
-        resource: "r2_t2",
+        resource: "t2_r2",
         text: "1's, branchse, 1043, 50 ",
         title: "1's, branchse, 1043, 50 ",
         total: 6,
@@ -638,17 +710,63 @@ const eventList = [
         } // custom event property
     }
 ]
-
-const resources = Object.keys(data)
-dp.treeEnabled = true
-dp.resources = resources.map(resource => ({
-    name: data[resource].name,
-    id: data[resource].id,
-    expanded: true,
-    children: data[resource].tasks.map(task => ({name: task.name, id: task.id}))
+const eventListSBC = eventListSBE.map(event => ({
+  start: event.start,
+  end: event.end,
+  id: event.id,
+  resource: event.resource.split('_').reverse().join('_'),
+  text: event.text,
+  title: event.title,
+  total: event.total,
+  tags: {
+      bookingType: event.tags.bookingType,
+      taskType: event.tags.taskType
+  }
 }))
 
-dp.events.list = eventList;
+const loadSBE = () => {
+  const tasks = Object.keys(dataSBE)
+  dp.treeEnabled = true
+  dp.resources = tasks.map(task => ({
+      name: dataSBE[task].name,
+      id: dataSBE[task].id,
+      expanded: true,
+      children: dataSBE[task].resources.map(resource => ({name: resource.name, id: resource.id}))
+  }))
+}
+loadSBE()
+
+dp.events.list = eventListSBE
+
+const sbeButton = document.querySelector('#sbe-tab')
+sbeButton.className = 'item active'
+const sbcButton = document.querySelector('#sbc-tab')
+
+sbcButton.addEventListener('click', () => {
+  sbcButton.className = 'item active'
+  sbeButton.className = 'item'
+
+  const resources = Object.keys(dataSBC)
+  dp.treeEnabled = true
+  dp.resources = resources.map(resource => ({
+      name: dataSBC[resource].name,
+      id: dataSBC[resource].id,
+      expanded: true,
+      children: dataSBC[resource].tasks.map(task => ({name: task.name, id: task.id}))
+  }))
+  dp.events.list = eventListSBC
+
+  dp.update()
+})
+sbeButton.addEventListener('click', () => {
+  sbeButton.className = 'item active'
+  sbcButton.className = 'item'
+
+  loadSBE()
+  dp.events.list = eventListSBE
+
+  dp.update()
+})
 
 dp.init();
 
@@ -910,8 +1028,8 @@ function scheduleProjectModal() {
 // fullscreen
 $('#expand-btn').click(function(e) {
     $('#workspace').toggleClass('fullscreen');
-    $('#header-menu, #footer').toggleClass('hidden');
-    $('#header-menu').addClass('bring-down');
+    $('#header-menu, #footer, .submenu').toggleClass('hidden');
+    $('#header-menu, .submenu').addClass('bring-down');
 
     const workspace = document.querySelector('#workspace');
     if (workspace.classList.contains('fullscreen')) {

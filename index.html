@@ -53,7 +53,14 @@
             </div>
         </div>
     </div>
+    <div class="ui borderless menu submenu" >
+      <a class="item" style="color: rgba(0,0,0,0.6)">Resource Allocator</a>
+      <a class="item" style="color: rgba(0,0,0,0.6)" id="sbe-tab">Schedule By Employee</a>
+      <a class="item" style="color: rgba(0,0,0,0.6)" id="sbc-tab">Schedule By Tasks/Clients</a>
+    </div>
+
     <div id="workspace">
+
     <div class="ui grid pad15" style="padding-bottom:0 !important">
         <!-- <div style="padding:15px 15px 0px  !important;display:inline-block;width:292px;"> -->
         <div class="ui four wide column" style="padding-bottom:0 !important">
@@ -73,10 +80,12 @@
                 </div>
             </div>
         </div>
-        <!-- <div style="padding:15px 15px 15px 0px !important;display: inline-block;width:1070px"> -->
-        <div class="ui twelve wide column" style="padding-bottom:0 !important;">
+
+
+        <div class="ui twelve wide column" style="padding-bottom:0 !important">
+
             <span>
-              <select name="Select Resource .." multiple="" class="ui search dropdown" >
+              <select name="Select Resource .." multiple="" class="ui search dropdown searchResource" >
                 <option value="">Search Resources .. </option>
                 <option value="Resource1">Resource 1</option>
                 <option value="Resource2">Resource 2</option>
