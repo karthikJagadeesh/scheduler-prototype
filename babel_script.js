@@ -366,15 +366,52 @@ document.querySelector('#modes-single-resource').addEventListener('click', funct
     return modesStyle('none', 'none', 'inline'), changeModeTo('singleRowResource'), dp.update();
 });
 
+var createTwoEvents = function createTwoEvents() {
+    for (var _len = arguments.length, props = Array(_len), _key = 0; _key < _len; _key++) {
+        props[_key] = arguments[_key];
+    }
+
+    var newEvent1 = new DayPilot.Event({
+        start: props[0],
+        end: props[1],
+        text: props[3].text(),
+        resource: props[3].resource(),
+        id: DayPilot.guid(),
+        total: props[3].data.total,
+        tags: props[3].data.tags
+    });
+    var newEvent2 = new DayPilot.Event({
+        start: props[1],
+        end: props[2],
+        text: props[3].text(),
+        resource: props[3].resource(),
+        id: DayPilot.guid(),
+        total: props[3].data.total,
+        tags: props[3].data.tags
+    });
+
+    dp.events.add(newEvent1);
+    dp.events.add(newEvent2);
+    dp.update();
+};
+
 //Split Dates and create 2 events
-var splitdate = void 0;
-var spawnCalenderForSplit = function spawnCalenderForSplit(args) {
-    splitdate = new Pikaday({
+var setNewDateRange = function setNewDateRange(args) {
+    var e = args.e;
+
+
+    var splitdate = new Pikaday({
         field: document.getElementById('split'),
         container: document.getElementById('split-cal'),
-        onSelect: function onSelect() {},
-        minDate: new Date(),
-        maxDate: new Date('2017-01-20')
+        onSelect: function onSelect(date) {
+            dp.events.remove(e);
+            createTwoEvents(e.start(), moment(date).format('YYYY-MM-DD'), e.end(), e);
+
+            document.querySelector('#eventActions').style.display = 'none';
+            splitdate.destroy();
+        },
+        minDate: new Date(e.start().addDays(1).value),
+        maxDate: new Date(e.end().addDays(-1).value)
     });
 };
 
