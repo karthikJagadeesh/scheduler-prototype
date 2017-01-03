@@ -270,22 +270,23 @@ document.querySelector('#scroll-today').addEventListener('click', function () {
     dp.update();
 });
 
-var addResourceForm = document.querySelector('#add-resource-form');
-addResourceForm.addEventListener('submit', function (event) {
-    event.preventDefault();
-
-    var firstName = event.target[0].value;
-    var lastName = event.target[1].value;
-
-    if (firstName !== '' && lastName !== '') {
-        dp.resources.unshift({ name: firstName + ' ' + lastName, id: '' + firstName });
-        dp.message("Added new Resource");
-    }
-
-    event.target[0].value = '';
-    event.target[1].value = '';
-    dp.update();
-});
+// const addResourceForm = document.querySelector('#add-resource-form')
+// addResourceForm.addEventListener('submit', function(event) {
+//     event.preventDefault()
+//
+//     const firstName = event.target[0].value
+//     const lastName = event.target[1].value
+//
+//     if (firstName !== '' && lastName !== '') {
+//         dp.resources.unshift({name: `${firstName} ${lastName}`, id: `${firstName}`})
+//         dp.message("Added new Resource")
+//     }
+//
+//     event.target[0].value = ''
+//     event.target[1].value = ''
+//     dp.update()
+//
+// })
 
 var cellHeights = {
     '#xtrasmall': 30,
@@ -296,16 +297,12 @@ var cellHeights = {
 };
 var heightKeys = Object.keys(cellHeights);
 
-var _loop = function _loop(i) {
-    document.querySelector(heightKeys[i]).addEventListener('click', function () {
-        dp.eventHeight = cellHeights[heightKeys[i]];
+heightKeys.forEach(function (key) {
+    document.querySelector(key).addEventListener('change', function () {
+        dp.eventHeight = cellHeights[key];
         dp.update();
     });
-};
-
-for (var i = 0; i < heightKeys.length; i++) {
-    _loop(i);
-}
+});
 
 //View Modes
 var modesGroupedLabel = document.querySelector('#label-modes-grouped');
@@ -369,7 +366,22 @@ document.querySelector('#modes-single-resource').addEventListener('click', funct
     return modesStyle('none', 'none', 'inline'), changeModeTo('singleRowResource'), dp.update();
 });
 
+//Split Dates and create 2 events
+var splitdate = void 0;
+var spawnCalenderForSplit = function spawnCalenderForSplit(args) {
+    splitdate = new Pikaday({
+        field: document.getElementById('split'),
+        container: document.getElementById('split-cal'),
+        onSelect: function onSelect() {},
+        minDate: new Date(),
+        maxDate: new Date('2017-01-20')
+    });
+};
+
 dp.onEventClick = function (args) {
+
+    setNewDateRange(args);
+
     // $('#scheduleproMenur').css({ display:"none"});
     document.querySelector('#scheduleproMenur').style.display = 'none';
     $("#eventActions").css({ display: "block", position: "absolute", top: event.pageY, left: event.pageX, zIndex: 999999 });
@@ -395,7 +407,7 @@ dp.onTimeRangeRightClick = function (args) {};
 dp.onBeforeCellRender = function (args) {
     //highlight today's column
     if (args.cell.start <= DayPilot.Date.today() && DayPilot.Date.today() < args.cell.end) {
-        args.cell.backColor = "#83D6DE";
+        args.cell.backColor = "#F9AE74";
     }
     // let blur = false
     var firmAvailableHours = 8;
@@ -584,45 +596,45 @@ dp.treeEnabled = false;
 var dataSBC = {
     'r1': {
         id: 'r1',
-        name: 'resource 1',
+        name: 'task 1',
         tasks: [{
             id: 'r1_t1',
-            name: 'task 1'
+            name: 'resource 1'
         }, {
             id: 'r1_t2',
-            name: 'task 1'
+            name: 'resource 2'
         }]
     },
     'r2': {
         id: 'r2',
-        name: 'resource 2',
+        name: 'task 2',
         tasks: [{
             id: 'r2_t1',
-            name: 'task 1'
+            name: 'resource 1'
         }, {
             id: 'r2_t2',
-            name: 'task 2'
+            name: 'resource 2'
         }]
     }
 };
 var dataSBE = {
     't1': {
         id: 't1',
-        name: 'task 1',
+        name: 'resource 1',
         resources: [{
             id: 't1_r1',
-            name: 'resource 1'
+            name: 'task 1'
         }]
     },
     't2': {
         id: 't2',
-        name: 'task 2',
+        name: 'resource 2',
         resources: [{
             id: 't2_r1',
-            name: 'resource 1'
+            name: 'task 1'
         }, {
             id: 't2_r2',
-            name: 'resource 2'
+            name: 'task 2'
         }]
     }
 };
@@ -980,18 +992,6 @@ $('#expand-btn').click(function (e) {
         })();
     } else dp.setHeight(360);
 });
-
-// Split Dates and create 2 events
-// let splitdate = new Pikaday({
-//    field: document.getElementById('split'),
-//    container: document.getElementById('split-cal'),
-//    onSelect: function(){
-//
-//      document.querySelector('#eventActions').style.display = "none";
-//    },
-//    minDate: new Date(),
-//    maxDate: new Date("2016-12-31")
-// });
 
 /*  custom contextmenu position
 
