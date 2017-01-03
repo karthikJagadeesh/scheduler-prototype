@@ -1,5 +1,6 @@
 // (() => {
 
+let tab = 'sbe'
 const showGrid = 'numbers'
 const weekdays = [
     'sun',
@@ -334,35 +335,18 @@ const modesSingleProjectResourceLabel = document.querySelector('#label-modes-sin
 const modesSingleResourceLabel = document.querySelector('#label-modes-single-resource')
 const modesStyle = (...types) => (modesGroupedLabel.style.display = types[0], modesSingleProjectResourceLabel.style.display = types[1], modesSingleResourceLabel.style.display = types[2])
 const changeModeTo = mode => {
-    if (mode === 'grouped')
-        return (dp.treeEnabled = true, dp.resources = [
-            {
-                name: "Task 1",
-                id: "T1",
-                expanded: true,
-                children: [
-                    {
-                        name: "Resource 1",
-                        id: "T1_r1"
-                    }, {
-                        name: "Resource 2",
-                        id: "r2"
-                    }, {
-                        name: "Resource 3",
-                        id: "r3"
-                    }, {
-                        name: "Resource 4",
-                        id: "r4"
-                    }, {
-                        name: "Resource 5",
-                        id: "r5"
-                    }, {
-                        name: "Resource 6",
-                        id: "r6"
-                    }
-                ]
-            }
-        ])
+    if (mode === 'grouped' && tab === 'sbe') loadSBE()
+    else if (mode === 'grouped' && tab === 'sbc') {
+      const resources = Object.keys(dataSBC)
+      dp.treeEnabled = true
+      dp.resources = resources.map(resource => ({
+          name: dataSBC[resource].name,
+          id: dataSBC[resource].id,
+          expanded: false,
+          children: dataSBC[resource].tasks.map(task => ({name: task.name, id: task.id}))
+      }))
+      dp.events.list = eventListSBC
+    }
     else if (mode === 'singleRowResource')
         return (dp.treeEnabled = false, dp.resources = [
             {
@@ -440,7 +424,7 @@ const setNewDateRange = args => {
 }
 
 dp.onEventClick = args => {
-    
+
     setNewDateRange(args)
 
     // $('#scheduleproMenur').css({ display:"none"});
@@ -781,7 +765,7 @@ const loadSBE = () => {
   dp.resources = tasks.map(task => ({
       name: dataSBE[task].name,
       id: dataSBE[task].id,
-      expanded: true,
+      expanded: false,
       children: dataSBE[task].resources.map(resource => ({name: resource.name, id: resource.id}))
   }))
 }
@@ -796,13 +780,14 @@ const sbcButton = document.querySelector('#sbc-tab')
 sbcButton.addEventListener('click', () => {
   sbcButton.className = 'item active'
   sbeButton.className = 'item'
+  tab = 'sbc'
 
   const resources = Object.keys(dataSBC)
   dp.treeEnabled = true
   dp.resources = resources.map(resource => ({
       name: dataSBC[resource].name,
       id: dataSBC[resource].id,
-      expanded: true,
+      expanded: false,
       children: dataSBC[resource].tasks.map(task => ({name: task.name, id: task.id}))
   }))
   dp.events.list = eventListSBC
@@ -812,6 +797,7 @@ sbcButton.addEventListener('click', () => {
 sbeButton.addEventListener('click', () => {
   sbeButton.className = 'item active'
   sbcButton.className = 'item'
+  tab = 'sbe'
 
   loadSBE()
   dp.events.list = eventListSBE

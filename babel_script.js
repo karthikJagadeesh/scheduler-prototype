@@ -2,6 +2,7 @@
 
 // (() => {
 
+var tab = 'sbe';
 var showGrid = 'numbers';
 var weekdays = ['sun', 'mon', 'tue', 'wed', 'thu', 'fri', 'sat'];
 var firmHolidays = [{
@@ -312,30 +313,21 @@ var modesStyle = function modesStyle() {
     return modesGroupedLabel.style.display = arguments.length <= 0 ? undefined : arguments[0], modesSingleProjectResourceLabel.style.display = arguments.length <= 1 ? undefined : arguments[1], modesSingleResourceLabel.style.display = arguments.length <= 2 ? undefined : arguments[2];
 };
 var changeModeTo = function changeModeTo(mode) {
-    if (mode === 'grouped') return dp.treeEnabled = true, dp.resources = [{
-        name: "Task 1",
-        id: "T1",
-        expanded: true,
-        children: [{
-            name: "Resource 1",
-            id: "T1_r1"
-        }, {
-            name: "Resource 2",
-            id: "r2"
-        }, {
-            name: "Resource 3",
-            id: "r3"
-        }, {
-            name: "Resource 4",
-            id: "r4"
-        }, {
-            name: "Resource 5",
-            id: "r5"
-        }, {
-            name: "Resource 6",
-            id: "r6"
-        }]
-    }];else if (mode === 'singleRowResource') return dp.treeEnabled = false, dp.resources = [{
+    if (mode === 'grouped' && tab === 'sbe') loadSBE();else if (mode === 'grouped' && tab === 'sbc') {
+        var resources = Object.keys(dataSBC);
+        dp.treeEnabled = true;
+        dp.resources = resources.map(function (resource) {
+            return {
+                name: dataSBC[resource].name,
+                id: dataSBC[resource].id,
+                expanded: false,
+                children: dataSBC[resource].tasks.map(function (task) {
+                    return { name: task.name, id: task.id };
+                })
+            };
+        });
+        dp.events.list = eventListSBC;
+    } else if (mode === 'singleRowResource') return dp.treeEnabled = false, dp.resources = [{
         name: "Resource 1",
         id: "r1"
     }, {
@@ -736,7 +728,7 @@ var loadSBE = function loadSBE() {
         return {
             name: dataSBE[task].name,
             id: dataSBE[task].id,
-            expanded: true,
+            expanded: false,
             children: dataSBE[task].resources.map(function (resource) {
                 return { name: resource.name, id: resource.id };
             })
@@ -754,6 +746,7 @@ var sbcButton = document.querySelector('#sbc-tab');
 sbcButton.addEventListener('click', function () {
     sbcButton.className = 'item active';
     sbeButton.className = 'item';
+    tab = 'sbc';
 
     var resources = Object.keys(dataSBC);
     dp.treeEnabled = true;
@@ -761,7 +754,7 @@ sbcButton.addEventListener('click', function () {
         return {
             name: dataSBC[resource].name,
             id: dataSBC[resource].id,
-            expanded: true,
+            expanded: false,
             children: dataSBC[resource].tasks.map(function (task) {
                 return { name: task.name, id: task.id };
             })
@@ -774,6 +767,7 @@ sbcButton.addEventListener('click', function () {
 sbeButton.addEventListener('click', function () {
     sbeButton.className = 'item active';
     sbcButton.className = 'item';
+    tab = 'sbe';
 
     loadSBE();
     dp.events.list = eventListSBE;
