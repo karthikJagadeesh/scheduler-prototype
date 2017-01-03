@@ -117,8 +117,13 @@
     right: 0px;
     top: 0px;
     bottom: 0px;
-    border-right: 1px solid #ddd;
-    border-bottom: 1px solid #ddd;
+    border-right: 1px solid rgba(0,0,0,0.1);
+    border-bottom: 1px solid rgba(0,0,0,0.1);
+    background: -webkit-linear-gradient(top, #f3f3f3 0%, #e9e9e9);
+    background: -moz-linear-gradient(top, #f3f3f3 0%, #e9e9e9);
+    background: -ms-linear-gradient(top, #f3f3f3 0%, #e9e9e9);
+    background: -o-linear-gradient(top, #f3f3f3 0%, #e9e9e9);
+
     padding: 3px;
 }
 
@@ -130,7 +135,10 @@
     top: 0px;
     bottom: 0px;
     border-right: 1px solid #ddd;
-
+    background: -webkit-linear-gradient(top, #f3f3f3 0%, #e9e9e9);
+    background: -moz-linear-gradient(top, #f3f3f3 0%, #e9e9e9);
+    background: -ms-linear-gradient(top, #f3f3f3 0%, #e9e9e9);
+    background: -o-linear-gradient(top, #f3f3f3 0%, #e9e9e9);
     padding: 3px;
 }
 
@@ -206,6 +214,11 @@
 }
 
 .scheduler_8_timeheader_float_inner {
+    background: -webkit-linear-gradient(top, #f3f3f3 0%, #e9e9e9);
+    background: -moz-linear-gradient(top, #f3f3f3 0%, #e9e9e9);
+    background: -ms-linear-gradient(top, #f3f3f3 0%, #e9e9e9);
+    background: -o-linear-gradient(top, #f3f3f3 0%, #e9e9e9);
+    border-bottom: 1px solid rgba(0, 0, 0, 0.1);
     padding: 3px;
     display: flex;
     justify-content: center;
