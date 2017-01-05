@@ -49,9 +49,13 @@ var dp = new DayPilot.Scheduler("dp");
 dp.theme = "scheduler_8";
 dp.clipBoard = null;
 
+dp.rowHeaderWidth = 150;
+dp.rowHeaderScrolling = true;
 dp.cellWidth = 60;
 dp.eventHeight = 50;
 dp.headerHeight = 40;
+// dp.rowMarginTop = 27;
+dp.headerHeight = 35;
 dp.startDate = new DayPilot.Date().firstDayOfMonth();
 var cacheStart = dp.startDate;
 dp.days = 900;
@@ -73,7 +77,7 @@ dp.separators = [{
 }];
 
 dp.heightSpec = "Max";
-dp.height = 360;
+dp.height = 350;
 dp.width = '98%';
 
 dp.businessBeginsHour = 10;
@@ -307,13 +311,13 @@ heightKeys.forEach(function (key) {
 
 //View Modes
 var modesGroupedLabel = document.querySelector('#label-modes-grouped');
-var modesSingleProjectResourceLabel = document.querySelector('#label-modes-single-project-resource');
+// const modesSingleProjectResourceLabel = document.querySelector('#label-modes-single-project-resource')
 var modesSingleResourceLabel = document.querySelector('#label-modes-single-resource');
 var modesStyle = function modesStyle() {
-    return modesGroupedLabel.style.display = arguments.length <= 0 ? undefined : arguments[0], modesSingleProjectResourceLabel.style.display = arguments.length <= 1 ? undefined : arguments[1], modesSingleResourceLabel.style.display = arguments.length <= 2 ? undefined : arguments[2];
+    return modesGroupedLabel.style.display = arguments.length <= 0 ? undefined : arguments[0], modesSingleResourceLabel.style.display = arguments.length <= 1 ? undefined : arguments[1];
 };
 var changeModeTo = function changeModeTo(mode) {
-    if (mode === 'grouped' && tab === 'sbe') loadSBE();else if (mode === 'grouped' && tab === 'sbc') {
+    if (mode === 'grouped' && tab === 'sbe') loadSBE(), dp.update();else if (mode === 'grouped' && tab === 'sbc') {
         var resources = Object.keys(dataSBC);
         dp.treeEnabled = true;
         dp.resources = resources.map(function (resource) {
@@ -327,35 +331,40 @@ var changeModeTo = function changeModeTo(mode) {
             };
         });
         dp.events.list = eventListSBC;
-    } else if (mode === 'singleRowResource') return dp.treeEnabled = false, dp.resources = [{
-        name: "Resource 1",
-        id: "r1"
-    }, {
-        name: "Resource 2",
-        id: "r2"
-    }, {
-        name: "Resource 3",
-        id: "r3"
-    }, {
-        name: "Resource 4",
-        id: "r4"
-    }, {
-        name: "Resource 5",
-        id: "r5"
-    }, {
-        name: "Resource 6",
-        id: "r6"
-    }];
+    } else if (mode === 'singleRowResource' && tab === 'sbe') {
+        var tasks = Object.keys(dataSBE);
+        dp.treeEnabled = false;
+        dp.rowHeaderColumns = [{ title: 'Employees', width: 200 }];
+        dp.resources = tasks.map(function (task) {
+            return {
+                name: dataSBE[task].name,
+                id: dataSBE[task].id
+            };
+        });
+        dp.events.list = eventListSBE.map(function (event) {
+            return {
+                start: event.start,
+                end: event.end,
+                id: event.id,
+                resource: event.resource.split('_')[0],
+                text: event.text,
+                title: event.title,
+                total: event.total,
+                tags: {
+                    bookingType: event.tags.bookingType,
+                    taskType: event.tags.taskType
+                }
+            };
+        });
+    }
 };
 
 document.querySelector('#modes-grouped').addEventListener('click', function () {
     return modesStyle('inline', 'none', 'none'), changeModeTo('grouped'), dp.update();
 });
-document.querySelector('#modes-single-project-resource').addEventListener('click', function () {
-    return modesStyle('none', 'inline', 'none');
-});
+// document.querySelector('#modes-single-project-resource').addEventListener('click', () => modesStyle('none', 'inline', 'none'))
 document.querySelector('#modes-single-resource').addEventListener('click', function () {
-    return modesStyle('none', 'none', 'inline'), changeModeTo('singleRowResource'), dp.update();
+    return modesStyle('none', 'inline'), changeModeTo('singleRowResource'), dp.update();
 });
 
 var createTwoEvents = function createTwoEvents() {
@@ -387,25 +396,26 @@ var createTwoEvents = function createTwoEvents() {
     dp.update();
 };
 
-//Split Dates and create 2 events
 var setNewDateRange = function setNewDateRange(args) {
-    var e = args.e;
 
+    splitdate.setMaxDate(new Date(args.e.end().addDays(-1).value));
+    splitdate.setMinDate(new Date(args.e.start().addDays(1).value));
 
-    var splitdate = new Pikaday({
-        field: document.getElementById('split'),
-        container: document.getElementById('split-cal'),
-        onSelect: function onSelect(date) {
-            dp.events.remove(e);
-            createTwoEvents(e.start(), moment(date).format('YYYY-MM-DD'), e.end(), e);
+    splitdate.config().onSelect = function (date) {
+        dp.events.remove(args.e);
+        createTwoEvents(args.e.start(), moment(date).format('YYYY-MM-DD'), args.e.end(), args.e);
 
-            document.querySelector('#eventActions').style.display = 'none';
-            splitdate.destroy();
-        },
-        minDate: new Date(e.start().addDays(1).value),
-        maxDate: new Date(e.end().addDays(-1).value)
-    });
+        document.querySelector('#eventActions').style.display = 'none';
+    };
 };
+
+var splitdate = new Pikaday({
+    field: document.getElementById('split'),
+    container: document.getElementById('split-cal'),
+    onSelect: function onSelect() {},
+    minDate: new Date(),
+    maxDate: new Date()
+});
 
 dp.onEventClick = function (args) {
 
@@ -443,7 +453,6 @@ dp.onBeforeCellRender = function (args) {
     // var weekDay = weekdays[args.cell.start.getDayOfWeek()];
     // utilization color
     var utilization = args.cell.utilization("total");
-
     var visibleUtilization = utilization > 0;
     // if (args.cell.start.getDayOfWeek() === 0 || args.cell.start.getDayOfWeek() === 6)
     //   visibleUtilization = false
@@ -480,6 +489,11 @@ dp.onBeforeCellRender = function (args) {
     }
     if (dp.scale == "Day" && (args.cell.start.getDayOfWeek() === 0 || args.cell.start.getDayOfWeek() === 6)) {
         args.cell.backColor = "#f9f6ed";
+    }
+
+    if (!(args.cell.isParent > 0) && args.cell.resource === 't1_r1') {
+        // args.cell.backColor = bgColor
+        console.log(args.cell.utilization('total'));
     }
 };
 
@@ -588,38 +602,6 @@ dp.onTimeRangeSelected = function (args) {
     var csm = document.querySelector('.cellSelectionMenu');
 };
 
-//dp.dynamicEventRenderingCacheSweeping = true;
-dp.eventMovingStartEndEnabled = false;
-dp.eventResizingStartEndEnabled = true;
-dp.timeRangeSelectingStartEndEnabled = false;
-
-// see also DayPilot.Event.data.staticBubbleHTML property
-dp.bubble = new DayPilot.Bubble({
-    onLoad: function onLoad(args) {
-        var ev = args.source,
-            parentElement;
-        var noDaysBooked = new DayPilot.Date(ev.data.end).getDay() - new DayPilot.Date(ev.data.start).getDay();
-        if (noDaysBooked == 0) noDaysBooked = 1;
-        var bookedHrs = ev.data.total;
-        args.html = '<div class="bubble-class"> ' + ev.text() + ' ' + ' : ' + bookedHrs + '  hrs for  ' + noDaysBooked + ' day </div>';
-    }
-});
-
-// before event load callback
-dp.onBeforeEventRender = function (args) {
-    args.data.barHidden = true;
-    args.data.barBackColor = 'transparent';
-    if (args.data.tags.bookingType == 'vacation') {
-        args.data.cssClass = "bookingtype-vacation";
-    } else if (args.data.tags.bookingType == 'sickleave') {
-        args.data.cssClass = "bookingtype-sickleave";
-    } else {
-        args.data.cssClass = "bookingtype-schedule";
-    }
-};
-
-// header columns
-// dp.rowHeaderColumns = [{ title: 'Name' }];
 dp.treeEnabled = false;
 
 var dataSBC = {
@@ -649,21 +631,63 @@ var dataSBC = {
 var dataSBE = {
     't1': {
         id: 't1',
-        name: 'resource 1',
+        name: 'Vader, Darth',
         resources: [{
             id: 't1_r1',
-            name: 'task 1'
+            name: 'a,Glen,IV',
+            props: ['1120', '12-31-15', '', '126.00', 'Mar-16(40)<br>Apr-16(20)', '116.00', 'No Info In', '3-5-16', '3-20-15']
+        }, {
+            id: 't1_r2',
+            name: 'a,Glen,IV',
+            props: ['1440', '19-31-16', '', '96.00', 'Mar-16(40)<br>Apr-16(20)', '136.00', 'No Info In', '3-5-16', '3-20-15']
+        }, {
+            id: 't1_r3',
+            name: 'Hinthorne,Cathy',
+            props: ['1442', '09-25-17', '', '46.00', 'Mar-16(40)<br>Apr-16(20)', '106.00', 'No Info In', '3-5-16', '3-20-15']
         }]
     },
     't2': {
         id: 't2',
-        name: 'resource 2',
+        name: 'Sulkunte, Sanjath',
         resources: [{
             id: 't2_r1',
-            name: 'task 1'
+            name: 'a,Glen,IV',
+            props: ['1020', '12-31-15', '', '126.00', 'Mar-16(40)<br>Apr-16(20)', '126.00', 'No Info In', '3-5-16', '3-20-15']
         }, {
             id: 't2_r2',
-            name: 'task 2'
+            name: 'ABC Company',
+            props: ['10', '12-31-15', '', '126.00', 'Mar-16(40)<br>Apr-16(20)', '126.00', 'No Info In', '3-5-16', '3-20-15']
+        }]
+    },
+    't3': {
+        id: 't3',
+        name: 'G, Sriram',
+        resources: [{
+            id: 't3_r1',
+            name: 'ABC Company',
+            props: ['1120', '12-31-15', '', '126.00', 'Mar-16(40)<br>Apr-16(20)', '126.00', 'No Info In', '3-5-16', '3-20-15']
+        }, {
+            id: 't3_r2',
+            name: 'a,Glen,IV',
+            props: ['1120', '12-31-15', '', '126.00', 'Mar-16(40)<br>Apr-16(20)', '126.00', 'No Info In', '3-5-16', '3-20-15']
+        }]
+    },
+    't4': {
+        id: 't4',
+        name: 'Albrecht, Mark',
+        resources: [{
+            id: 't4_r1',
+            name: 'Albrecht,Anna',
+            props: ['1120', '12-31-15', '', '126.00', 'Mar-16(40)<br>Apr-16(20)', '126.00', 'No Info In', '3-5-16', '3-20-15']
+        }]
+    },
+    't5': {
+        id: 't5',
+        name: 'Belanger, Jamie',
+        resources: [{
+            id: 't5_r1',
+            name: 'Albrecht,Charlie',
+            props: ['1120', '12-31-15', '', '126.00', 'Mar-16(40)<br>Apr-16(20)', '126.00', 'No Info In', '3-5-16', '3-20-15']
         }]
     }
 };
@@ -673,8 +697,8 @@ var eventListSBE = [{
     end: "2017-01-09",
     id: "1",
     resource: "t1_r1",
-    text: "2's,A Stitch In Time's, 1040, 40 ",
-    title: "2's,A Stitch In Time's, 1040, 40 ",
+    text: "a,Glen,IV",
+    title: "a,Glen,IV",
     total: 8,
     tags: {
         bookingType: 'schedule',
@@ -684,9 +708,9 @@ var eventListSBE = [{
     start: "2017-01-06",
     end: "2017-01-12",
     id: "2",
-    resource: "t2_r1",
-    text: "1's,A Stitch, 1041, 40 ",
-    title: "1's,A Stitch, 1041, 40 ",
+    resource: "t1_r2",
+    text: "a,Glen,IV",
+    title: "a,Glen,IV",
     total: 13,
     tags: {
         bookingType: 'schedule',
@@ -696,10 +720,82 @@ var eventListSBE = [{
     start: "2017-01-10",
     end: "2017-01-15",
     id: "3",
-    resource: "t2_r2",
-    text: "1's, branchse, 1043, 50 ",
-    title: "1's, branchse, 1043, 50 ",
+    resource: "t1_r3",
+    text: "Hinthorne,Cathy",
+    title: "Hinthorne,Cathy",
     total: 6,
+    tags: {
+        bookingType: 'schedule',
+        taskType: 1041
+    } // custom event property
+}, {
+    start: "2017-01-13",
+    end: "2017-01-15",
+    id: "3",
+    resource: "t2_r1",
+    text: "a,Glen,IV",
+    title: "a,Glen,IV",
+    total: 7,
+    tags: {
+        bookingType: 'schedule',
+        taskType: 1041
+    } // custom event property
+}, {
+    start: "2017-01-05",
+    end: "2017-01-20",
+    id: "3",
+    resource: "t2_r2",
+    text: "ABC Company",
+    title: "ABC Company",
+    total: 9,
+    tags: {
+        bookingType: 'schedule',
+        taskType: 1041
+    } // custom event property
+}, {
+    start: "2017-01-16",
+    end: "2017-01-22",
+    id: "3",
+    resource: "t3_r1",
+    text: "ABC Company",
+    title: "ABC Company",
+    total: 8,
+    tags: {
+        bookingType: 'schedule',
+        taskType: 1041
+    } // custom event property
+}, {
+    start: "2017-01-07",
+    end: "2017-01-11",
+    id: "3",
+    resource: "t3_r2",
+    text: "a,Glen,IV",
+    title: "a,Glen,IV",
+    total: 11,
+    tags: {
+        bookingType: 'schedule',
+        taskType: 1041
+    } // custom event property
+}, {
+    start: "2017-01-14",
+    end: "2017-01-17",
+    id: "3",
+    resource: "t4_r1",
+    text: "Albrecht,Anna",
+    title: "Albrecht,Anna",
+    total: 4,
+    tags: {
+        bookingType: 'schedule',
+        taskType: 1041
+    } // custom event property
+}, {
+    start: "2017-01-15",
+    end: "2017-01-24",
+    id: "3",
+    resource: "t5_r1",
+    text: "Albrecht,Charlie",
+    title: "Albrecht,Charlie",
+    total: 8,
     tags: {
         bookingType: 'schedule',
         taskType: 1041
@@ -724,16 +820,25 @@ var eventListSBC = eventListSBE.map(function (event) {
 var loadSBE = function loadSBE() {
     var tasks = Object.keys(dataSBE);
     dp.treeEnabled = true;
+    dp.rowHeaderColumns = [{ title: 'Client Name', width: 100 }, { title: 'Task Type', width: 90 }, { title: 'Per End', width: 60 }, { title: 'Desc', width: 100 }, { title: 'Bud Hrs', width: 60 }, { title: 'Month <br>Sch\'ed', width: 100 }, { title: 'Sch.Hrs', width: 60 }, { title: 'Status', width: 80 }, { title: 'PSD', width: 60 }, { title: 'Add', width: 60 }];
     dp.resources = tasks.map(function (task) {
         return {
             name: dataSBE[task].name,
             id: dataSBE[task].id,
+            backColor: '#E0E4CC',
             expanded: false,
             children: dataSBE[task].resources.map(function (resource) {
-                return { name: resource.name, id: resource.id };
+                return {
+                    name: resource.name, id: resource.id,
+                    columns: resource.props.map(function (prop) {
+                        return { html: prop };
+                    })
+                };
             })
         };
     });
+    dp.events.list = eventListSBE;
+    console.log(eventListSBE);
 };
 loadSBE();
 
@@ -774,6 +879,34 @@ sbeButton.addEventListener('click', function () {
 
     dp.update();
 });
+
+//dp.dynamicEventRenderingCacheSweeping = true;
+dp.eventMovingStartEndEnabled = false;
+dp.eventResizingStartEndEnabled = true;
+dp.timeRangeSelectingStartEndEnabled = false;
+
+dp.bubble = new DayPilot.Bubble({
+    onLoad: function onLoad(args) {
+        var ev = args.source,
+            parentElement;
+        var noDaysBooked = new DayPilot.Date(ev.data.end).getDay() - new DayPilot.Date(ev.data.start).getDay();
+        if (noDaysBooked == 0) noDaysBooked = 1;
+        var bookedHrs = ev.data.total;
+        args.html = '<div class="bubble-class"> ' + ev.text() + ' ' + ' : ' + bookedHrs + '  hrs for  ' + noDaysBooked + ' day </div>';
+    }
+});
+
+dp.onBeforeEventRender = function (args) {
+    args.data.barHidden = true;
+    args.data.barBackColor = 'transparent';
+    if (args.data.tags.bookingType == 'vacation') {
+        args.data.cssClass = "bookingtype-vacation";
+    } else if (args.data.tags.bookingType == 'sickleave') {
+        args.data.cssClass = "bookingtype-sickleave";
+    } else {
+        args.data.cssClass = "bookingtype-schedule";
+    }
+};
 
 dp.init();
 
@@ -963,7 +1096,7 @@ $(document).ready(function () {
         }
     });
 
-    /* ends vf  here */
+    /* vigfox ends here */
 });
 
 function createBookingModal() {

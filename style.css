@@ -3,7 +3,7 @@ body {
     padding: 0;
     margin: 0;
     background: #F5F5F5;
-
+    font-family: helvetica, helvetica, sans-serif;
 }
 
 a {
@@ -111,7 +111,6 @@ body.pushable>.pusher {
     font-weight: 600;
     letter-spacing: 1px;
     font-size: 15px;
-    font-family: lato;
 }
 
 /* removed background  */
@@ -187,7 +186,6 @@ button {
     background-color: rgba(212, 212, 213, 0.52);
     width:100%;
     text-align: center;
-    font-family: 'lato';
 }
 
 .bubble-class {
@@ -250,6 +248,16 @@ footer.mdl-mini-footer {
 }
 .pika-lendar{width:auto;}
 
+#role-selection{
+   padding:0;
+}
+
+#role-selection .multiple {
+   border: 0;
+   width:110% !important;
+   margin-left:-15px;
+}
+
 /* vigfox css */
 .ui.basic.button{background: #fff !important}
 .ui.vertical.menu .dropdown.item.edge .menu{left:-100%;}
@@ -288,7 +296,7 @@ footer.mdl-mini-footer {
     text-align: center;
     line-height: 18px;
     height: 18px !important;
-    border-bottom: 1px solid #eee;
+    /*border-bottom: 1px solid #eee;*/
     position: absolute;
     z-index: 1;
     width: 100%;
@@ -299,7 +307,7 @@ footer.mdl-mini-footer {
 }
 
 .booking-numbers span,
-.unscheduled-booking span,
+/*.unscheduled-booking span,*/
 .booking-numbers,
 .booking-bar {
     display: block;
