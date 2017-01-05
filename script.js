@@ -500,7 +500,7 @@ dp.onBeforeCellRender = args => {
             args.cell.backColor = "#f9f6ed"
             args.cell.html = "<div class='booking-bg booking-numbers' style='background-color: " + blurColor(bgColor) + ";'></div>"
         }
-    } else if (showGrid == 'numbers' && visibleUtilization == false && dp.scale === 'Day') {
+    } else if (showGrid == 'numbers' && visibleUtilization == false && dp.scale === 'Day' && !(args.cell.isParent > 0)) {
         args.cell.html = "<div class='booking-bg unscheduled-booking'><span>" + firmAvailableHours + "</span></div>";
     }
     if (dp.scale == "Day" && (args.cell.start.getDayOfWeek() === 0 || args.cell.start.getDayOfWeek() === 6)) {
@@ -564,6 +564,8 @@ dp.onTimeRangeSelecting = function(args) {
     args.left.enabled = true;
     args.allowed = true;
 
+    if (args.resource.length === 2) (args.allowed = false, args.left.enabled = false, args.right.enabled = false)
+
 };
 
 dp.onTimeRangeSelected = function(args) {
@@ -618,12 +620,12 @@ dp.onTimeRangeSelected = function(args) {
     //  document.getElementsByClassName('cellSelectionMenu').remove();
     //  }
 
-    var el = document.querySelector('.scheduler_8_shadow');
-    var elChild = document.createElement('div');
-    elChild.className = 'cellSelectionMenu';
-    el.prepend(elChild);
-    var el2 = document.querySelector('.cellSelectionMenu');
-    el2.innerHTML = "<i class='fa fa-ellipsis-v fa-2x' aria-hidden='true'></i>";
+    // var el = document.querySelector('.scheduler_8_shadow');
+    // var elChild = document.createElement('div');
+    // elChild.className = 'cellSelectionMenu';
+    // el.prepend(elChild);
+    // var el2 = document.querySelector('.cellSelectionMenu');
+    // el2.innerHTML = "<i class='fa fa-ellipsis-v fa-2x' aria-hidden='true'></i>";
 
     var csm = document.querySelector('.cellSelectionMenu');
 };
@@ -900,6 +902,8 @@ sbcButton.addEventListener('click', () => {
 
   const resources = Object.keys(dataSBC)
   dp.treeEnabled = true
+  dp.rowHeaderColumns = [{title: 'Tasks', width: 200}]
+
   dp.resources = resources.map(resource => ({
       name: dataSBC[resource].name,
       id: dataSBC[resource].id,
