@@ -199,6 +199,7 @@ document.querySelector('#show-months').addEventListener('click', function () {
     dp.scale = 'Month';
     dp.days = 900;
     dp.cellWidth = 60;
+
     dp.update();
 });
 document.querySelector('#show-this-week').addEventListener('click', function () {
@@ -484,17 +485,17 @@ dp.onBeforeCellRender = function (args) {
             args.cell.backColor = "#f9f6ed";
             args.cell.html = "<div class='booking-bg booking-numbers' style='background-color: " + blurColor(bgColor) + ";'></div>";
         }
-    } else if (showGrid == 'numbers' && visibleUtilization == false) {
+    } else if (showGrid == 'numbers' && visibleUtilization == false && dp.scale === 'Day') {
         args.cell.html = "<div class='booking-bg unscheduled-booking'><span>" + firmAvailableHours + "</span></div>";
     }
     if (dp.scale == "Day" && (args.cell.start.getDayOfWeek() === 0 || args.cell.start.getDayOfWeek() === 6)) {
         args.cell.backColor = "#f9f6ed";
     }
 
-    if (!(args.cell.isParent > 0) && args.cell.resource === 't1_r1') {
-        // args.cell.backColor = bgColor
-        console.log(args.cell.utilization('total'));
-    }
+    // if (!(args.cell.isParent > 0) && args.cell.resource === 't1_r1') {
+    //   // args.cell.backColor = bgColor
+    //   console.log(args.cell.utilization('total'))
+    // }
 };
 
 //groupConcurrentEvents by vigfox

@@ -258,6 +258,10 @@ footer.mdl-mini-footer {
    margin-left:-15px;
 }
 
+#view-states-btn .menu {
+  width: 250px !important;
+}
+
 /* vigfox css */
 .ui.basic.button{background: #fff !important}
 .ui.vertical.menu .dropdown.item.edge .menu{left:-100%;}
