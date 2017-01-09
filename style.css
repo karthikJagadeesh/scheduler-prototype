@@ -262,6 +262,16 @@ footer.mdl-mini-footer {
 }
 
 /* vigfox css */
+.taskcount div {
+    position: absolute;
+    top: 50%;
+    width: 100%;
+}
+.taskcount div > div{
+    height: 18px;
+    position: absolute;
+    top: -9px;
+    width: 100%;}
 .ui.basic.button{background: #fff !important}
 .ui.vertical.menu .dropdown.item.edge .menu{left:-100%;}
 .ui.button{background:#fff;}

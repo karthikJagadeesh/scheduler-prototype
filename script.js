@@ -879,6 +879,7 @@ const loadSBE = () => {
       id: dataSBE[task].id,
       backColor: '#E0E4CC',
       expanded: false,
+       areas: [{"action":"None","js":"","bottom":0,"w":35,"v":"Visible","html":"<div><div><i class='folder outline icon'></i>"+dataSBE[task].resources.length+"<\/div><\/div>","css":"taskcount","top":0,"left":16}] ,
       children: dataSBE[task].resources.map(resource => ({
         name: resource.name, id: resource.id,
         columns: resource.props.map(prop => ({html: prop}))
