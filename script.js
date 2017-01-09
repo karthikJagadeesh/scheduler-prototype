@@ -70,6 +70,14 @@ dp.days = 900
 dp.cellDuration = 8
 dp.scale = 'Day'
 
+dp.treeImageMarginTop = 20
+dp.treeAutoExpand = true
+dp.messageHideAfter = 2000
+dp.eventResizeMargin = 10
+dp.autoScroll = 'Drag'
+dp.dynamicLoading = true
+// dp.cornerHtml = "XCM"
+
 dp.timeHeaders = [
     {
         groupBy: 'Month',
@@ -93,7 +101,7 @@ dp.height = 350;
 dp.width = '98%';
 
 dp.businessBeginsHour = 10
-dp.businessEndsHour = 18
+dp.businessEndsHour = 19
 
 const picker = new Pikaday({
     field: document.getElementById('select-cal'),
@@ -172,6 +180,8 @@ document.querySelector('#show-hours').addEventListener('click', () => {
     dp.scale = 'Hour'
     dp.days = 100
     dp.cellWidth = 60
+    dp.showNonBusiness = false
+
     dp.update()
 })
 document.querySelector('#show-days').addEventListener('click', () => {
@@ -188,6 +198,8 @@ document.querySelector('#show-days').addEventListener('click', () => {
     dp.scale = 'Day'
     dp.days = 900
     dp.cellWidth = 60
+    dp.showNonBusiness = true
+
     dp.update()
 })
 document.querySelector('#show-weeks').addEventListener('click', () => {
@@ -203,6 +215,7 @@ document.querySelector('#show-weeks').addEventListener('click', () => {
     dp.scale = 'Week'
     dp.days = 900
     dp.cellWidth = 60
+    dp.showNonBusiness = true
     dp.update()
 })
 document.querySelector('#show-months').addEventListener('click', () => {
@@ -219,6 +232,7 @@ document.querySelector('#show-months').addEventListener('click', () => {
     dp.scale = 'Month'
     dp.days = 900
     dp.cellWidth = 60
+    dp.showNonBusiness = true
 
     dp.update()
 })
@@ -237,6 +251,7 @@ document.querySelector('#show-this-week').addEventListener('click', () => {
     dp.days = 7
     dp.startDate = new DayPilot.Date()
     dp.cellWidth = 180
+    dp.showNonBusiness = true
     dp.update()
 })
 document.querySelector('#show-this-month').addEventListener('click', () => {
@@ -254,6 +269,7 @@ document.querySelector('#show-this-month').addEventListener('click', () => {
     dp.days = 31
     dp.startDate = new DayPilot.Date()
     dp.cellWidth = 60
+    dp.showNonBusiness = true
     dp.update()
 })
 
@@ -459,11 +475,13 @@ dp.onEventClick = args => {
 
 dp.onTimeRangeRightClick = args => {}
 
+
+
 dp.onBeforeCellRender = args => {
     //highlight today's column
-    if (args.cell.start <= DayPilot.Date.today() && DayPilot.Date.today() < args.cell.end) {
-        args.cell.backColor = "#F9AE74";
-    }
+    // if (args.cell.start <= DayPilot.Date.today() && DayPilot.Date.today() < args.cell.end) {
+    //     args.cell.backColor = "#F9AE74";
+    // }
     // let blur = false
     let firmAvailableHours = 8;
     // var weekDay = weekdays[args.cell.start.getDayOfWeek()];
@@ -494,25 +512,28 @@ dp.onBeforeCellRender = args => {
     firmAvailableHours = firmAvailableHours > 0
         ? firmAvailableHours
         : '-';
-    if (showGrid == 'numbers' && visibleUtilization == true) {
-        args.cell.html = "<div class='booking-bg booking-numbers' style='background-color: " + bgColor + ";'><span class='utilization-span'>" + utilizationHrs + "hr " + utilizationText + "</span></div>";
-        if (args.cell.start.getDayOfWeek() === 0 || args.cell.start.getDayOfWeek() === 6) {
-            args.cell.backColor = "#f9f6ed"
-            args.cell.html = "<div class='booking-bg booking-numbers' style='background-color: " + blurColor(bgColor) + ";'></div>"
-        }
-    } else if (showGrid == 'numbers' && visibleUtilization == false && dp.scale === 'Day' && !(args.cell.isParent > 0)) {
-        args.cell.html = "<div class='booking-bg unscheduled-booking'><span>" + firmAvailableHours + "</span></div>";
-    }
+    // if (showGrid == 'numbers' && visibleUtilization == true) {
+    //     args.cell.html = "<div class='booking-bg booking-numbers' style='background-color: " + bgColor + ";'><span class='utilization-span'>" + utilizationHrs + "hr " + utilizationText + "</span></div>";
+    //     if (args.cell.start.getDayOfWeek() === 0 || args.cell.start.getDayOfWeek() === 6) {
+    //         args.cell.backColor = "#f9f6ed"
+    //         args.cell.html = "<div class='booking-bg booking-numbers' style='background-color: " + blurColor(bgColor) + ";'></div>"
+    //     }
+    // } else if (showGrid == 'numbers' && visibleUtilization == false && dp.scale === 'Day' && !args.cell.isParent > 0) {
+    //     args.cell.html = "<div class='booking-bg unscheduled-booking'><span>" + firmAvailableHours + "</span></div>";
+    // }
     if (dp.scale == "Day" && (args.cell.start.getDayOfWeek() === 0 || args.cell.start.getDayOfWeek() === 6)) {
         args.cell.backColor = "#f9f6ed"
     }
 
-    // if (!(args.cell.isParent > 0) && args.cell.resource === 't1_r1') {
-    //   // args.cell.backColor = bgColor
-    //   console.log(args.cell.utilization('total'))
-    // }
+    if (args.cell.isParent > 0) {
+
+      // (moment(args.cell.start.value).format('YYYY-MM-DD'))
+    // dp.cells.all().filter(cell => moment(cell.start.value).format('YYYY-MM-DD') == '2017-01-10').forEach(cell => console.log(cell.utilization('total')))
+    }
 
 };
+
+
 
 //groupConcurrentEvents by vigfox
 
@@ -564,10 +585,9 @@ dp.onTimeRangeSelecting = function(args) {
     args.left.enabled = true;
     args.allowed = true;
 
-    if (args.resource.length === 2) (args.allowed = false, args.left.enabled = false, args.right.enabled = false)
 
 };
-
+ dp.treePreventParentUsage = true
 dp.onTimeRangeSelected = function(args) {
     $('.schedulepop').removeClass('disabled');
 
@@ -630,7 +650,7 @@ dp.onTimeRangeSelected = function(args) {
     var csm = document.querySelector('.cellSelectionMenu');
 };
 
-dp.treeEnabled = false;
+dp.treeEnabled = true;
 
 const dataSBC = {
     'r1': {
@@ -734,13 +754,34 @@ const dataSBE = {
     }
 }
 
+const numberOfDays = (startDate, endDate) => {
+  let currentDate = new DayPilot.Date(startDate)
+  startDate = new DayPilot.Date(startDate), endDate = new DayPilot.Date(endDate).addDays(-1)
+  let total = 0
+  while (currentDate <= endDate) {
+    total += 1
+    currentDate = currentDate.addDays(1)
+  }
+  return total
+}
+
+const addEventDescription = events => {
+  return events.map(event => {
+    const modifiedEvent = event
+    const text = `${event.text} : ${event.total} hrs for ${numberOfDays(event.start, event.end)} days`
+    modifiedEvent.text = text
+    return modifiedEvent
+  })
+}
+
+
 const eventListSBE = [
     {
         start: "2017-01-04",
         end: "2017-01-09",
         id: "1",
         resource: "t1_r1",
-        text: "a,Glen,IV",
+        text: `a,Glen,IV` ,
         title: "a,Glen,IV",
         total: 8,
         tags: {
@@ -878,14 +919,14 @@ const loadSBE = () => {
       name: dataSBE[task].name,
       id: dataSBE[task].id,
       backColor: '#E0E4CC',
-      expanded: false,
+      expanded: true,
       children: dataSBE[task].resources.map(resource => ({
         name: resource.name, id: resource.id,
         columns: resource.props.map(prop => ({html: prop}))
     }))
   }))
-  dp.events.list = eventListSBE
-  console.log(eventListSBE)
+  dp.events.list = addEventDescription(eventListSBE)
+  console.log(dp.events.list)
 }
 loadSBE()
 
@@ -957,7 +998,65 @@ dp.onBeforeEventRender = function(args) {
         }
 }
 
+const getViewPortDateRange = () => {
+  let startDate = dp.getViewPort().start
+  let currentDate = dp.getViewPort().start
+  let endDate = dp.getViewPort().end
+  let dateRange = []
+
+  while (currentDate <= endDate) {
+    dateRange.push(currentDate)
+    currentDate = currentDate.addDays(1)
+  }
+  return dateRange
+}
+
+dp.onEventMoved = () => {
+  showHeatMap()
+}
+
+dp.onScroll = () => {
+  showHeatMap()
+}
+
+dp.onEventResized = (args) => {
+  const text = args.e.text().split('for')[0]
+  console.log(args.e.text().split('for'))
+  args.e.text(`${text} for ${numberOfDays(moment(args.e.start().value).format('YYYY-MM-DD'),
+                                      moment(args.e.end().value).format('YYYY-MM-DD'))} days`)
+  dp.events.update(args.e)
+  showHeatMap()
+}
+
 dp.init();
+
+const employees = Object.keys(dataSBE)
+const showHeatMap = () => {
+
+  employees.forEach(employee => {
+
+    const dateList = getViewPortDateRange()
+    dateList.forEach(date => {
+      const total = dataSBE[employee].resources
+        .map(resource => dp.cells.find(date.value, resource.id)[0].utilization('total'))
+        .reduce((prev, curr) => prev + curr)
+
+        if (total > 8) {
+          dp.cells.find(date, dataSBE[employee].id).html(`<div class="over">${total}</div>`)
+        }
+        else if (total === 8) {
+          dp.cells.find(date, dataSBE[employee].id).html(`<div class="equal">${total}</div>`)
+        }
+        else if (total < 8) {
+          dp.cells.find(date, dataSBE[employee].id).html(`<div class="under">${total}</div>`)
+        }
+
+    })
+  })
+}
+showHeatMap()
+
+dp.init()
 
 const addRippleEffect = function(e) {
     let target = e.target;
@@ -1223,12 +1322,14 @@ $('#expand-btn').click(function(e) {
     const workspace = document.querySelector('#workspace');
     if (workspace.classList.contains('fullscreen')) {
         let height = 360
+        let accleration = 1
         const change = setInterval(() => {
-            height += 6
-            if (dp.height >= 450)
-                clearInterval(change)
-            else
-                dp.setHeight(height)
+          accleration += 0.4
+          height += accleration
+          if (dp.height >= 450)
+              clearInterval(change)
+          else
+              dp.setHeight(height)
         }, 1)
 
     } else
