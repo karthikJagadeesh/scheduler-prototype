@@ -920,6 +920,7 @@ const loadSBE = () => {
       id: dataSBE[task].id,
       backColor: '#E0E4CC',
       expanded: true,
+      areas: [{"action":"None","js":"","bottom":0,"w":35,"v":"Visible","html":"<div><div><i class='folder outline icon'></i>"+dataSBE[task].resources.length+"<\/div><\/div>","css":"taskcount","top":0,"left":16}],
       children: dataSBE[task].resources.map(resource => ({
         name: resource.name, id: resource.id,
         columns: resource.props.map(prop => ({html: prop}))
@@ -1085,7 +1086,16 @@ $(document).ready(function() {
 
     $('#setting').click(function(e) {
 
-        $('.ui.sidebar').sidebar('setting', {
+        $('.ui.right.sidebar').sidebar('setting', {
+            'transition': 'overlay',
+            dimPage: true
+        }).sidebar("toggle");
+        e.preventDefault();
+    });
+
+    $('#filtering').click(function(e) {
+
+        $('.ui.left.sidebar').sidebar('filtering', {
             'transition': 'overlay',
             dimPage: true
         }).sidebar("toggle");
@@ -1318,7 +1328,7 @@ $('#expand-btn').click(function(e) {
     $('#workspace').toggleClass('fullscreen');
     $('#header-menu, #footer, .submenu').toggleClass('hidden');
     $('#header-menu, .submenu').addClass('bring-down');
-
+  $('#expand-btn i').removeClass('compress').addClass('maximize');
     const workspace = document.querySelector('#workspace');
     if (workspace.classList.contains('fullscreen')) {
         let height = 360

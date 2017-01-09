@@ -88,6 +88,13 @@ body.pushable>.pusher {
     min-width: 150px !important;
 }
 
+#sidebar-resource.ui.inverted.menu{
+  background: #FFFFFF !important;width:400px;
+}
+#sidebar-resource.ui.inverted.menu .sidebar-header{margin: 0px;
+    width: 100%;padding:12.5px;text-transform: uppercase;}
+.sr-wrapper{padding:10px;}
+
 #sidebar-area {
     width: 269px;
     background: #FFFFFF !important;
@@ -247,22 +254,24 @@ footer.mdl-mini-footer {
     padding: 12px 15px;
 }
 .pika-lendar{width:auto;}
-
-#role-selection{
-   padding:0;
-}
-
-#role-selection .multiple {
-   border: 0;
-   width:110% !important;
-   margin-left:-15px;
-}
-
+.searchresource {float: left;
+    width: 100%;
+    height: 100%;}
 #view-states-btn .menu {
   width: 250px !important;
 }
 
 /* vigfox css */
+.taskcount div {
+    position: absolute;
+    top: 50%;
+    width: 100%;
+}
+.taskcount div > div{
+    height: 18px;
+    position: absolute;
+    top: -9px;
+    width: 100%;}
 .ui.basic.button{background: #fff !important}
 .ui.vertical.menu .dropdown.item.edge .menu{left:-100%;}
 .ui.button{background:#fff;}

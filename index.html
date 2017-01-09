@@ -63,21 +63,19 @@
 
       <div class="ui grid pad15" style="padding-bottom:0 !important">
              <!-- <div style="padding:15px 15px 0px  !important;display:inline-block;width:292px;"> -->
-             <div class="ui five wide column" style="padding-bottom:0 !important;padding-right:0">
-                 <div id="role-selection" class="ui floating labeled icon dropdown button" style="border: 1px solid rgba(0,0,0,0.1)">
-                     <i class="filter icon"></i>
-                     <span>
-                       <select id="resource-filter" name="Resource" multiple="" class="ui search dropdown" >
-                         <option value="">Resources</option>
-                         <option value="Resource1">Resource</option>
-                         <option value="Resource2">Location/Department</option>
-                     </select>
-                     </span>
-                 </div>
+             <div class="ui four wide column" style="padding-bottom:0 !important;padding-right:0">
+               <div id="role-selection" class="ui floating labeled icon dropdown button" style="border: 1px solid rgba(0,0,0,0.1)">
+                   <i class="filter icon"></i>
+                   <span class="text">Filter By </span>
+                   <div class="menu">
+                    <div class="item">Resource</div>
+                    <div class="item">  Location/Department  </div>
+                      </div>
+              </div>
              </div>
-             <div class="ui eleven wide column" style="padding-bottom:0 !important;text-align: right">
+             <div class="ui twelve wide column" style="padding-bottom:0 !important;text-align: right">
                  <span>
-               <select name="Select Resource .." multiple="" class="ui search dropdown searchResource" >
+               <select name="Select Resource .." multiple="" class="ui search dropdown searchresource" id="searchresource" >
                  <option value="">Search Resources .. </option>
                  <option value="Resource1">Sulkunte, Sanjath</option>
                  <option value="Resource2">G, Sriram</option>
@@ -92,6 +90,9 @@
 
     <div class="ui grid pad15" style="padding-top: 0!important">
         <div class="ui ten wide column">
+          <button id="filtering" class="ui icon button" style="border: 1px solid rgba(0,0,0,0.1)" title="Resource Filtering">
+              <i class="list layout icon"></i>
+          </button>
             <div class="ui icon buttons" style="border: 1px solid rgba(0,0,0,0.1)">
                 <button class="ui icon button" id="scroll-back"><i class="chevron left icon"></i></button>
                 <button class="ui icon button" id="scroll-today"><i class="circle icon"></i>
@@ -196,7 +197,7 @@
                     </div>
                 </div>
             </div><button class="ui icon button" id="expand-btn" style="border: 1px solid rgba(0,0,0,0.1)">
-                   <i class="expand icon"></i>
+                   <i class="maximize icon"></i>
                </button>
             <button id="setting" class="ui icon button" style="border: 1px solid rgba(0,0,0,0.1)">
                 <i class="setting icon"></i>
@@ -356,6 +357,347 @@
             </div>
         </div>
     </div>
+
+
+
+
+    <!-- side bar resource filter -->
+
+    <div id="sidebar-resource" class="ui left sidebar inverted vertical menu">
+        <div class="sidebar-header">Resource Filters</div>
+        <!-- cell Width -->
+        <div class="sr-wrapper">
+
+          <div class="ui segment">
+        <div class="ui checkbox">
+        <input type="checkbox" name="example">
+        <label>Include Part Time Employees</label>
+        </div>
+      </div>
+
+
+        <div class="ui segment">
+          <div class="ui small header">Experience</div>
+          <div class="description">
+            <input type=range multiple min=0 max=10 step="0.2" value="3,5">
+          </div>
+        </div>
+
+        <div class="ui segment">
+          <div class="ui small header">Primary Role</div>
+
+
+          <div class="ui grid">
+            <div class="eight wide column">
+                <div class="grouped fields">
+              <div class="field">
+                <div class="ui checkbox">
+                  <input type="checkbox" name="rperson" checked="checked">
+                  <label>Responsible Person</label>
+                </div>
+              </div>
+              <div class="field">
+                <div class="ui checkbox">
+                  <input type="checkbox" name="apartner">
+                  <label>Audit Partner</label>
+                </div>
+              </div>
+              <div class="field">
+                <div class="ui checkbox">
+                  <input type="checkbox" name="amanager">
+                  <label>Audit Manager</label>
+                </div>
+              </div>
+              <div class="field">
+                <div class="ui checkbox">
+                  <input type="checkbox" name="asenior">
+                  <label>Audit Senior</label>
+                </div>
+              </div>
+            </div>
+            </div>
+         <div class="eight wide column">
+           <div class="grouped fields">
+
+           <div class="field">
+           <div class="ui checkbox">
+             <input type="checkbox" name="tpartner">
+             <label>Tax Partner</label>
+           </div>
+           </div>
+           <div class="field">
+           <div class="ui checkbox">
+             <input type="checkbox" name="tmanager">
+             <label>Tax Manager</label>
+           </div>
+           </div>
+           <div class="field">
+           <div class="ui checkbox">
+             <input type="checkbox" name="tsenior">
+             <label>Tax Senior</label>
+           </div>
+           </div>
+           </div>
+
+         </div>
+
+        </div>
+
+
+      </div>
+
+      <div class="ui segment">
+        <div class="ui small header">Departments</div>
+
+
+        <div class="ui grid">
+          <div class="eight wide column">
+              <div class="grouped fields">
+            <div class="field">
+              <div class="ui checkbox">
+                <input type="checkbox" name="admin" checked="checked">
+                <label>Admin</label>
+              </div>
+            </div>
+            <div class="field">
+              <div class="ui checkbox">
+                <input type="checkbox" name="audit">
+                <label>Audit</label>
+              </div>
+            </div>
+            <div class="field">
+              <div class="ui checkbox">
+                <input type="checkbox" name="ba">
+                <label>BA</label>
+              </div>
+            </div>
+            <div class="field">
+              <div class="ui checkbox">
+                <input type="checkbox" name="batax">
+                <label>BA/Taxr</label>
+              </div>
+            </div>
+            <div class="field">
+              <div class="ui checkbox">
+                <input type="checkbox" name="commercial">
+                <label>Commercial</label>
+              </div>
+            </div>
+            <div class="field">
+              <div class="ui checkbox">
+                <input type="checkbox" name="consulting">
+                <label>Consulting</label>
+              </div>
+            </div>
+            <div class="field">
+              <div class="ui checkbox">
+                <input type="checkbox" name="expatriate">
+                <label>Expatriate</label>
+              </div>
+            </div>
+          </div>
+          </div>
+       <div class="eight wide column">
+         <div class="grouped fields">
+
+         <div class="field">
+         <div class="ui checkbox">
+           <input type="checkbox" name="hr">
+           <label>HR</label>
+         </div>
+         </div>
+         <div class="field">
+         <div class="ui checkbox">
+           <input type="checkbox" name="it">
+           <label>IT</label>
+         </div>
+         </div>
+         <div class="field">
+         <div class="ui checkbox">
+           <input type="checkbox" name="itconsulting">
+           <label>IT Consulting</label>
+         </div>
+         </div>
+         <div class="field">
+         <div class="ui checkbox">
+           <input type="checkbox" name="marketing">
+           <label>Marketing</label>
+         </div>
+         </div>
+         <div class="field">
+         <div class="ui checkbox">
+           <input type="checkbox" name="privateclient">
+           <label>Private Client</label>
+         </div>
+         </div>
+         <div class="field">
+         <div class="ui checkbox">
+           <input type="checkbox" name="realestate">
+           <label>Real Estate</label>
+         </div>
+         </div>
+         <div class="field">
+         <div class="ui checkbox">
+           <input type="checkbox" name="valuation">
+           <label>Valuation</label>
+         </div>
+         </div>
+
+
+         </div>
+
+       </div>
+
+      </div>
+
+
+    </div>
+
+      <div class="ui segment">
+        <div class="ui small header">Niche Group</div>
+
+
+        <div class="ui grid">
+          <div class="eight wide column">
+              <div class="grouped fields">
+            <div class="field">
+              <div class="ui checkbox">
+                <input type="checkbox" name="rperson" checked="checked">
+                <label>Advertising</label>
+              </div>
+            </div>
+            <div class="field">
+              <div class="ui checkbox">
+                <input type="checkbox" name="apartner">
+                <label>Advertising
+                	Architects and Engineers
+                	</label>
+              </div>
+            </div>
+            <div class="field">
+              <div class="ui checkbox">
+                <input type="checkbox" name="amanager">
+                <label>Business Investigative and Insolvency Group
+              </label>
+              </div>
+            </div>
+            <div class="field">
+              <div class="ui checkbox">
+                <input type="checkbox" name="asenior">
+                <label>  Construction
+                  </label>
+              </div>
+            </div>
+            <div class="field">
+              <div class="ui checkbox">
+                <input type="checkbox" name="asenior">
+                <label>    Exempt Organizations
+
+                  </label>
+              </div>
+            </div>
+            <div class="field">
+              <div class="ui checkbox">
+                <input type="checkbox" name="asenior">
+                <label>    Energy
+
+                  </label>
+              </div>
+            </div>
+            <div class="field">
+              <div class="ui checkbox">
+                <input type="checkbox" name="asenior">
+                <label>    Employee Benefits and Executive Compensation Group
+
+                  </label>
+              </div>
+            </div>
+            <div class="field">
+              <div class="ui checkbox">
+                <input type="checkbox" name="asenior">
+                <label>    Employee Benefit Plans
+
+                  </label>
+              </div>
+            </div>
+
+
+
+
+
+
+
+          </div>
+          </div>
+       <div class="eight wide column">
+         <div class="grouped fields">
+
+         <div class="field">
+         <div class="ui checkbox">
+           <input type="checkbox" name="tpartner">
+           <label>Construction Services Group
+          </label>
+         </div>
+         </div>
+         <div class="field">
+         <div class="ui checkbox">
+           <input type="checkbox" name="tmanager">
+           <label> Dealer Services Group
+          </label>
+         </div>
+         </div>
+         <div class="field">
+         <div class="ui checkbox">
+           <input type="checkbox" name="tsenior">
+           <label>     Expatriat
+
+             </label>
+         </div>
+         </div>
+         <div class="field">
+         <div class="ui checkbox">
+           <input type="checkbox" name="tsenior">
+           <label>   Fiduciary Services Group
+
+             </label>
+         </div>
+         </div>
+         <div class="field">
+         <div class="ui checkbox">
+           <input type="checkbox" name="tsenior">
+           <label>  Financial Services
+
+             </label>
+         </div>
+         </div>
+         <div class="field">
+         <div class="ui checkbox">
+           <input type="checkbox" name="tsenior">
+           <label>   Fisheries
+
+             </label>
+         </div>
+         </div>
+
+
+
+
+
+         </div>
+
+       </div>
+
+      </div>
+
+
+    </div>
+
+<button class="ui secondary button right floated">APPLY</button>
+<br><br>
+    </div>
+  </div>
+
+
    <div id="footer" class="row">
         <footer class="sixteen wide column">
             <div class="ui basic segment">
@@ -650,7 +992,7 @@
  <div class="field ui grid">
 
    <div class="five wide column">
-   <input type="button" name="submit" value="Submit" id="submitProject">
+   <button class="ui button secondary right floated" type="button" id="submitProject">Submit</button>
  </div>
  </div>
                       </div>
