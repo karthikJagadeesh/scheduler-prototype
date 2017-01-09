@@ -941,7 +941,16 @@ $(document).ready(function () {
 
     $('#setting').click(function (e) {
 
-        $('.ui.sidebar').sidebar('setting', {
+        $('.ui.right.sidebar').sidebar('setting', {
+            'transition': 'overlay',
+            dimPage: true
+        }).sidebar("toggle");
+        e.preventDefault();
+    });
+
+    $('#filtering').click(function (e) {
+
+        $('.ui.left.sidebar').sidebar('filtering', {
             'transition': 'overlay',
             dimPage: true
         }).sidebar("toggle");
@@ -1149,7 +1158,7 @@ $('#expand-btn').click(function (e) {
     $('#workspace').toggleClass('fullscreen');
     $('#header-menu, #footer, .submenu').toggleClass('hidden');
     $('#header-menu, .submenu').addClass('bring-down');
-
+    $('#expand-btn i').removeClass('compress').addClass('maximize');
     var workspace = document.querySelector('#workspace');
     if (workspace.classList.contains('fullscreen')) {
         (function () {
@@ -1157,6 +1166,7 @@ $('#expand-btn').click(function (e) {
             var change = setInterval(function () {
                 height += 6;
                 if (dp.height >= 450) clearInterval(change);else dp.setHeight(height);
+                $('#expand-btn i').removeClass('maximize').addClass('compress');
             }, 1);
         })();
     } else dp.setHeight(360);
