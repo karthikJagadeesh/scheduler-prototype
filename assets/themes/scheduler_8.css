@@ -233,6 +233,11 @@
 .scheduler_8_timeheadercol_inner, .scheduler_8_rowheader{display:flex;align-items: center;justify-content: center;}
 .scheduler_8_rowheader_scroll .scheduler_8_rowheader{justify-content: flex-start;}
 .scheduler_8_rowheader .scheduler_8_rowheader_inner > div +div{margin-left:50px !important}
+.scheduler_8_rowheader .scheduler_8_rowheader_inner > div.scheduler_8_tree_image_no_children{background-image: none;}
+.scheduler_8_rowheader .scheduler_8_rowheader_inner > div.scheduler_8_tree_image_no_children +div{margin-left:15px !important}
+
+
+
 .scheduler_8_event_float_inner {
     padding: 5px 4px 4px 8px;
 }
