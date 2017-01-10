@@ -62,6 +62,14 @@ dp.days = 900;
 dp.cellDuration = 8;
 dp.scale = 'Day';
 
+dp.treeImageMarginTop = 20;
+dp.treeAutoExpand = true;
+dp.messageHideAfter = 2000;
+dp.eventResizeMargin = 10;
+dp.autoScroll = 'Drag';
+dp.dynamicLoading = true;
+// dp.cornerHtml = "XCM"
+
 dp.timeHeaders = [{
     groupBy: 'Month',
     format: 'MMMM yyyy'
@@ -81,7 +89,7 @@ dp.height = 350;
 dp.width = '98%';
 
 dp.businessBeginsHour = 10;
-dp.businessEndsHour = 18;
+dp.businessEndsHour = 19;
 
 var picker = new Pikaday({
     field: document.getElementById('select-cal'),
@@ -158,6 +166,8 @@ document.querySelector('#show-hours').addEventListener('click', function () {
     dp.scale = 'Hour';
     dp.days = 100;
     dp.cellWidth = 60;
+    dp.showNonBusiness = false;
+
     dp.update();
 });
 document.querySelector('#show-days').addEventListener('click', function () {
@@ -172,6 +182,8 @@ document.querySelector('#show-days').addEventListener('click', function () {
     dp.scale = 'Day';
     dp.days = 900;
     dp.cellWidth = 60;
+    dp.showNonBusiness = true;
+
     dp.update();
 });
 document.querySelector('#show-weeks').addEventListener('click', function () {
@@ -185,6 +197,7 @@ document.querySelector('#show-weeks').addEventListener('click', function () {
     dp.scale = 'Week';
     dp.days = 900;
     dp.cellWidth = 60;
+    dp.showNonBusiness = true;
     dp.update();
 });
 document.querySelector('#show-months').addEventListener('click', function () {
@@ -199,6 +212,7 @@ document.querySelector('#show-months').addEventListener('click', function () {
     dp.scale = 'Month';
     dp.days = 900;
     dp.cellWidth = 60;
+    dp.showNonBusiness = true;
 
     dp.update();
 });
@@ -215,6 +229,7 @@ document.querySelector('#show-this-week').addEventListener('click', function () 
     dp.days = 7;
     dp.startDate = new DayPilot.Date();
     dp.cellWidth = 180;
+    dp.showNonBusiness = true;
     dp.update();
 });
 document.querySelector('#show-this-month').addEventListener('click', function () {
@@ -230,6 +245,7 @@ document.querySelector('#show-this-month').addEventListener('click', function ()
     dp.days = 31;
     dp.startDate = new DayPilot.Date();
     dp.cellWidth = 60;
+    dp.showNonBusiness = true;
     dp.update();
 });
 
@@ -446,9 +462,9 @@ dp.onTimeRangeRightClick = function (args) {};
 
 dp.onBeforeCellRender = function (args) {
     //highlight today's column
-    if (args.cell.start <= DayPilot.Date.today() && DayPilot.Date.today() < args.cell.end) {
-        args.cell.backColor = "#F9AE74";
-    }
+    // if (args.cell.start <= DayPilot.Date.today() && DayPilot.Date.today() < args.cell.end) {
+    //     args.cell.backColor = "#F9AE74";
+    // }
     // let blur = false
     var firmAvailableHours = 8;
     // var weekDay = weekdays[args.cell.start.getDayOfWeek()];
@@ -479,23 +495,24 @@ dp.onBeforeCellRender = function (args) {
         return color.replace('10', '0.3');
     };
     firmAvailableHours = firmAvailableHours > 0 ? firmAvailableHours : '-';
-    if (showGrid == 'numbers' && visibleUtilization == true) {
-        args.cell.html = "<div class='booking-bg booking-numbers' style='background-color: " + bgColor + ";'><span class='utilization-span'>" + utilizationHrs + "hr " + utilizationText + "</span></div>";
-        if (args.cell.start.getDayOfWeek() === 0 || args.cell.start.getDayOfWeek() === 6) {
-            args.cell.backColor = "#f9f6ed";
-            args.cell.html = "<div class='booking-bg booking-numbers' style='background-color: " + blurColor(bgColor) + ";'></div>";
-        }
-    } else if (showGrid == 'numbers' && visibleUtilization == false && dp.scale === 'Day' && !(args.cell.isParent > 0)) {
-        args.cell.html = "<div class='booking-bg unscheduled-booking'><span>" + firmAvailableHours + "</span></div>";
-    }
+    // if (showGrid == 'numbers' && visibleUtilization == true) {
+    //     args.cell.html = "<div class='booking-bg booking-numbers' style='background-color: " + bgColor + ";'><span class='utilization-span'>" + utilizationHrs + "hr " + utilizationText + "</span></div>";
+    //     if (args.cell.start.getDayOfWeek() === 0 || args.cell.start.getDayOfWeek() === 6) {
+    //         args.cell.backColor = "#f9f6ed"
+    //         args.cell.html = "<div class='booking-bg booking-numbers' style='background-color: " + blurColor(bgColor) + ";'></div>"
+    //     }
+    // } else if (showGrid == 'numbers' && visibleUtilization == false && dp.scale === 'Day' && !args.cell.isParent > 0) {
+    //     args.cell.html = "<div class='booking-bg unscheduled-booking'><span>" + firmAvailableHours + "</span></div>";
+    // }
     if (dp.scale == "Day" && (args.cell.start.getDayOfWeek() === 0 || args.cell.start.getDayOfWeek() === 6)) {
         args.cell.backColor = "#f9f6ed";
     }
 
-    // if (!(args.cell.isParent > 0) && args.cell.resource === 't1_r1') {
-    //   // args.cell.backColor = bgColor
-    //   console.log(args.cell.utilization('total'))
-    // }
+    if (args.cell.isParent > 0) {
+
+        // (moment(args.cell.start.value).format('YYYY-MM-DD'))
+        // dp.cells.all().filter(cell => moment(cell.start.value).format('YYYY-MM-DD') == '2017-01-10').forEach(cell => console.log(cell.utilization('total')))
+    }
 };
 
 //groupConcurrentEvents by vigfox
@@ -543,10 +560,8 @@ dp.onTimeRangeSelecting = function (args) {
     args.right.enabled = true;
     args.left.enabled = true;
     args.allowed = true;
-
-    if (args.resource.length === 2) args.allowed = false, args.left.enabled = false, args.right.enabled = false;
 };
-
+dp.treePreventParentUsage = true;
 dp.onTimeRangeSelected = function (args) {
     $('.schedulepop').removeClass('disabled');
 
@@ -605,7 +620,7 @@ dp.onTimeRangeSelected = function (args) {
     var csm = document.querySelector('.cellSelectionMenu');
 };
 
-dp.treeEnabled = false;
+dp.treeEnabled = true;
 
 var dataSBC = {
     'r1': {
@@ -695,12 +710,32 @@ var dataSBE = {
     }
 };
 
+var numberOfDays = function numberOfDays(startDate, endDate) {
+    var currentDate = new DayPilot.Date(startDate);
+    startDate = new DayPilot.Date(startDate), endDate = new DayPilot.Date(endDate).addDays(-1);
+    var total = 0;
+    while (currentDate <= endDate) {
+        total += 1;
+        currentDate = currentDate.addDays(1);
+    }
+    return total;
+};
+
+var addEventDescription = function addEventDescription(events) {
+    return events.map(function (event) {
+        var modifiedEvent = event;
+        var text = event.text + ' : ' + event.total + ' hrs for ' + numberOfDays(event.start, event.end) + ' days';
+        modifiedEvent.text = text;
+        return modifiedEvent;
+    });
+};
+
 var eventListSBE = [{
     start: "2017-01-04",
     end: "2017-01-09",
     id: "1",
     resource: "t1_r1",
-    text: "a,Glen,IV",
+    text: 'a,Glen,IV',
     title: "a,Glen,IV",
     total: 8,
     tags: {
@@ -829,7 +864,7 @@ var loadSBE = function loadSBE() {
             name: dataSBE[task].name,
             id: dataSBE[task].id,
             backColor: '#E0E4CC',
-            expanded: false,
+            expanded: true,
             areas: [{ "action": "None", "js": "", "bottom": 0, "w": 35, "v": "Visible", "html": "<div><div><i class='folder outline icon'></i>" + dataSBE[task].resources.length + "<\/div><\/div>", "css": "taskcount", "top": 0, "left": 16 }],
             children: dataSBE[task].resources.map(function (resource) {
                 return {
@@ -841,8 +876,8 @@ var loadSBE = function loadSBE() {
             })
         };
     });
-    dp.events.list = eventListSBE;
-    console.log(eventListSBE);
+    dp.events.list = addEventDescription(eventListSBE);
+    console.log(dp.events.list);
 };
 loadSBE();
 
@@ -913,6 +948,62 @@ dp.onBeforeEventRender = function (args) {
         args.data.cssClass = "bookingtype-schedule";
     }
 };
+
+var getViewPortDateRange = function getViewPortDateRange() {
+    var startDate = dp.getViewPort().start;
+    var currentDate = dp.getViewPort().start;
+    var endDate = dp.getViewPort().end;
+    var dateRange = [];
+
+    while (currentDate <= endDate) {
+        dateRange.push(currentDate);
+        currentDate = currentDate.addDays(1);
+    }
+    return dateRange;
+};
+
+dp.onEventMoved = function () {
+    showHeatMap();
+};
+
+dp.onScroll = function () {
+    showHeatMap();
+};
+
+dp.onEventResized = function (args) {
+    var text = args.e.text().split('for')[0];
+    console.log(args.e.text().split('for'));
+    args.e.text(text + ' for ' + numberOfDays(moment(args.e.start().value).format('YYYY-MM-DD'), moment(args.e.end().value).format('YYYY-MM-DD')) + ' days');
+    dp.events.update(args.e);
+    showHeatMap();
+};
+
+dp.init();
+
+var employees = Object.keys(dataSBE);
+var showHeatMap = function showHeatMap() {
+
+    employees.forEach(function (employee) {
+
+        var dateList = getViewPortDateRange();
+        dateList.forEach(function (date) {
+            var total = dataSBE[employee].resources.map(function (resource) {
+                return dp.cells.find(date.value, resource.id)[0].utilization('total');
+            }).reduce(function (prev, curr) {
+                return prev + curr;
+            });
+
+            if (total > 8) {
+                dp.cells.find(date, dataSBE[employee].id).html('<div class="over">' + total + '</div>');
+            } else if (total === 8) {
+                dp.cells.find(date, dataSBE[employee].id).html('<div class="equal">' + total + '</div>');
+            } else if (total < 8) {
+                dp.cells.find(date, dataSBE[employee].id).html('<div class="under">' + total + '</div>');
+            }
+        });
+    });
+};
+showHeatMap();
 
 dp.init();
 
@@ -1164,10 +1255,11 @@ $('#expand-btn').click(function (e) {
     if (workspace.classList.contains('fullscreen')) {
         (function () {
             var height = 360;
+            var accleration = 1;
             var change = setInterval(function () {
-                height += 6;
+                accleration += 0.4;
+                height += accleration;
                 if (dp.height >= 450) clearInterval(change);else dp.setHeight(height);
-                $('#expand-btn i').removeClass('maximize').addClass('compress');
             }, 1);
         })();
     } else dp.setHeight(360);

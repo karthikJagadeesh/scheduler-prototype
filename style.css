@@ -402,3 +402,27 @@ footer.mdl-mini-footer {
 .menu_default_item:hover {
   border-left: 6px solid #60728C;
 }
+.over {
+  background: #C0504D;
+  color: #fff;
+  height: 80%;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+}
+.equal {
+  background: #9BBB59;
+  color: #fff;
+  height: 80%;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+}
+.under {
+  background: #4F81BD;
+  color: #fff;
+  height: 80%;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+}
