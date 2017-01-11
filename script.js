@@ -97,7 +97,8 @@ dp.separators = [
 ]
 
 dp.heightSpec = "Max";
-dp.height = 350;
+dp.height = window.screen.height-250;
+console.log("dpinit "+dp.height);
 dp.width = '98%';
 
 dp.businessBeginsHour = 10
@@ -553,14 +554,14 @@ dp.onBeforeRowHeaderRender = function(args) {
     }
     else if (hasCollapsed) {
         args.row.areas = [
-            {v:"Visible", right: 0, top: 0, height: 12, width: 12, style: "cursor:pointer", html: "<i class='pam'>[+]</i>", action:"JavaScript", js: function(row)
+            {v:"Visible", right: 5, top: 0, height: 12, width: 12, style: "cursor:pointer", html: "<i class='pam'>[+]</i>", action:"JavaScript", js: function(row)
             { row.groups.expandAll(); } },
         ];
     }
     else if (hasExpanded) {
         args.row.areas = [
 
-            {v:"Visible", right: 0, top: 0, height: 12, width: 12, style: "cursor:pointer", html: "<i class='pam'>[-]</i>", action:"JavaScript", js: function(row) { row.groups.collapseAll(); } }
+            {v:"Visible", right:5, top: 0, height: 12, width: 12, style: "cursor:pointer", html: "<i class='pam'>[-]</i>", action:"JavaScript", js: function(row) { row.groups.collapseAll(); } }
         ];
     }
 };
@@ -927,7 +928,7 @@ const loadSBE = () => {
     }))
   }))
   dp.events.list = addEventDescription(eventListSBE)
-  console.log(dp.events.list)
+
 }
 loadSBE()
 
@@ -1324,26 +1325,40 @@ function scheduleProjectModal() {
 };*/
 
 // fullscreen
-$('#expand-btn').click(function(e) {
-    $('#workspace').toggleClass('fullscreen');
-    $('#header-menu, #footer, .submenu').toggleClass('hidden');
-    $('#header-menu, .submenu').addClass('bring-down');
-  $('#expand-btn i').removeClass('compress').addClass('maximize');
-    const workspace = document.querySelector('#workspace');
-    if (workspace.classList.contains('fullscreen')) {
-        let height = 360
-        let accleration = 1
-        const change = setInterval(() => {
-          accleration += 0.4
-          height += accleration
-          if (dp.height >= 450)
-              clearInterval(change)
-          else
-              dp.setHeight(height)
-        }, 1)
 
-    } else
-        dp.setHeight(360)
+let svheight = window.screen.height - 250
+$('#expand-btn').click(function(e) {
+    let sheight = svheight
+    let fullHeight = sheight + 120
+    $('body').toggleClass('fullscreen');
+  //  $('#header-menu, #footer, .submenu').toggleClass('hidden');
+  //  $('#header-menu, .submenu').addClass('bring-down');
+
+    $('#expand-btn i').removeClass('compress').addClass('maximize');
+    const workspace = document.querySelector('body');
+    if (workspace.classList.contains('fullscreen')) {
+        dp.height = fullHeight
+        dp.update()
+       $('#expand-btn i').removeClass('maximize').addClass('compress');
+        // dp.height = fullHeight
+        // let accleration = 1
+        // const change = setInterval(() => {
+        //   accleration += 0.4
+        //   sheight += accleration
+        //   if (dp.height >= 600)
+        //       clearInterval(change)
+        //   else
+        //       dp.height = fullHeight
+        //        $('#expand-btn i').removeClass('maximize').addClass('compress');
+        // }, 1)
+
+    }
+    else
+    {
+     dp.height = svheight
+     dp.update()
+   }
+
 });
 
 
