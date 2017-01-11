@@ -85,7 +85,7 @@ dp.separators = [{
 }];
 
 dp.heightSpec = "Max";
-dp.height = window.screen.height - 250;
+dp.height = window.screen.height - 410;
 console.log("dpinit " + dp.height);
 dp.width = '98%';
 
@@ -1247,10 +1247,10 @@ function scheduleProjectModal() {
 
 // fullscreen
 
-var svheight = window.screen.height - 250;
+var svheight = window.screen.height - 410;
 $('#expand-btn').click(function (e) {
     var sheight = svheight;
-    var fullHeight = sheight + 120;
+    var fullHeight = sheight + 100;
     $('body').toggleClass('fullscreen');
     //  $('#header-menu, #footer, .submenu').toggleClass('hidden');
     //  $('#header-menu, .submenu').addClass('bring-down');

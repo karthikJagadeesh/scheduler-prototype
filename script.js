@@ -97,7 +97,7 @@ dp.separators = [
 ]
 
 dp.heightSpec = "Max";
-dp.height = window.screen.height-250;
+dp.height = window.screen.height-410;
 console.log("dpinit "+dp.height);
 dp.width = '98%';
 
@@ -1326,10 +1326,10 @@ function scheduleProjectModal() {
 
 // fullscreen
 
-let svheight = window.screen.height - 250
+let svheight = window.screen.height - 410
 $('#expand-btn').click(function(e) {
     let sheight = svheight
-    let fullHeight = sheight + 120
+    let fullHeight = sheight + 100
     $('body').toggleClass('fullscreen');
   //  $('#header-menu, #footer, .submenu').toggleClass('hidden');
   //  $('#header-menu, .submenu').addClass('bring-down');
