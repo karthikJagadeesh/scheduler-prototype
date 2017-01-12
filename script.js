@@ -972,7 +972,7 @@ sbeButton.addEventListener('click', () => {
   dp.update()
 })
 
-//dp.dynamicEventRenderingCacheSweeping = true;
+dp.dynamicEventRenderingCacheSweeping = true;
 dp.eventMovingStartEndEnabled = false;
 dp.eventResizingStartEndEnabled = true;
 dp.timeRangeSelectingStartEndEnabled = false;

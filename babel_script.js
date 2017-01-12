@@ -925,7 +925,7 @@ sbeButton.addEventListener('click', function () {
     dp.update();
 });
 
-//dp.dynamicEventRenderingCacheSweeping = true;
+dp.dynamicEventRenderingCacheSweeping = true;
 dp.eventMovingStartEndEnabled = false;
 dp.eventResizingStartEndEnabled = true;
 dp.timeRangeSelectingStartEndEnabled = false;
