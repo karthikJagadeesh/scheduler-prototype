@@ -327,6 +327,8 @@ heightKeys.forEach(function (key) {
     });
 });
 
+var globalMode = undefined;
+
 //View Modes
 var modesGroupedLabel = document.querySelector('#label-modes-grouped');
 // const modesSingleProjectResourceLabel = document.querySelector('#label-modes-single-project-resource')
@@ -335,7 +337,8 @@ var modesStyle = function modesStyle() {
     return modesGroupedLabel.style.display = arguments.length <= 0 ? undefined : arguments[0], modesSingleResourceLabel.style.display = arguments.length <= 1 ? undefined : arguments[1];
 };
 var changeModeTo = function changeModeTo(mode) {
-    if (mode === 'grouped' && tab === 'sbe') loadSBE(), dp.update();else if (mode === 'grouped' && tab === 'sbc') {
+    if (mode === 'grouped' && tab === 'sbe') globalMode = 'grouped', loadSBE(), dp.update();else if (mode === 'grouped' && tab === 'sbc') {
+        globalMode = 'grouped';
         var resources = Object.keys(dataSBC);
         dp.treeEnabled = true;
         dp.resources = resources.map(function (resource) {
@@ -350,6 +353,7 @@ var changeModeTo = function changeModeTo(mode) {
         });
         dp.events.list = eventListSBC;
     } else if (mode === 'singleRowResource' && tab === 'sbe') {
+        globalMode = 'singleRowResource';
         var tasks = Object.keys(dataSBE);
         dp.treeEnabled = false;
         dp.rowHeaderColumns = [{ title: 'Employees', width: 200 }];
@@ -496,15 +500,15 @@ dp.onBeforeCellRender = function (args) {
         return color.replace('10', '0.3');
     };
     firmAvailableHours = firmAvailableHours > 0 ? firmAvailableHours : '-';
-    // if (showGrid == 'numbers' && visibleUtilization == true) {
-    //     args.cell.html = "<div class='booking-bg booking-numbers' style='background-color: " + bgColor + ";'><span class='utilization-span'>" + utilizationHrs + "hr " + utilizationText + "</span></div>";
-    //     if (args.cell.start.getDayOfWeek() === 0 || args.cell.start.getDayOfWeek() === 6) {
-    //         args.cell.backColor = "#f9f6ed"
-    //         args.cell.html = "<div class='booking-bg booking-numbers' style='background-color: " + blurColor(bgColor) + ";'></div>"
-    //     }
-    // } else if (showGrid == 'numbers' && visibleUtilization == false && dp.scale === 'Day' && !args.cell.isParent > 0) {
-    //     args.cell.html = "<div class='booking-bg unscheduled-booking'><span>" + firmAvailableHours + "</span></div>";
-    // }
+    if (showGrid == 'numbers' && visibleUtilization == true && globalMode === 'singleRowResource') {
+        args.cell.html = "<div class='booking-bg booking-numbers' style='background-color: " + bgColor + ";'><span class='utilization-span'>" + utilizationHrs + "hr " + utilizationText + "</span></div>";
+        if (args.cell.start.getDayOfWeek() === 0 || args.cell.start.getDayOfWeek() === 6) {
+            args.cell.backColor = "#f9f6ed";
+            args.cell.html = "<div class='booking-bg booking-numbers' style='background-color: " + blurColor(bgColor) + ";'></div>";
+        }
+    } else if (showGrid == 'numbers' && visibleUtilization == false && dp.scale === 'Day' && !args.cell.isParent > 0 && globalMode === 'singleRowResource') {
+        args.cell.html = "<div class='booking-bg unscheduled-booking'><span>" + firmAvailableHours + "</span></div>";
+    }
     if (dp.scale == "Day" && (args.cell.start.getDayOfWeek() === 0 || args.cell.start.getDayOfWeek() === 6)) {
         args.cell.backColor = "#f9f6ed";
     }

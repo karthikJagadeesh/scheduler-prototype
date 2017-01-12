@@ -351,14 +351,17 @@ heightKeys.forEach(key => {
   })
 })
 
+let globalMode = undefined
+
 //View Modes
 const modesGroupedLabel = document.querySelector('#label-modes-grouped')
 // const modesSingleProjectResourceLabel = document.querySelector('#label-modes-single-project-resource')
 const modesSingleResourceLabel = document.querySelector('#label-modes-single-resource')
 const modesStyle = (...types) => (modesGroupedLabel.style.display = types[0], modesSingleResourceLabel.style.display = types[1])
 const changeModeTo = mode => {
-    if (mode === 'grouped' && tab === 'sbe') (loadSBE(), dp.update())
+    if (mode === 'grouped' && tab === 'sbe') (globalMode = 'grouped', loadSBE(), dp.update())
     else if (mode === 'grouped' && tab === 'sbc') {
+      globalMode = 'grouped'
       const resources = Object.keys(dataSBC)
       dp.treeEnabled = true
       dp.resources = resources.map(resource => ({
@@ -370,6 +373,7 @@ const changeModeTo = mode => {
       dp.events.list = eventListSBC
     }
     else if (mode === 'singleRowResource' && tab === 'sbe') {
+      globalMode = 'singleRowResource'
       const tasks = Object.keys(dataSBE)
       dp.treeEnabled = false
       dp.rowHeaderColumns = [{title: 'Employees', width: 200}]
@@ -513,15 +517,15 @@ dp.onBeforeCellRender = args => {
     firmAvailableHours = firmAvailableHours > 0
         ? firmAvailableHours
         : '-';
-    // if (showGrid == 'numbers' && visibleUtilization == true) {
-    //     args.cell.html = "<div class='booking-bg booking-numbers' style='background-color: " + bgColor + ";'><span class='utilization-span'>" + utilizationHrs + "hr " + utilizationText + "</span></div>";
-    //     if (args.cell.start.getDayOfWeek() === 0 || args.cell.start.getDayOfWeek() === 6) {
-    //         args.cell.backColor = "#f9f6ed"
-    //         args.cell.html = "<div class='booking-bg booking-numbers' style='background-color: " + blurColor(bgColor) + ";'></div>"
-    //     }
-    // } else if (showGrid == 'numbers' && visibleUtilization == false && dp.scale === 'Day' && !args.cell.isParent > 0) {
-    //     args.cell.html = "<div class='booking-bg unscheduled-booking'><span>" + firmAvailableHours + "</span></div>";
-    // }
+    if (showGrid == 'numbers' && visibleUtilization == true && globalMode === 'singleRowResource') {
+        args.cell.html = "<div class='booking-bg booking-numbers' style='background-color: " + bgColor + ";'><span class='utilization-span'>" + utilizationHrs + "hr " + utilizationText + "</span></div>";
+        if (args.cell.start.getDayOfWeek() === 0 || args.cell.start.getDayOfWeek() === 6) {
+            args.cell.backColor = "#f9f6ed"
+            args.cell.html = "<div class='booking-bg booking-numbers' style='background-color: " + blurColor(bgColor) + ";'></div>"
+        }
+    } else if (showGrid == 'numbers' && visibleUtilization == false && dp.scale === 'Day' && !args.cell.isParent > 0 && globalMode === 'singleRowResource') {
+        args.cell.html = "<div class='booking-bg unscheduled-booking'><span>" + firmAvailableHours + "</span></div>";
+    }
     if (dp.scale == "Day" && (args.cell.start.getDayOfWeek() === 0 || args.cell.start.getDayOfWeek() === 6)) {
         args.cell.backColor = "#f9f6ed"
     }
