@@ -67,7 +67,7 @@ dp.treeAutoExpand = true;
 dp.messageHideAfter = 2000;
 dp.eventResizeMargin = 10;
 dp.autoScroll = 'Drag';
-dp.dynamicLoading = true;
+dp.dynamicLoading = false;
 // dp.cornerHtml = "XCM"
 
 dp.timeHeaders = [{
@@ -337,7 +337,11 @@ var modesStyle = function modesStyle() {
     return modesGroupedLabel.style.display = arguments.length <= 0 ? undefined : arguments[0], modesSingleResourceLabel.style.display = arguments.length <= 1 ? undefined : arguments[1];
 };
 var changeModeTo = function changeModeTo(mode) {
-    if (mode === 'grouped' && tab === 'sbe') globalMode = 'grouped', loadSBE(), dp.update();else if (mode === 'grouped' && tab === 'sbc') {
+    if (mode === 'grouped' && tab === 'sbe') {
+        globalMode = 'grouped';
+        loadSBE();
+        dp.update();
+    } else if (mode === 'grouped' && tab === 'sbc') {
         globalMode = 'grouped';
         var resources = Object.keys(dataSBC);
         dp.treeEnabled = true;
@@ -562,8 +566,8 @@ dp.onTimeRangeSelecting = function (args) {
 
     document.getElementById('scheduleproMenur').style.display = "none";
     document.getElementById('eventActions').style.display = "none";
-    args.right.enabled = true;
-    args.left.enabled = true;
+    // args.right.enabled = true;
+    // args.left.enabled = true;
     args.allowed = true;
 };
 dp.treePreventParentUsage = true;
@@ -925,10 +929,10 @@ sbeButton.addEventListener('click', function () {
     dp.update();
 });
 
-dp.dynamicEventRenderingCacheSweeping = true;
+// dp.dynamicEventRenderingCacheSweeping = true;
 dp.eventMovingStartEndEnabled = false;
-dp.eventResizingStartEndEnabled = true;
-dp.timeRangeSelectingStartEndEnabled = false;
+dp.eventResizingStartEndEnabled = false;
+dp.timeRangeSelectingStartEndEnabled = true;
 
 dp.bubble = new DayPilot.Bubble({
     onLoad: function onLoad(args) {
@@ -1147,8 +1151,7 @@ $(document).ready(function () {
         bookingObj.start = projStartDate ? projStartDate : bookingObj.start;
         bookingObj.end = projEndDate ? projEndDate : bookingObj.end;
 
-        createBooking();
-        function createBooking() {
+        (function (callback) {
             var newBooking = new DayPilot.Event({
                 start: bookingObj.start,
                 end: bookingObj.end,
@@ -1163,11 +1166,14 @@ $(document).ready(function () {
                 }
             });
             dp.events.add(newBooking);
+            dp.events.update(newBooking);
             document.getElementById('scheduleproMenur').style.display = "none";
             $('.ui.scheduleproj-modal').modal("hide");
             dp.message('New Task assigned to ' + bookingObj.resource);
             dp.clearSelection();
-        }
+            console.log(callback);
+            callback();
+        })(showHeatMap);
     });
 
     // submit event
