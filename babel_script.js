@@ -518,7 +518,7 @@ dp.onBeforeCellRender = function (args) {
 
 //groupConcurrentEvents by vigfox
 
-dp.groupConcurrentEvents = true;
+dp.groupConcurrentEvents = false;
 dp.groupConcurrentEventsLimit = 1; // don't group if there aren't more than 2 overlapping events
 
 dp.onBeforeRowHeaderRender = function (args) {
@@ -541,6 +541,16 @@ dp.onBeforeRowHeaderRender = function (args) {
             } }];
     }
 };
+
+document.querySelector('#overlapEnable').addEventListener('change', function () {
+    dp.groupConcurrentEvents = true;
+    dp.update();
+});
+
+document.querySelector('#overlapDisable').addEventListener('change', function () {
+    dp.groupConcurrentEvents = false;
+    dp.update();
+});
 
 // adding holidays to the caleneder beore loading
 dp.onBeforeTimeHeaderRender = function (args) {
