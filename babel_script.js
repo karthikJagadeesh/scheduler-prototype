@@ -86,7 +86,6 @@ dp.separators = [{
 
 dp.heightSpec = "Max";
 dp.height = window.screen.height - 410;
-console.log("dpinit " + dp.height);
 dp.width = '98%';
 
 dp.businessBeginsHour = 10;
@@ -572,9 +571,13 @@ dp.onTimeRangeSelecting = function (args) {
     args.left.enabled = true;
     args.allowed = true;
 };
+
+$('.schedulepop').click(function (e) {
+    $('#scheduleproMenur').css({ position: "absolute", display: "block", top: e.pageY, left: e.pageX, zIndex: 999999 });
+});
+
 dp.treePreventParentUsage = true;
 dp.onTimeRangeSelected = function (args) {
-    $('.schedulepop').removeClass('disabled');
 
     bookingObj = args;
 
@@ -590,11 +593,6 @@ dp.onTimeRangeSelected = function (args) {
         });
         e.preventDefault();
     }, false);
-
-    $('.schedulepop').removeClass('disabled');
-    $('.schedulepop').click(function (e) {
-        $('#scheduleproMenur').css({ position: "absolute", display: "block", top: e.pageY, left: e.pageX, zIndex: 999999 });
-    });
 
     if (!copied) {
         $('.pasteBooking').addClass('disabled');
@@ -1097,7 +1095,6 @@ $(document).ready(function () {
     $(".close-booking").on("click", function () {
         $('.ui.scheduleproj-modal').modal("hide");
     });
-    $('.ui.fluid.dropdown').dropdown({ 'set selected': 'Resource 1,Resource 2' });
 
     $('.ui.radio.checkbox').checkbox({
         onChange: function onChange() {
@@ -1288,24 +1285,43 @@ $('#expand-btn').click(function (e) {
     }
 });
 
-/*  custom contextmenu position
+/* form validation */
 
-  $(".item.dropdown").on('mouseenter mouseleave', function (e) {
+$('.ui.form').form({
+    firstName: {
+        identifier: 'projectname',
+        rules: [{
+            type: 'empty',
+            prompt: 'Please enter Project name'
+        }]
+    },
+    lastName: {
+        identifier: 'task-name',
+        rules: [{
+            type: 'empty',
+            prompt: 'Please enter Task name'
+        }]
+    }
+});
 
-        if ($('.menu', this).length) {
-          var elm = $('.dropdown', this);
-          var off = elm.offset();
-          var l = off.left;
-            var w = elm.width() + 300;
-            var docH = $("#calendar-container").height();
-            var docW = $("#calendar-container").width();
-            var isEntirelyVisible = (l + w <= docW);
-            if (!isEntirelyVisible) {
-              $(this).addClass('edge');
-            } else {
-              $(this).removeClass('edge');
-            }
+/*  custom contextmenu position */
+
+$(".item.dropdown").on('mouseenter mouseleave', function (e) {
+
+    if ($('.menu', this).length) {
+        var elm = $('.dropdown', this);
+        var off = elm.offset();
+        var l = off.left;
+        var w = elm.width() + 300;
+        var docH = $("#calendar-container").height();
+        var docW = $("#calendar-container").width();
+        var isEntirelyVisible = l + w <= docW;
+        if (!isEntirelyVisible) {
+            $(this).addClass('edge');
+        } else {
+            $(this).removeClass('edge');
         }
-    });*/
+    }
+});
 
 // })()

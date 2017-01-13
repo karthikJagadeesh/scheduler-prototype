@@ -98,7 +98,6 @@ dp.separators = [
 
 dp.heightSpec = "Max";
 dp.height = window.screen.height-410;
-console.log("dpinit "+dp.height);
 dp.width = '98%';
 
 dp.businessBeginsHour = 10
@@ -599,9 +598,15 @@ dp.onTimeRangeSelecting = function(args) {
 
 
 };
+
+$('.schedulepop').click(function(e) {
+    $('#scheduleproMenur').css({position: "absolute", display: "block", top: e.pageY, left: e.pageX, zIndex: 999999});
+
+});
+
  dp.treePreventParentUsage = true
 dp.onTimeRangeSelected = function(args) {
-    $('.schedulepop').removeClass('disabled');
+
 
     bookingObj = args;
 
@@ -620,11 +625,7 @@ dp.onTimeRangeSelected = function(args) {
         e.preventDefault();
     }, false);
 
-    $('.schedulepop').removeClass('disabled');
-    $('.schedulepop').click(function(e) {
-        $('#scheduleproMenur').css({position: "absolute", display: "block", top: e.pageY, left: e.pageX, zIndex: 999999});
 
-    });
 
     if (!copied) {
         $('.pasteBooking').addClass('disabled');
@@ -1150,11 +1151,11 @@ $(document).ready(function() {
 
     $('.ui.dropdown').dropdown();
     $('.ui.checkbox').checkbox();
-    $(".ui.fluid.dropdown").dropdown({allowLabels: true})
+    $(".ui.fluid.dropdown").dropdown({allowLabels: true});
     $(".close-booking").on("click", function() {
         $('.ui.scheduleproj-modal').modal("hide");
     });
-    $('.ui.fluid.dropdown').dropdown({'set selected': 'Resource 1,Resource 2'});
+
 
     $('.ui.radio.checkbox').checkbox({
         onChange: function() {
@@ -1373,7 +1374,36 @@ $('#expand-btn').click(function(e) {
 });
 
 
-/*  custom contextmenu position
+
+
+
+/* form validation */
+
+
+$('.ui.form')
+  .form({
+    firstName: {
+      identifier  : 'projectname',
+      rules: [
+        {
+          type   : 'empty',
+          prompt : 'Please enter Project name'
+        }
+      ]
+    },
+    lastName: {
+      identifier  : 'task-name',
+      rules: [
+        {
+          type   : 'empty',
+          prompt : 'Please enter Task name'
+        }
+      ]
+    }
+  });
+
+
+/*  custom contextmenu position */
 
   $(".item.dropdown").on('mouseenter mouseleave', function (e) {
 
@@ -1391,6 +1421,6 @@ $('#expand-btn').click(function(e) {
               $(this).removeClass('edge');
             }
         }
-    });*/
+    });
 
 // })()
