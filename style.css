@@ -386,7 +386,7 @@ footer.mdl-mini-footer {
 #footer.hidden {
    display: none;
 }*/
-body{   overflow-y:hidden; padding-bottom:45px;}
+body{ padding-bottom:45px;}
 body.fullscreen #workspace{
   /*transform: translateY(-11%);*/
   transition: .9s ease-in-out;}

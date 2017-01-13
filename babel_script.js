@@ -3,6 +3,7 @@
 // (() => {
 
 var tab = 'sbe';
+
 var showGrid = 'numbers';
 var weekdays = ['sun', 'mon', 'tue', 'wed', 'thu', 'fri', 'sat'];
 var firmHolidays = [{
@@ -592,11 +593,21 @@ dp.onTimeRangeSelected = function (args) {
 
     /* vigfox added */
     var seltaskName = dp.rows.find(args.resource).name;
-    var selresourceName = dp.rows.find(args.resource).parent().name;
-    $("#projName").attr("value", seltaskName);
-    $("#empName").attr("value", selresourceName);
-    $("#dateStart").attr("value", bookingObj.start);
-    $(" #dateEnd").attr("value", bookingObj.end);
+
+    if (globalMode != 'singleRowResource') {
+        var selresourceName = dp.rows.find(args.resource).parent().name;
+
+        $("#projName").attr("value", seltaskName);
+        $("#empName").attr("value", selresourceName);
+        $("#dateStart").attr("value", bookingObj.start);
+        $(" #dateEnd").attr("value", bookingObj.end);
+    } else {
+
+        $("#projName").attr("value", "");
+        $("#empName").attr("value", seltaskName);
+        $("#dateStart").attr("value", bookingObj.start);
+        $(" #dateEnd").attr("value", bookingObj.end);
+    }
 
     document.querySelector('.scheduler_8_shadow_inner').addEventListener('contextmenu', function (e) {
         document.getElementById('scheduleproMenur').style.display = "block";
