@@ -5,7 +5,7 @@ body {
     background: #F5F5F5;
     font-family: helvetica, helvetica, sans-serif;
 }
-
+*{outline:none;}
 a {
     color: #009fda;
     text-decoration: none;
@@ -274,6 +274,7 @@ footer.mdl-mini-footer {
     width: 100%;}
 .ui.basic.button{background: #fff !important}
 .ui.vertical.menu .dropdown.item.edge .menu{left:-100%;}
+.ui.vertical.menu .dropdown.item.edge.active .menu{left:-48%;}
 .ui.button{background:#fff;}
 .booking-numbers{color:#fff}
 .ui.six.wide.column{display: flex;  justify-content: flex-end;  align-items: center;}
