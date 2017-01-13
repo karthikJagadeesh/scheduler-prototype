@@ -58,7 +58,7 @@ dp.headerHeight = 40;
 dp.headerHeight = 35;
 dp.startDate = new DayPilot.Date().firstDayOfMonth();
 var cacheStart = dp.startDate;
-dp.days = 900;
+dp.days = 90;
 dp.cellDuration = 8;
 dp.scale = 'Day';
 
@@ -423,8 +423,7 @@ var createTwoEvents = function createTwoEvents() {
 };
 
 var setNewDateRange = function setNewDateRange(args) {
-
-    splitdate.setMaxDate(new Date(args.e.end().addDays(-1).value));
+    if (args.e.start() === args.e.end().addDays(-1)) splitdate.config().container = null;else splitdate.setMaxDate(new Date(args.e.end().addDays(-1).value));
     splitdate.setMinDate(new Date(args.e.start().addDays(1).value));
 
     splitdate.config().onSelect = function (date) {
@@ -432,6 +431,7 @@ var setNewDateRange = function setNewDateRange(args) {
         createTwoEvents(args.e.start(), moment(date).format('YYYY-MM-DD'), args.e.end(), args.e);
 
         document.querySelector('#eventActions').style.display = 'none';
+        showHeatMap();
     };
 };
 
@@ -672,15 +672,15 @@ var dataSBE = {
         resources: [{
             id: 't1_r1',
             name: 'a,Glen,IV',
-            props: ['1120', '12-31-15', '', '126.00', 'Mar-16(40)<br>Apr-16(20)', '116.00', 'No Info In', '3-5-16', '3-20-15']
+            props: ['892348413', '1120', '12-31-15', '', '126.00', 'Mar-16(40)<br>Apr-16(20)', '116.00', 'No Info In', '3-5-16', '3-20-15']
         }, {
             id: 't1_r2',
             name: 'a,Glen,IV',
-            props: ['1440', '19-31-16', '', '96.00', 'Mar-16(40)<br>Apr-16(20)', '136.00', 'No Info In', '3-5-16', '3-20-15']
+            props: ['892348415', '1440', '19-31-16', '', '96.00', 'Mar-16(40)<br>Apr-16(20)', '136.00', 'No Info In', '3-5-16', '3-20-15']
         }, {
             id: 't1_r3',
             name: 'Hinthorne,Cathy',
-            props: ['1442', '09-25-17', '', '46.00', 'Mar-16(40)<br>Apr-16(20)', '106.00', 'No Info In', '3-5-16', '3-20-15']
+            props: ['892348419', '1442', '09-25-17', '', '46.00', 'Mar-16(40)<br>Apr-16(20)', '106.00', 'No Info In', '3-5-16', '3-20-15']
         }]
     },
     't2': {
@@ -689,11 +689,11 @@ var dataSBE = {
         resources: [{
             id: 't2_r1',
             name: 'a,Glen,IV',
-            props: ['1020', '12-31-15', '', '126.00', 'Mar-16(40)<br>Apr-16(20)', '126.00', 'No Info In', '3-5-16', '3-20-15']
+            props: ['892348443', '1020', '12-31-15', '', '126.00', 'Mar-16(40)<br>Apr-16(20)', '126.00', 'No Info In', '3-5-16', '3-20-15']
         }, {
             id: 't2_r2',
             name: 'ABC Company',
-            props: ['10', '12-31-15', '', '126.00', 'Mar-16(40)<br>Apr-16(20)', '126.00', 'No Info In', '3-5-16', '3-20-15']
+            props: ['892348479', '10', '12-31-15', '', '126.00', 'Mar-16(40)<br>Apr-16(20)', '126.00', 'No Info In', '3-5-16', '3-20-15']
         }]
     },
     't3': {
@@ -702,11 +702,11 @@ var dataSBE = {
         resources: [{
             id: 't3_r1',
             name: 'ABC Company',
-            props: ['1120', '12-31-15', '', '126.00', 'Mar-16(40)<br>Apr-16(20)', '126.00', 'No Info In', '3-5-16', '3-20-15']
+            props: ['892348413', '1120', '12-31-15', '', '126.00', 'Mar-16(40)<br>Apr-16(20)', '126.00', 'No Info In', '3-5-16', '3-20-15']
         }, {
             id: 't3_r2',
             name: 'a,Glen,IV',
-            props: ['1120', '12-31-15', '', '126.00', 'Mar-16(40)<br>Apr-16(20)', '126.00', 'No Info In', '3-5-16', '3-20-15']
+            props: ['892349813', '1120', '12-31-15', '', '126.00', 'Mar-16(40)<br>Apr-16(20)', '126.00', 'No Info In', '3-5-16', '3-20-15']
         }]
     },
     't4': {
@@ -715,7 +715,7 @@ var dataSBE = {
         resources: [{
             id: 't4_r1',
             name: 'Albrecht,Anna',
-            props: ['1120', '12-31-15', '', '126.00', 'Mar-16(40)<br>Apr-16(20)', '126.00', 'No Info In', '3-5-16', '3-20-15']
+            props: ['892347103', '1120', '12-31-15', '', '126.00', 'Mar-16(40)<br>Apr-16(20)', '126.00', 'No Info In', '3-5-16', '3-20-15']
         }]
     },
     't5': {
@@ -724,7 +724,7 @@ var dataSBE = {
         resources: [{
             id: 't5_r1',
             name: 'Albrecht,Charlie',
-            props: ['1120', '12-31-15', '', '126.00', 'Mar-16(40)<br>Apr-16(20)', '126.00', 'No Info In', '3-5-16', '3-20-15']
+            props: ['892348703', '1120', '12-31-15', '', '126.00', 'Mar-16(40)<br>Apr-16(20)', '126.00', 'No Info In', '3-5-16', '3-20-15']
         }]
     }
 };
@@ -877,7 +877,7 @@ var eventListSBC = eventListSBE.map(function (event) {
 var loadSBE = function loadSBE() {
     var tasks = Object.keys(dataSBE);
     dp.treeEnabled = true;
-    dp.rowHeaderColumns = [{ title: 'Client Name', width: 100 }, { title: 'Task Type', width: 90 }, { title: 'Per End', width: 60 }, { title: 'Desc', width: 100 }, { title: 'Bud Hrs', width: 60 }, { title: 'Month <br>Sch\'ed', width: 100 }, { title: 'Sch.Hrs', width: 60 }, { title: 'Status', width: 80 }, { title: 'PSD', width: 60 }, { title: 'Add', width: 60 }];
+    dp.rowHeaderColumns = [{ title: 'Client Name', width: 100 }, { title: 'Acc No.', width: 90 }, { title: 'Task Type', width: 90 }, { title: 'Per End', width: 60 }, { title: 'Desc', width: 100 }, { title: 'Bud Hrs', width: 60 }, { title: 'Month <br>Sch\'ed', width: 100 }, { title: 'Sch.Hrs', width: 60 }, { title: 'Status', width: 80 }, { title: 'PSD', width: 60 }, { title: 'Add', width: 60 }];
     dp.resources = tasks.map(function (task) {
         return {
             name: dataSBE[task].name,
@@ -1022,8 +1022,6 @@ var showHeatMap = function showHeatMap() {
     });
 };
 showHeatMap();
-
-dp.init();
 
 var addRippleEffect = function addRippleEffect(e) {
     var target = e.target;
@@ -1176,12 +1174,11 @@ $(document).ready(function () {
                 }
             });
             dp.events.add(newBooking);
-            dp.events.update(newBooking);
+
             document.getElementById('scheduleproMenur').style.display = "none";
             $('.ui.scheduleproj-modal').modal("hide");
             dp.message('New Task assigned to ' + bookingObj.resource);
             dp.clearSelection();
-            console.log(callback);
             callback();
         })(showHeatMap);
     });
