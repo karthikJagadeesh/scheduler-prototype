@@ -19,7 +19,7 @@
     color: #ffffff;
     display: flex !important;
     align-items: center !important;
-
+    padding-left: 3px;
 }
 
 .scheduler_8_event_inner
