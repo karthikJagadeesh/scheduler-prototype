@@ -946,13 +946,25 @@
                   <div class="field ui grid">
                     <label class="five wide column" >Select Employees</label>
                     <div class="ten wide column">
-                      <select name="employees" multiple="" class="ui fluid search dropdown">
+                      <div class="ui search eight wide column" id="searchEmployee">
+                        <div class="ui icon input">
+                          <input class="prompt"  id="empName" name="employeename" type="text" value="" placeholder="Search Employees" >
+                          <i class="search icon"></i>
+                        </div>
+                        <div class="ui results"></div>
+
+                      </div>
+
+
+
+
+                      <!-- <select name="employees" multiple="" class="ui fluid search dropdown">
       						<option value="">Start typing employee name(s)</option>
       						<option value="0">Vader, Darth</option>
                               <option value="1">Sulkunte, Sanjath</option>
                               <option value="2">G, Sriram</option>
 
-      					</select>
+      					</select> -->
                 </div></div>
 
               <div class="field ui grid">
@@ -972,7 +984,7 @@
 
  <div class="ui search eight wide column" id="searchClient">
    <div class="ui icon input">
-     <input class="prompt"  id="projName" name="projectname" type="text" placeholder="Search projects" >
+     <input class="prompt"  id="projName" name="projectname" type="text" value="" placeholder="Search projects" >
      <i class="search icon"></i>
    </div>
 

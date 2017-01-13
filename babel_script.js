@@ -347,6 +347,7 @@ var changeModeTo = function changeModeTo(mode) {
         dp.resources = resources.map(function (resource) {
             return {
                 name: dataSBC[resource].name,
+                title: dataSBC[resource].name,
                 id: dataSBC[resource].id,
                 expanded: false,
                 children: dataSBC[resource].tasks.map(function (task) {
@@ -587,8 +588,15 @@ $('.schedulepop').click(function (e) {
 dp.treePreventParentUsage = true;
 
 dp.onTimeRangeSelected = function (args) {
-
     bookingObj = args;
+
+    /* vigfox added */
+    var seltaskName = dp.rows.find(args.resource).name;
+    var selresourceName = dp.rows.find(args.resource).parent().name;
+    $("#projName").attr("value", seltaskName);
+    $("#empName").attr("value", selresourceName);
+    $("#dateStart").attr("value", bookingObj.start);
+    $(" #dateEnd").attr("value", bookingObj.end);
 
     document.querySelector('.scheduler_8_shadow_inner').addEventListener('contextmenu', function (e) {
         document.getElementById('scheduleproMenur').style.display = "block";
@@ -880,6 +888,7 @@ var loadSBE = function loadSBE() {
     dp.resources = tasks.map(function (task) {
         return {
             name: dataSBE[task].name,
+            title: dataSBE[task].name,
             id: dataSBE[task].id,
             backColor: '#E0E4CC',
             expanded: true,
@@ -1077,6 +1086,8 @@ $(document).ready(function () {
 
     var taskList = dp.events.list;
     var taskTitle = '';
+    var empName = '';
+
     var projectStartDate = new Pikaday({
         field: $("#dateStart")[0],
         theme: 'triangle',
@@ -1124,11 +1135,21 @@ $(document).ready(function () {
     $('.draghelp').popup();
 
     $('#searchClient').search({
-        source: taskList,
+        source: dp.events.list,
         searchFields: ['title'],
 
         onSelect: function onSelect(result, response) {
             taskTitle = result.title;
+        }
+    });
+
+    $('#searchEmployee').search({
+        source: dp.resources,
+        searchFields: ['name'],
+        searchFullText: false,
+
+        onSelect: function onSelect(result, response) {
+            empName = result.name;
         }
     });
 
@@ -1154,7 +1175,9 @@ $(document).ready(function () {
         var bookingHours = parseInt($("#bookingHrs").val()) ? parseInt($("#bookingHrs").val()) : 8,
             bookingTitle = $('#projName').val(),
             projStartDate = $("#dateStart").val(),
+            employeeSeleted = $("#empName").val(),
             projEndDate = $("#dateEnd").val();
+        console.log(bookingTitle);
 
         bookingObj.start = projStartDate ? projStartDate : bookingObj.start;
         bookingObj.end = projEndDate ? projEndDate : bookingObj.end;
@@ -1177,7 +1200,7 @@ $(document).ready(function () {
             dp.events.update(newBooking);
             document.getElementById('scheduleproMenur').style.display = "none";
             $('.ui.scheduleproj-modal').modal("hide");
-            dp.message('New Task assigned to ' + bookingObj.resource);
+            dp.message('New Task assigned to ' + dp.rows.find(bookingObj.resource).parent().name);
             dp.clearSelection();
             console.log(callback);
             callback();
