@@ -387,7 +387,8 @@ footer.mdl-mini-footer {
    display: none;
 }*/
 body{   overflow-y:hidden; padding-bottom:45px;}
-body.fullscreen #workspace{   transform: translateY(-11%);
+body.fullscreen #workspace{
+  /*transform: translateY(-11%);*/
   transition: .9s ease-in-out;}
 body.fullscreen {
    transition: .8s ease-in-out;
@@ -400,7 +401,8 @@ body.fullscreen {
 }
 body.fullscreen #footer{display:none;}
 body.fullscreen #header-menu,body.fullscreen .submenu{
-  transform: translateY(-200%);
+  /*transform: translateY(-200%);*/
+  display: none;
   transition: .9s ease-in-out;}
 
 

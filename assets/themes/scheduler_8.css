@@ -17,16 +17,24 @@
 .scheduler_8_event {
     font-size: 14px;
     color: #ffffff;
+    display: flex !important;
+    align-items: center !important;
+
 }
 
 .scheduler_8_event_inner
 {
-    position:absolute;
-    left:0px;
+    /*position:absolute;*/
+    display: flex;
+    align-items: center;
+    height: 80%;
+    width: 100%;
+    padding: 0px 10px;
+    /*left:0px;
     right: 1px;
     top: 18px;
     bottom: 1px;
-    padding: 4px;
+    padding: 4px;*/
 
     background: #81a489;
     border: 1px solid #81a489;
