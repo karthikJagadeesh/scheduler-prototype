@@ -10,6 +10,7 @@
     <link rel="stylesheet" type="text/css" href="assets/semantic.min.css">
     <link rel="stylesheet" type="text/css" href="assets/icon.min.css">
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/pikaday/1.5.1/css/pikaday.min.css" />
+    <link rel="stylesheet" type="text/css" href="//cdn.jsdelivr.net/bootstrap.daterangepicker/2/daterangepicker.css" />
     <link rel="stylesheet" href="./style.css">
 </head>
 
@@ -212,8 +213,8 @@
         </div>
     </div>
   </div>
-    <!-- Rightsidebar -->
-    <div id="sidebar-area" class="ui right sidebar inverted vertical menu">
+    <!-- Rightsidebar settings  -->
+    <div id="sidebar-area" class="ui right sidebar settingsidebar inverted vertical menu">
         <div class="sidebar-header">Scheduler Customization</div>
         <!-- cell Width -->
         <div class="ui cards">
@@ -390,7 +391,7 @@
 
     <!-- side bar resource filter -->
 
-    <div id="sidebar-resource" class="ui left sidebar inverted vertical menu">
+    <div id="sidebar-resource" class="ui left sidebar  filtersidebar inverted vertical menu">
         <div class="sidebar-header">Resource Filters</div>
         <!-- cell Width -->
         <div class="sr-wrapper">
@@ -768,6 +769,221 @@
     </div>
   </div>
 
+<!-- booking sidebar -->
+    <div id="addbookingWrap" class="ui right sidebar bookingsidebar inverted vertical menu">
+      <div class="scheduleproj-modal">
+          <div class="header">
+              <h2 class="booking-head"> Add Booking</h2>
+              <div class="ui radio checkbox">
+              <input type="radio" name="task" checked="checked">
+              <label>Tasks</label>
+              </div>
+              <div class="ui radio checkbox">
+              <input type="radio" name="task">
+              <label>Non -Task (blocked)</label>
+              </div>
+              <i class="close icon close-booking"></i>
+            </div>
+          <form id="projschedule-form" class="ui form" action="">
+
+            <div class="ui form projschedule">
+              <div class="field ui grid">
+                <label class="five wide column" >Select Employees</label>
+                <div class="ten wide column">
+
+                  <select class="ui fluid search dropdown" multiple="">
+<option value="">Start typing employee name</option>
+<option value="Resource1">Sulkunte, Sanjath</option>
+<option value="Resource2">G, Sriram</option>
+<option value="Resource3">Albrecht, Mark</option>
+<option value="Resource4">Belanger, Jamie</option>
+<option value="Resource5">Albrecht,Charlie</option>
+<option value="Resource6">Vader, Darth</option>
+</select>
+                  <!-- <div class="ui search eight wide column" id="searchEmployee">
+                    <div class="ui icon input">
+                      <input class="prompt"  id="empName" multiple="" name="employeename" type="text" value="" placeholder="Start typing employee name" >
+                      <i class="search icon"></i>
+                    </div>
+                    <div class="ui results"></div>
+
+                  </div> -->
+            </div></div>
+
+          <div class="field ui grid">
+
+<label class="five wide column">Select Task</label>
+ <div class="ten wide column">
+<div class="ui grid">
+<div class="four wide column">
+<select class="ui search dropdown ">
+<option value="">Years</option>
+<option value="2010">2010</option>
+<option value="2012">2012</option>
+<option value="2013">2013</option>
+<option value="2014">2014</option>
+<option value="2015">2015</option>
+<option value="2016">2016</option>
+<option value="2017">2017</option>
+</select>
+</div>
+
+<div class="ui search twelve wide column" id="searchClient">
+<div class="ui icon input">
+ <input class="prompt"  id="projName" name="projectname" type="text" value="" placeholder="Start typing client name" >
+ <i class="search icon"></i>
+</div>
+
+</div>
+</div>
+<!--
+<table class="ui single line table">   <thead><tr><th>Task Type</th><th>PED</th><th>Status</th><th>Descroption</th></tr>
+</thead>
+<tbody>
+<tr><td>1120</td><td>12/03/2016</td><td>Status of the task</td><td>Descroption of task   <div class="ui radio checkbox">
+<input type="radio" name="tasktype" >
+</div> </td></tr>
+<tr><td>1120</td><td>12/03/2016</td><td>Status of the task</td><td>Descroption of task   <div class="ui radio checkbox">
+ <input type="radio" name="tasktype" >
+ </div> </td></tr>
+ <tr><td>1120</td><td>12/03/2016</td><td>Status of the task</td><td>Descroption of task   <div class="ui radio checkbox">
+   <input type="radio" name="tasktype" >
+   </div> </td></tr>
+   <tbody>
+ </table> -->
+
+<div class="ui results"></div>
+</div>
+</div>
+
+<div class="field ui grid">
+<label class="five wide column">Select Role</label>
+<div class="ten wide column">
+<input type="text" name="first-name" placeholder="Please select task above to select role">
+</div>
+</div>
+
+<div class="field ui grid">
+ <label for="hours" class="five wide column">Schedule Hours</label>
+  <div class="ten wide column">
+
+
+
+
+    <div id="byday1" class="shright desc inline fields ui grid">
+      <div class="three wide column">
+          <div class="ui left input">
+      <input type="text" name="byday" value="8 hrs" placeholder="8 hrs">
+    </div>
+  </div>
+  <div class="three wide column">
+    <select class="ui dropdown">
+        <option value="from">from</option>
+        <option value="bulk">bulk</option>
+         </select>
+ </div>
+      <div class="four wide column">
+      <div class="ui left icon input">
+      <input type="text" id="dateStart" placeholder="date"><i class="calendar icon"></i>
+      </div>
+      <div id="datepikstart"></div>
+    </div>
+    <div class="one wide column">to</div>
+      <div class="four wide column">
+         <div class="ui left icon input">
+      <input type="text" id="dateEnd" placeholder="date"><i class="calendar  icon"></i>
+      </div>
+      <div id="datepikend"></div>
+    </div>
+
+
+      <div class="eight wide column">
+         <div class="ui left icon input">
+           <input type="text" name="pikstarttime" placeholder="Pick Start Time"><i class="wait  icon"></i>
+      </div>
+      </div>
+
+      <div class="eight wide column">
+         <div class="ui left icon input">
+           <select class="ui dropdown" name="pikdays">
+               <option value="">Pick Days</option>
+               <option value="bulk">bulk</option>
+              </select>
+
+      </div>
+      </div>
+
+
+     </div>
+
+  </div>
+</div>
+
+<div class="field ui grid include">
+<label class="five wide column">Include</label>
+  <div class="ten wide column">
+<div class="ui checkbox">
+<input type="checkbox" name="saturday">
+<label>Saturday</label>
+</div>
+<div class="ui checkbox">
+<input type="checkbox" name="sunday">
+<label>Sunday</label>
+</div>
+<div class="ui checkbox">
+<input type="checkbox" name="hloidays">
+<label>Holidays</label>
+</div>
+</div>
+
+</div>
+<div class="field ui grid">
+<label class="five wide column"> Select Job Code</label>
+<div class="eight wide column">
+<input type="text" name="job-code" placeholder="Select Job Code">
+</div>
+</div>
+
+
+
+<div class="field ui grid">
+
+<div class="five wide column">
+
+</div>
+<div class="ten wide column">
+
+
+<button class="ui button left floated lightblue" type="button" id="clearProject">Clear</button>
+  <button class="ui button leftleft floated lightblue" type="button" id="submitProject">Save & Add Another</button>
+<button class="ui button left floated orange" type="button" id="addProject">Add</button>
+
+
+</div>
+
+</div>
+
+<div class="field ui grid">
+
+<div class="five wide column">
+
+</div>
+<div class="ten wide column">
+<h3>Please Note:</h3>
+<p>Budgeted Time 24 Hrs ~ Scheduled Time -16 Hrs ~ Remaining Time to Schedule - 8 Hrs</p>
+
+
+</div>
+
+</div>
+                  </div>
+
+
+          </form>
+
+      </div>
+
+    </div>
 
    <div id="footer" class="row">
         <footer class="sixteen wide column">
@@ -936,40 +1152,53 @@
               </form>
           </div>
 
-<!-- modal for schedule project -->
-          <div class="ui small modal scheduleproj-modal">
+<!-- modal for schedule project
+
+          <div class="ui modal scheduleproj-modal">
               <div class="header">
-                  <h2 style="font-size:20px;"> <span id="booking-head">Schedule Project </span>  <i class="close icon close-booking" style="float:right;"></i></h2> </div>
+                  <h2 class="booking-head"> Add Booking</h2>
+                  <div class="ui radio checkbox">
+                  <input type="radio" name="task" checked="checked">
+                  <label>Tasks</label>
+                  </div>
+                  <div class="ui radio checkbox">
+                  <input type="radio" name="task">
+                  <label>Non -Task (blocked)</label>
+                  </div>
+                  <i class="close icon close-booking"></i>
+                </div>
               <form id="projschedule-form" class="ui form" action="">
 
                 <div class="ui form projschedule">
                   <div class="field ui grid">
                     <label class="five wide column" >Select Employees</label>
                     <div class="ten wide column">
-                      <div class="ui search eight wide column" id="searchEmployee">
+
+                      <select class="ui fluid search dropdown" multiple="">
+  <option value="">Start typing employee name</option>
+  <option value="Resource1">Sulkunte, Sanjath</option>
+  <option value="Resource2">G, Sriram</option>
+  <option value="Resource3">Albrecht, Mark</option>
+  <option value="Resource4">Belanger, Jamie</option>
+  <option value="Resource5">Albrecht,Charlie</option>
+  <option value="Resource6">Vader, Darth</option>
+</select>
+                      <!-- <div class="ui search eight wide column" id="searchEmployee">
                         <div class="ui icon input">
-                          <input class="prompt"  id="empName" name="employeename" type="text" value="" placeholder="Search Employees" >
+                          <input class="prompt"  id="empName" multiple="" name="employeename" type="text" value="" placeholder="Start typing employee name" >
                           <i class="search icon"></i>
                         </div>
                         <div class="ui results"></div>
 
-                      </div>
-
-
-
-
-                      <!-- <select name="employees" multiple="" class="ui fluid search dropdown">
-      						<option value="">Start typing employee name(s)</option>
-      						<option value="0">Vader, Darth</option>
-                              <option value="1">Sulkunte, Sanjath</option>
-                              <option value="2">G, Sriram</option>
-
-      					</select> -->
-                </div></div>
+                      </div> -->
+            <!--    </div></div>
 
               <div class="field ui grid">
-   <label class="five wide column">Select/ Search Client/ Task</label>
-   <div class="two wide column">
+
+   <label class="five wide column">Select Task</label>
+     <div class="ten wide column">
+<div class="ui grid">
+   <div class="four wide column">
    <select class="ui search dropdown ">
    <option value="">Years</option>
    <option value="2010">2010</option>
@@ -982,80 +1211,100 @@
     </select>
  </div>
 
- <div class="ui search eight wide column" id="searchClient">
+ <div class="ui search twelve wide column" id="searchClient">
    <div class="ui icon input">
-     <input class="prompt"  id="projName" name="projectname" type="text" value="" placeholder="Search projects" >
+     <input class="prompt"  id="projName" name="projectname" type="text" value="" placeholder="Start typing client name" >
      <i class="search icon"></i>
    </div>
 
  </div>
-   <div class="ui results"></div>
+</div>
+<!--
+<table class="ui single line table">   <thead><tr><th>Task Type</th><th>PED</th><th>Status</th><th>Descroption</th></tr>
+</thead>
+<tbody>
+ <tr><td>1120</td><td>12/03/2016</td><td>Status of the task</td><td>Descroption of task   <div class="ui radio checkbox">
+   <input type="radio" name="tasktype" >
+   </div> </td></tr>
+   <tr><td>1120</td><td>12/03/2016</td><td>Status of the task</td><td>Descroption of task   <div class="ui radio checkbox">
+     <input type="radio" name="tasktype" >
+     </div> </td></tr>
+     <tr><td>1120</td><td>12/03/2016</td><td>Status of the task</td><td>Descroption of task   <div class="ui radio checkbox">
+       <input type="radio" name="tasktype" >
+       </div> </td></tr>
+       <tbody>
+     </table> -->
 
+ <!-- <div class="ui results"></div>
+</div>
  </div>
- <div class="field ui grid">
-   <label class="five wide column">Select Task</label>
-   <div class="five wide column">
-   <input type="text" name="task-name" placeholder="Select Task to assign role">
- </div>
- </div>
+
  <div class="field ui grid">
    <label class="five wide column">Select Role</label>
-   <div class="five wide column">
-   <input type="text" name="first-name" placeholder="Assign role">
+   <div class="ten wide column">
+   <input type="text" name="first-name" placeholder="Please select task above to select role">
  </div>
  </div>
 
- <div class="inline fields ui grid">
+ <div class="field ui grid">
      <label for="hours" class="five wide column">Schedule Hours</label>
-     <div class="field">
-       <div class="ui radio checkbox">
-         <input type="radio" name="hours" checked="" tabindex="0" class="hidden" value="1">
-         <label>day</label>
-       </div>
-     </div>
-     <div class="field">
-       <div class="ui radio checkbox">
-         <input type="radio" name="hours" tabindex="0" class="hidden">
-         <label>bulk by dates</label>
-       </div>
-     </div>
-     <div class="field">
-       <div class="ui radio checkbox">
-         <input type="radio" name="hours" tabindex="0" class="hidden">
-         <label>bulk by days</label>
-       </div>
-     </div>
-     <div id="byday1" class="desc inline fields ui grid">
-       <input type="text" name="byday" class="one wide column">
-          <div class="five wide column">
-       <div class="ui left icon input">
-       <input type="text" id="dateStart" placeholder="Start Date"><i class="calendar  icon"></i>
-       </div>
-       <div id="datepikstart"></div>
-     </div>
-       <div class="five wide column">
-          <div class="ui left icon input">
-       <input type="text" id="dateEnd" placeholder="End Date"><i class="calendar  icon"></i>
-       </div>
-       <div id="datepikend"></div>
-     </div>
+      <div class="ten wide column">
 
-       <input type="text" name="pikstarttime" placeholder="Pick Start time" class="two wide column">
-       on
-       <input type="text" name="pikdays" placeholder="Pick days" class="two wide column">
+
+
+
+        <div id="byday1" class="shright desc inline fields ui grid">
+          <div class="three wide column">
+              <div class="ui left input">
+          <input type="text" name="byday" value="8 hrs" placeholder="8 hrs">
+        </div>
+      </div>
+      <div class="three wide column">
+        <select class="ui dropdown">
+            <option value="from">from</option>
+            <option value="bulk">bulk</option>
+             </select>
+     </div>
+          <div class="four wide column">
+          <div class="ui left icon input">
+          <input type="text" id="dateStart" placeholder="date"><i class="calendar icon"></i>
+          </div>
+          <div id="datepikstart"></div>
+        </div>
+        <div class="one wide column">to</div>
+          <div class="four wide column">
+             <div class="ui left icon input">
+          <input type="text" id="dateEnd" placeholder="date"><i class="calendar  icon"></i>
+          </div>
+          <div id="datepikend"></div>
+        </div>
+
+
+          <div class="eight wide column">
+             <div class="ui left icon input">
+               <input type="text" name="pikstarttime" placeholder="Pick Start Time"><i class="wait  icon"></i>
+          </div>
+          </div>
+
+          <div class="eight wide column">
+             <div class="ui left icon input">
+               <select class="ui dropdown" name="pikdays">
+                   <option value="">Pick Days</option>
+                   <option value="bulk">bulk</option>
+                  </select>
+
+          </div>
+          </div>
+
+
+         </div>
 
       </div>
-   </div>
- <div class="field ui grid">
-   <label class="five wide column">Job Code</label>
-   <div class="five wide column">
-   <input type="text" name="job-code" placeholder="Job Code">
- </div>
  </div>
 
- <div class="field ui grid">
-   <label class="five wide column">Allow</label>
-      <div class="eight wide column">
+ <div class="field ui grid include">
+   <label class="five wide column">Include</label>
+      <div class="ten wide column">
    <div class="ui checkbox">
    <input type="checkbox" name="saturday">
    <label>Saturday</label>
@@ -1071,20 +1320,51 @@
 </div>
 
  </div>
+ <div class="field ui grid">
+   <label class="five wide column"> Select Job Code</label>
+   <div class="eight wide column">
+   <input type="text" name="job-code" placeholder="Select Job Code">
+ </div>
+ </div>
+
+
 
  <div class="field ui grid">
 
    <div class="five wide column">
-   <button class="ui button secondary right floated" type="button" id="submitProject">Submit</button>
-   <!-- <div class="ui blue submit button ">Submit</div> -->
+
  </div>
+ <div class="ten wide column">
+
+
+   <button class="ui button left floated lightblue" type="button" id="clearProject">Clear</button>
+      <button class="ui button leftleft floated lightblue" type="button" id="submitProject">Save & Add Another</button>
+   <button class="ui button left floated orange" type="button" id="addProject">Add</button>
+
+
+</div>
+
+ </div>
+
+ <div class="field ui grid">
+
+   <div class="five wide column">
+
+ </div>
+ <div class="ten wide column">
+<h3>Please Note:</h3>
+<p>Budgeted Time 24 Hrs ~ Scheduled Time -16 Hrs ~ Remaining Time to Schedule - 8 Hrs</p>
+
+
+</div>
+
  </div>
                       </div>
 
 
               </form>
 
-          </div>
+          </div> -->
 
 
     <script type="text/javascript" src="./assets/daypilot-all.min.js"></script>
@@ -1092,7 +1372,11 @@
     <script src="assets/semantic.min.js"></script>
     <script src="https://cdnjs.cloudflare.com/ajax/libs/moment.js/2.17.1/moment.min.js"></script>
     <script src="https://cdnjs.cloudflare.com/ajax/libs/pikaday/1.5.1/pikaday.js"></script>
+    <!-- Include Date Range Picker -->
+    <script type="text/javascript" src="//cdn.jsdelivr.net/bootstrap.daterangepicker/2/daterangepicker.js"></script>
+
     <script type="text/javascript" src="./babel_script.js"></script>
+
 </body>
 
 </html>

@@ -91,10 +91,21 @@ body.pushable>.pusher {
 #sidebar-resource.ui.inverted.menu{
   background: #FFFFFF !important;width:400px;
 }
+
+
 #sidebar-resource.ui.inverted.menu .sidebar-header{margin: 0px;
     width: 100%;padding:12.5px;text-transform: uppercase;}
 .sr-wrapper{padding:10px;}
 
+
+#addbookingWrap.ui.inverted.menu{
+  background: #FFFFFF !important;width:700px;
+}
+#addbookingWrap .scheduleproj-modal{margin-top:0;}
+.close-booking{cursor:pointer;}
+.close-booking:before{padding: 5px;
+    border: 2px solid #fff;
+    border-radius: 50%;}
 #sidebar-area {
     width: 269px;
     background: #FFFFFF !important;
@@ -437,3 +448,46 @@ body.fullscreen #header-menu,body.fullscreen .submenu{
   align-items: center;
   justify-content: center;
 }
+.ui.multiple.dropdown{padding:0 !important}
+.ui.multiple.dropdown>.label{    display: inline-block !important;
+    background: transparent;
+    border: none;
+    box-shadow: none;}
+
+.ui.multiple.dropdown  i.icon.delete:before  {padding: 5px;
+    border: 1px solid #ccc;
+    border-radius: 50%;}
+/* scheduler modalcss */
+.pika-single.is-bound {
+    position: absolute !important;
+    box-shadow: 0 5px 15px -5px rgba(0,0,0,.5);
+}
+.scheduleproj-modal, .scheduleproj-modal.modal{    max-width: 750px;margin: 20px auto;background: #F0F0F0;}
+.scheduleproj-modal .header, .scheduleproj-modal.modal .header{padding: 1em;  background: #445978;  color: #fff !important;  display: block;}
+.booking-head{    display: inline-block;  margin: 0;line-height: 18px;  font-weight: 500;  margin-right: 20px;}
+.scheduleproj-modal .ui.radio.checkbox label {padding-left: 25px;  padding-right: 12px;  color: #fff;}
+.close-booking{    float: right;  font-size: 1.5em;  font-weight: 300;}
+.scheduleproj-modal .ui.form.eventbooking, .ui.form.projschedule {    padding: 40px 20px;  }
+.scheduleproj-modal  .ui.form  .field>label {  display: flex;
+  align-items: center;  justify-content: flex-end;    font-size: 1.2em;margin:0;    color: #363636;    font-weight: 500;  }
+.ui.form .field .ui.input input, .ui.form input[type=text], .ui.search.dropdown>input.search,  .ui.selection.dropdown{  border: 1px solid #E6E6E6;
+    border-radius: 0 !important;  font-style: italic;  font-size: 1.1em;}
+    .scheduleproj-modal  .ui.grid+.grid ,   .scheduleproj-modal .ui.form .field{  margin: 0;}
+    .shright.ui.grid>.column{padding-left: 0 !important;}
+  .scheduleproj-modal .include .ui.checkbox.checked{background:#445978}
+  .scheduleproj-modal .include .ui.checkbox label{color:#000;padding-left: 0;}
+  .scheduleproj-modal .include .ui.checkbox .box::before,   .scheduleproj-modal .include  .ui.checkbox label::before{background:none !important;}
+   .scheduleproj-modal .include .ui.checkbox.checked label{padding-left: 0;color:#fff}
+    .scheduleproj-modal .include .ui.checkbox{    margin: 0;outline: 0;  -webkit-appearance: none;    border: 1px solid #E6E6E6;
+    border-radius: 0 !important;
+    line-height: 1.2142em;padding: .67861429em 1em;font-size: 1em;  background: #FFF;}
+    .scheduleproj-modal .include .ui.checkbox input:checked~.box:before,.scheduleproj-modal .include .ui.checkbox input:checked~label:before ,
+    .scheduleproj-modal .include .ui.checkbox .box:hover::before, .scheduleproj-modal .include .ui.checkbox label:hover::before {
+    background: none !important;
+    border-color: rgba(34,36,38,.35);}
+  .scheduleproj-modal .include .ui.checkbox .box:before,   .scheduleproj-modal .include .ui.checkbox label:before{border:0 none;}
+  .scheduleproj-modal .include  .ui.checkbox input:checked~.box:after,.scheduleproj-modal .include .ui.checkbox input:checked~label:after
+  {content:""; background:none;}
+  .ui.selection.dropdown:hover{ border: 1px solid #E6E6E6; min-height:auto;}
+  .ui.selection.dropdown{min-height:auto;}
+  .ui.lightblue.button{background:#637798;color:#fff;}

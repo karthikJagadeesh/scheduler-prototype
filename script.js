@@ -617,10 +617,10 @@ dp.onTimeRangeSelecting = function(args) {
 };
 
 
-$('.schedulepop').click(function(e) {
-    $('#scheduleproMenur').css({position: "absolute", display: "block", top: e.pageY, left: e.pageX, zIndex: 999999});
-
-});
+// $('.schedulepop').click(function(e) {
+//     $('#scheduleproMenur').css({position: "absolute", display: "block", top: e.pageY, left: e.pageX, zIndex: 999999});
+//
+// });
 
  dp.treePreventParentUsage = true
 
@@ -696,6 +696,14 @@ var selresourceName = dp.rows.find(args.resource).parent().name;
     // el2.innerHTML = "<i class='fa fa-ellipsis-v fa-2x' aria-hidden='true'></i>";
 
     var csm = document.querySelector('.cellSelectionMenu');
+
+
+
+    $('.ui.right.bookingsidebar').sidebar('bookingsidebar', {
+        'transition': 'overlay',
+        dimPage: true
+    }).sidebar("toggle");
+
 };
 
 dp.treeEnabled = true;
@@ -1133,9 +1141,26 @@ document.addEventListener('click', addRippleEffect, false);
 
 $(document).ready(function() {
 
+
+
+  $('input[name="datefilter"]').daterangepicker({
+     autoUpdateInput: false,
+     locale: {
+         cancelLabel: 'Clear'
+     }
+ });
+
+ $('input[name="datefilter"]').on('apply.daterangepicker', function(ev, picker) {
+     $(this).val(picker.startDate.format('MM/DD/YYYY') + ' - ' + picker.endDate.format('MM/DD/YYYY'));
+ });
+
+ $('input[name="datefilter"]').on('cancel.daterangepicker', function(ev, picker) {
+     $(this).val('');
+ });
+
     $('#setting').click(function(e) {
 
-        $('.ui.right.sidebar').sidebar('setting', {
+        $('.ui.right.settingsidebar').sidebar('settingsidebar', {
             'transition': 'overlay',
             dimPage: true
         }).sidebar("toggle");
@@ -1144,12 +1169,23 @@ $(document).ready(function() {
 
     $('#filtering').click(function(e) {
 
-        $('.ui.left.sidebar').sidebar('filtering', {
+        $('.ui.left.filtersidebar').sidebar('filtersidebar', {
             'transition': 'overlay',
             dimPage: true
         }).sidebar("toggle");
         e.preventDefault();
     });
+
+    $('.schedulepop').click(function(e) {
+
+        $('.ui.right.bookingsidebar').sidebar('bookingsidebar', {
+            'transition': 'overlay',
+            dimPage: true
+        }).sidebar("toggle");
+        e.preventDefault();
+    });
+
+
     // $('#addresource-form .item').click(function(e){
     //  e.preventDefault();
     // });
@@ -1194,22 +1230,23 @@ $(document).ready(function() {
     $(".ui.fluid.dropdown").dropdown({allowLabels: true});
     $(".close-booking").on("click", function() {
         $('.ui.scheduleproj-modal').modal("hide");
+          $('#addbookingWrap.ui.sidebar').sidebar('toggle');
     });
 
 
-    $('.ui.radio.checkbox').checkbox({
-        onChange: function() {
-            var tval = $(this).val();
-            $("div.desc").hide();
-            $("#byday" + tval).show();
-        },
-        onChecked: function() {
-            var tval = $(this).val();
-            $("div.desc").hide();
-            $("#byday" + tval).show();
-        }
-
-    });
+    // $('.ui.radio.checkbox').checkbox({
+    //     onChange: function() {
+    //         var tval = $(this).val();
+    //         $("div.desc").hide();
+    //         $("#byday" + tval).show();
+    //     },
+    //     onChecked: function() {
+    //         var tval = $(this).val();
+    //         $("div.desc").hide();
+    //         $("#byday" + tval).show();
+    //     }
+    //
+    // });
 
     $('.ui.accordion').dropdown({exclusive: false});
     $('.ui.accordion').accordion();
@@ -1413,28 +1450,28 @@ $('#expand-btn').click(function(e) {
 
 /* form validation */
 
-
-$('.ui.form')
-  .form({
-    firstName: {
-      identifier  : 'projectname',
-      rules: [
-        {
-          type   : 'empty',
-          prompt : 'Please enter Project name'
-        }
-      ]
-    },
-    lastName: {
-      identifier  : 'task-name',
-      rules: [
-        {
-          type   : 'empty',
-          prompt : 'Please enter Task name'
-        }
-      ]
-    }
-  });
+//
+// $('.ui.form')
+//   .form({
+//     firstName: {
+//       identifier  : 'projectname',
+//       rules: [
+//         {
+//           type   : 'empty',
+//           prompt : 'Please enter Project name'
+//         }
+//       ]
+//     },
+//     lastName: {
+//       identifier  : 'task-name',
+//       rules: [
+//         {
+//           type   : 'empty',
+//           prompt : 'Please enter Task name'
+//         }
+//       ]
+//     }
+//   });
 
 
 /*  custom contextmenu position */
