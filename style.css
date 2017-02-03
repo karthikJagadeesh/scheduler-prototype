@@ -518,6 +518,7 @@ body.fullscreen #header-menu,body.fullscreen .submenu{
   .ui.selection.dropdown:hover{ border: 1px solid #E6E6E6; min-height:auto;}
   .ui.selection.dropdown{min-height:auto;}
   .ui.lightblue.button{background:#637798;color:#fff;}
+#tasktypes.ui.dropdown .menu>.header{background: #ccc;}
 #tasktypes.ui.dropdown .menu>.header, #tasktypes.ui.dropdown .menu>.item{display: -webkit-flex;
     display: flex;
     -webkit-flex-flow: row wrap;
