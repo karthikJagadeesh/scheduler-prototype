@@ -1,7 +1,7 @@
 html,
 body {
     padding: 0;
-    margin: 0;
+    margin: 0;    font-size: 12px;
     background: #F5F5F5;
     font-family: helvetica, helvetica, sans-serif;
 }
@@ -49,11 +49,11 @@ a {
     background: rgba(154, 170, 195, 0.24) !important;
 }
 
-/*.ui.dropdown.selection.multiple {
+/* .ui.dropdown.selection.multiple {
     min-width: 101.5% !important;
     margin-left: -18px;
     border: 0;
-}*/
+} */
 
 .ui.labeled.icon.button>.icon,
 .ui.labeled.icon.buttons>.button>.icon,
@@ -70,12 +70,19 @@ a {
 }
 
 
-/*resetting background after pusher activates*/
+
+/* resetting background after pusher activates */
 
 body.pushable>.pusher {
     background: #F5F5F5 !important;
 }
 
+body.pushable>.pusher.dd {
+    overflow-x:scroll !important;
+      overflow-y:hidden !important;
+}
+
+body.pushable .dd .pushwrapper{transform: translate3d(700px, 0, 0);}
 #conflictsbtn {
     min-width: 230px;
 }
@@ -99,13 +106,17 @@ body.pushable>.pusher {
 
 
 #addbookingWrap.ui.inverted.menu{
-  background: #FFFFFF !important;width:700px;
+  background: #FFFFFF !important;width:700px;    border-left: 2px solid #445978;
 }
+
 #addbookingWrap .scheduleproj-modal{margin-top:0;}
 .close-booking{cursor:pointer;}
-.close-booking:before{padding: 5px;
+.close-booking:before{/* padding: 5px;
     border: 2px solid #fff;
-    border-radius: 50%;}
+  border-radius: 50%; */
+  color: #F7B231 !important;
+      font-size: 22px;
+}
 #sidebar-area {
     width: 269px;
     background: #FFFFFF !important;
@@ -198,7 +209,8 @@ button {
 }
 
 #footer{
-    position:fixed;height: 46px;
+    position:relative;
+    height: 46px;
     bottom:0;
     left:0;
     background-color: rgba(212, 212, 213, 0.52);
@@ -293,7 +305,7 @@ footer.mdl-mini-footer {
  .ui.styled.accordion .result .title{padding:0;border:0;}
  .ui.form.eventbooking, .ui.form.projschedule{padding:15px 20px;}
  .ui.form.projschedule .field>label{display: flex;align-items: center;justify-content: flex-end;}
- .form.projschedule .ui.selection.dropdown{min-width:auto}
+ .form.projschedule .ui.selection.dropdown{min-width:auto;    width: 100%;}
  .ui.submenu{margin:0; box-shadow: none;}
  .ui.menu.submenu .item.active{box-shadow: 0em 2px 0em #F7B233;}
  .ui.grid>.column:not(.row) {
@@ -450,7 +462,7 @@ body.fullscreen #header-menu,body.fullscreen .submenu{
 }
 .ui.multiple.dropdown{padding:0 !important}
 .ui.multiple.dropdown>.label{    display: inline-block !important;
-    background: transparent;
+    background: transparent;    line-height: 1.6em;
     border: none;
     box-shadow: none;}
 
@@ -462,20 +474,35 @@ body.fullscreen #header-menu,body.fullscreen .submenu{
     position: absolute !important;
     box-shadow: 0 5px 15px -5px rgba(0,0,0,.5);
 }
+.ui.multiple.search.dropdown>.text{    line-height: 1.8em;}
 .scheduleproj-modal, .scheduleproj-modal.modal{    max-width: 750px;margin: 20px auto;background: #F0F0F0;}
-.scheduleproj-modal .header, .scheduleproj-modal.modal .header{padding: 1em;  background: #445978;  color: #fff !important;  display: block;}
+.scheduleproj-modal .header, .scheduleproj-modal.modal .header{    border-top: 1px solid #ccc;padding: 1em;  background: #445978;  color: #fff !important;  display: block;}
 .booking-head{    display: inline-block;  margin: 0;line-height: 18px;  font-weight: 500;  margin-right: 20px;}
-.scheduleproj-modal .ui.radio.checkbox label {padding-left: 25px;  padding-right: 12px;  color: #fff;}
+.scheduleproj-modal .ui.radio.checkbox label {padding-left: 22px;  padding-right: 10px;  color: #fff;font-size:0.9em}
 .close-booking{    float: right;  font-size: 1.5em;  font-weight: 300;}
-.scheduleproj-modal .ui.form.eventbooking, .ui.form.projschedule {    padding: 40px 20px;  }
-.scheduleproj-modal  .ui.form  .field>label {  display: flex;
-  align-items: center;  justify-content: flex-end;    font-size: 1.2em;margin:0;    color: #363636;    font-weight: 500;  }
+.scheduleproj-modal .ui.form.eventbooking, .ui.form.projschedule {    padding: 10px 0px;  }
+.scheduleproj-modal .ui[class*="left icon"].input>input{padding-left: 2.5em!important;}
+.scheduleproj-modal  .ui.form  .field>label {  display: flex;    padding-right: 0;
+  align-items: center;      justify-content: flex-start;
+    font-size: 1em;margin:0;    color: #363636;    font-weight: 500;  }
+/* .scheduleproj-modal  .ui.form  .field>label[for="hours"]{    align-items: baseline;padding-top: 20px;} */
+.schedulepop{    min-width: 100px;}
+.ui.form .field.ui.grid+.grid, .ui.form .field{margin:0}
+#expand-btn, #setting{    min-width: 45px;}
+.fullw{width:100% !important}
+#bar{display:none;}
+.scheduleproj-modal .ui.table thead th {    white-space: pre-wrap;}
+.ftitalic{    padding: 0 !important;
+    font-style: italic;height: 100%;
+    display: flex;
+    align-items: center;}
+.ftitalic label{padding-left:6px;}
 .ui.form .field .ui.input input, .ui.form input[type=text], .ui.search.dropdown>input.search,  .ui.selection.dropdown{  border: 1px solid #E6E6E6;
-    border-radius: 0 !important;  font-style: italic;  font-size: 1.1em;}
-    .scheduleproj-modal  .ui.grid+.grid ,   .scheduleproj-modal .ui.form .field{  margin: 0;}
+    border-radius: 0 !important;  font-style: italic;  font-size: 1em;}
+    /*.scheduleproj-modal  .ui.grid+.grid ,   .scheduleproj-modal .ui.form .field{  margin: 0;}*/
     .shright.ui.grid>.column{padding-left: 0 !important;}
   .scheduleproj-modal .include .ui.checkbox.checked{background:#445978}
-  .scheduleproj-modal .include .ui.checkbox label{color:#000;padding-left: 0;}
+  .scheduleproj-modal .include .ui.checkbox label{color:#ccc;padding-left: 0;}
   .scheduleproj-modal .include .ui.checkbox .box::before,   .scheduleproj-modal .include  .ui.checkbox label::before{background:none !important;}
    .scheduleproj-modal .include .ui.checkbox.checked label{padding-left: 0;color:#fff}
     .scheduleproj-modal .include .ui.checkbox{    margin: 0;outline: 0;  -webkit-appearance: none;    border: 1px solid #E6E6E6;
@@ -491,3 +518,15 @@ body.fullscreen #header-menu,body.fullscreen .submenu{
   .ui.selection.dropdown:hover{ border: 1px solid #E6E6E6; min-height:auto;}
   .ui.selection.dropdown{min-height:auto;}
   .ui.lightblue.button{background:#637798;color:#fff;}
+#tasktypes.ui.dropdown .menu>.header, #tasktypes.ui.dropdown .menu>.item{display: -webkit-flex;
+    display: flex;
+    -webkit-flex-flow: row wrap;
+    flex-flow: row wrap;    margin: 0;
+    text-align: center;}
+#tasktypes.ui.dropdown .menu>.header div{ padding: 10px;}
+
+  @media  (max-width: 800px) {
+    .ui.ten.wide.column , .ui.six.wide.column{
+        width: 100% !important;
+    }
+}

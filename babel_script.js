@@ -27,8 +27,8 @@ var firmHolidays = [{
     endDate: '2017-05-02T00:00:00',
     title: 'May Day'
 }, {
-    startDate: '2017-02-10T00:00:00',
-    endDate: '2017-02-11T00:00:00',
+    startDate: '2017-10-02T00:00:00',
+    endDate: '2017-11-02T00:00:00',
     title: 'Gandhi Jayanthi'
 }, {
     startDate: '2017-12-25T00:00:00',
@@ -86,7 +86,7 @@ dp.separators = [{
 }];
 
 dp.heightSpec = "Max";
-dp.height = window.screen.height - 410;
+dp.height = window.screen.height - 390;
 dp.width = '98%';
 
 dp.businessBeginsHour = 10;
@@ -577,8 +577,8 @@ dp.onTimeRangeSelecting = function (args) {
 
     document.getElementById('scheduleproMenur').style.display = "none";
     document.getElementById('eventActions').style.display = "none";
-    // args.right.enabled = true;
-    // args.left.enabled = true;
+    args.right.enabled = true;
+    args.left.enabled = true;
     args.allowed = true;
 };
 
@@ -611,7 +611,7 @@ dp.onTimeRangeSelected = function (args) {
     }
 
     document.querySelector('.scheduler_8_shadow_inner').addEventListener('contextmenu', function (e) {
-        document.getElementById('scheduleproMenur').style.display = "block";
+        //document.getElementById('scheduleproMenur').style.display = "block";
         var windowWidth = $(window).width();
 
         $("#scheduleproMenur").css({
@@ -657,10 +657,11 @@ dp.onTimeRangeSelected = function (args) {
 
     var csm = document.querySelector('.cellSelectionMenu');
 
-    $('.ui.right.bookingsidebar').sidebar('bookingsidebar', {
-        'transition': 'overlay',
-        dimPage: true
-    }).sidebar("toggle");
+    //$(".ui.right.bookingsidebar").sidebar("show");
+
+    $('#widget').width(window.screen.width).height(window.screen.height - 200).split({ orientation: 'vertical', limit: 410, position: '70%' });
+    $('#bar,.vsplitter').show();
+    $('#foo').removeClass("fullw");
 };
 
 dp.treeEnabled = true;
@@ -750,6 +751,33 @@ var dataSBE = {
             name: 'Albrecht,Charlie',
             props: ['892348703', '1120', '12-31-15', '', '126.00', 'Mar-16(40)<br>Apr-16(20)', '126.00', 'No Info In', '3-5-16', '3-20-15']
         }]
+    },
+    't6': {
+        id: 't6',
+        name: 'Keenan, Glen',
+        resources: [{
+            id: 't6_r1',
+            name: 'Albrecht,Charlie',
+            props: ['892348703', '1120', '12-31-15', '', '126.00', 'Mar-16(40)<br>Apr-16(20)', '126.00', 'No Info In', '3-5-16', '3-20-15']
+        }]
+    },
+    't7': {
+        id: 't7',
+        name: 'Simmons, Dean',
+        resources: [{
+            id: 't7_r1',
+            name: 'Albrecht,Charlie',
+            props: ['892348703', '1120', '12-31-15', '', '126.00', 'Mar-16(40)<br>Apr-16(20)', '126.00', 'No Info In', '3-5-16', '3-20-15']
+        }]
+    },
+    't8': {
+        id: 't8',
+        name: 'Emory, peter',
+        resources: [{
+            id: 't8_r1',
+            name: 'Albrecht,Charlie',
+            props: ['892348703', '1120', '12-31-15', '', '126.00', 'Mar-16(40)<br>Apr-16(20)', '126.00', 'No Info In', '3-5-16', '3-20-15']
+        }]
     }
 };
 
@@ -774,8 +802,8 @@ var addEventDescription = function addEventDescription(events) {
 };
 
 var eventListSBE = [{
-    start: "2017-01-04",
-    end: "2017-01-09",
+    start: "2017-02-04",
+    end: "2017-02-09",
     id: "1",
     resource: "t1_r1",
     text: 'a,Glen,IV',
@@ -786,8 +814,8 @@ var eventListSBE = [{
         taskType: 1040
     } // custom event property
 }, {
-    start: "2017-01-06",
-    end: "2017-01-12",
+    start: "2017-02-06",
+    end: "2017-02-12",
     id: "2",
     resource: "t1_r2",
     text: "a,Glen,IV",
@@ -1006,7 +1034,7 @@ var getViewPortDateRange = function getViewPortDateRange() {
 };
 
 dp.onEventMoved = function () {
-    showHeatMap();
+    //  showHeatMap()
 };
 
 dp.onScroll = function () {
@@ -1048,49 +1076,51 @@ var showHeatMap = function showHeatMap() {
 };
 showHeatMap();
 
-var addRippleEffect = function addRippleEffect(e) {
-    var target = e.target;
-    if (target.tagName.toLowerCase() !== 'button') return false;
-    var rect = target.getBoundingClientRect();
-    var ripple = target.querySelector('.ripple');
-    if (!ripple) {
-        ripple = document.createElement('span');
-        ripple.className = 'ripple';
-        ripple.style.height = ripple.style.width = Math.max(rect.width, rect.height) + 'px';
-        target.appendChild(ripple);
-    }
-    ripple.classList.remove('show');
-    var top = e.pageY - rect.top - ripple.offsetHeight / 2 - document.body.scrollTop;
-    var left = e.pageX - rect.left - ripple.offsetWidth / 2 - document.body.scrollLeft;
-    ripple.style.top = top + 'px';
-    ripple.style.left = left + 'px';
-    ripple.classList.add('show');
-    return false;
-};
-
-document.addEventListener('click', addRippleEffect, false);
+//
+// const addRippleEffect = function(e) {
+//     let target = e.target;
+//     if (target.tagName.toLowerCase() !== 'button')
+//         return false;
+//     let rect = target.getBoundingClientRect();
+//     let ripple = target.querySelector('.ripple');
+//     if (!ripple) {
+//         ripple = document.createElement('span');
+//         ripple.className = 'ripple';
+//         ripple.style.height = ripple.style.width = Math.max(rect.width, rect.height) + 'px';
+//         target.appendChild(ripple);
+//     }
+//     ripple.classList.remove('show');
+//     let top = e.pageY - rect.top - ripple.offsetHeight / 2 - document.body.scrollTop;
+//     let left = e.pageX - rect.left - ripple.offsetWidth / 2 - document.body.scrollLeft;
+//     ripple.style.top = top + 'px';
+//     ripple.style.left = left + 'px';
+//     ripple.classList.add('show');
+//     return false;
+// }
+//
+// document.addEventListener('click', addRippleEffect, false);
 
 $(document).ready(function () {
 
-    $('input[name="datefilter"]').daterangepicker({
-        autoUpdateInput: false,
-        locale: {
-            cancelLabel: 'Clear'
-        }
-    });
-
-    $('input[name="datefilter"]').on('apply.daterangepicker', function (ev, picker) {
-        $(this).val(picker.startDate.format('MM/DD/YYYY') + ' - ' + picker.endDate.format('MM/DD/YYYY'));
-    });
-
-    $('input[name="datefilter"]').on('cancel.daterangepicker', function (ev, picker) {
-        $(this).val('');
-    });
+    //  $('input[name="datefilter"]').daterangepicker({
+    //     autoUpdateInput: false,
+    //     locale: {
+    //         cancelLabel: 'Clear'
+    //     }
+    // });
+    //
+    // $('input[name="datefilter"]').on('apply.daterangepicker', function(ev, picker) {
+    //     $(this).val(picker.startDate.format('MM/DD/YYYY') + ' - ' + picker.endDate.format('MM/DD/YYYY'));
+    // });
+    //
+    // $('input[name="datefilter"]').on('cancel.daterangepicker', function(ev, picker) {
+    //     $(this).val('');
+    // });
 
     $('#setting').click(function (e) {
 
-        $('.ui.right.settingsidebar').sidebar('settingsidebar', {
-            'transition': 'overlay',
+        $('.ui.right.settingsidebar').sidebar('setting', {
+            'transition': 'push',
             dimPage: true
         }).sidebar("toggle");
         e.preventDefault();
@@ -1098,20 +1128,47 @@ $(document).ready(function () {
 
     $('#filtering').click(function (e) {
 
-        $('.ui.left.filtersidebar').sidebar('filtersidebar', {
-            'transition': 'overlay',
+        $('.ui.left.filtersidebar').sidebar('setting', {
+            'transition': 'push',
             dimPage: true
+
         }).sidebar("toggle");
         e.preventDefault();
     });
 
+    $(".ui.right.bookingsidebar")
+    // will auto-init (since not instantiated yet) then change setting
+    .sidebar('setting', 'onShow', function () {
+        $('.pusher').addClass("dd");
+    }).sidebar('setting', 'onHide', function () {
+        $('.pusher').removeClass("dd");
+    }).sidebar('setting', {
+        dimPage: false,
+        transition: 'push',
+        exclusive: false,
+        closable: false
+    });
+
     $('.schedulepop').click(function (e) {
 
-        $('.ui.right.bookingsidebar').sidebar('bookingsidebar', {
-            'transition': 'overlay',
-            dimPage: true
-        }).sidebar("toggle");
-        e.preventDefault();
+        //     $(".ui.right.bookingsidebar")
+        //
+        // // will auto-init (since not instantiated yet) then change setting
+        // .sidebar('setting', 'onShow', function() {
+        //   $('.pusher').addClass("dd");
+        // })
+        // .sidebar('setting', 'onHide', function() {
+        //     $('.pusher').removeClass("dd");
+        // })
+        //
+        // .sidebar('setting', {
+        //   dimPage             : false,
+        //   transition          : 'push',
+        //   exclusive    : false,
+        //   closable: false
+        // })
+        // .sidebar("toggle");
+        // //  e.preventDefault();
     });
 
     // $('#addresource-form .item').click(function(e){
@@ -1152,10 +1209,11 @@ $(document).ready(function () {
     $('.ui.dropdown').dropdown();
     $('.ui.checkbox').checkbox();
     $(".ui.fluid.dropdown").dropdown({ allowLabels: true });
-    $(".close-booking").on("click", function () {
-        $('.ui.scheduleproj-modal').modal("hide");
-        $('#addbookingWrap.ui.sidebar').sidebar('toggle');
-    });
+    // $(".close-booking").on("click", function() {
+    //     $('.ui.scheduleproj-modal').modal("hide");
+    //       $('#addbookingWrap.ui.sidebar').sidebar('toggle');
+    // });
+
 
     // $('.ui.radio.checkbox').checkbox({
     //     onChange: function() {
@@ -1241,10 +1299,14 @@ $(document).ready(function () {
 
             document.getElementById('scheduleproMenur').style.display = "none";
             $('.ui.scheduleproj-modal').modal("hide");
-            dp.message('New Task assigned to ' + dp.rows.find(bookingObj.resource).parent().name);
+            //  dp.message(`New Task assigned to ${dp.rows.find(bookingObj.resource).parent().name }`);
+            dp.message('New Task assigned ');
+
             dp.clearSelection();
             callback();
         })(showHeatMap);
+
+        $('#addbookingWrap.ui.sidebar').sidebar('toggle');
     });
 
     // submit event
@@ -1318,10 +1380,10 @@ dp.onEventRightClick = function (args) {};
 
 // fullscreen
 
-var svheight = window.screen.height - 410;
+var svheight = window.screen.height - 230;
 $('#expand-btn').click(function (e) {
     var sheight = svheight;
-    var fullHeight = sheight + 100;
+    var fullHeight = sheight + 150;
     $('body').toggleClass('fullscreen');
     //  $('#header-menu, #footer, .submenu').toggleClass('hidden');
     //  $('#header-menu, .submenu').addClass('bring-down');
@@ -1382,6 +1444,26 @@ $(".item.dropdown").on('mouseenter mouseleave', function (e) {
             $(this).removeClass('edge');
         }
     }
+});
+
+jQuery(function ($) {
+
+    $('#bar').hide();
+    $('.schedulepop').click(function (e) {
+
+        var splitter = $('#widget').width(window.screen.width).height(window.screen.height - 200).split({ orientation: 'vertical', limit: 410, position: '70%',
+            onDrag: function onDrag(event) {
+                console.log(splitter.position());
+            }
+        });
+        $('#bar,.vsplitter').show();
+        $('#foo').removeClass("fullw");
+    });
+    $(".close-booking").on("click", function () {
+
+        $('#foo').addClass("fullw");
+        $('#bar,.vsplitter').hide();
+    });
 });
 
 // })()
